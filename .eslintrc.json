@@ -1,0 +1,60 @@
+{
+	"env": {
+		"browser": true,
+		"es2021": true,
+		"node": true,
+		"jest": true
+	},
+	"extends": [
+		"next",
+		"next/core-web-vitals",
+		"plugin:@next/next/recommended",
+		"next/core-web-vitals"
+	],
+	"plugins": [
+		"prettier",
+		"@typescript-eslint",
+		"eslint-plugin-import-helpers"
+	],
+	"parser": "@typescript-eslint/parser",
+	"parserOptions": {
+		"ecmaFeatures": {
+			"tsx": true
+		},
+		"ecmaVersion": 12,
+		"sourceType": "module"
+	},
+	"rules": {
+		"prettier/prettier": "error",
+		"react/no-children-prop": 0,
+		"import-helpers/order-imports": [
+			"warn",
+			{
+				"newlinesBetween": "always", // new line between groups
+				"groups": [
+					"/^@docs/",
+					"/^react/",
+					"module",
+					"/^@atoms/",
+					"/^@molecules/",
+					"/^@organisms/",
+					"/^@templates/",
+					"/^@icons/",
+					"/^@images/",
+					"/^@assets/",
+					"/^@fonts/",
+					"/^@themes/",
+					"/^@contexts/",
+					"/^@hooks/",
+					"/^@pages/",
+					"/^@utils/",
+					"/^@store/",
+					"/^@services/",
+					"/^@scripts/",
+					["parent", "sibling", "index"]
+				],
+				"alphabetize": { "order": "asc", "ignoreCase": true }
+			}
+		]
+	}
+}
