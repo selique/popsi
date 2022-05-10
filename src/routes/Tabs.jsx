@@ -1,4 +1,4 @@
-import { Redirect, Route } from 'react-router-dom'
+import { Route } from 'react-router-dom'
 
 import {
 	IonRouterOutlet,
@@ -10,28 +10,13 @@ import {
 } from '@ionic/react'
 import { cog, flash, list } from 'ionicons/icons'
 
-import Home from './Feed'
-import ListDetail from './ListDetail'
-import Lists from './Lists'
-import Settings from './Settings'
+import Home from '../components/pages/Apresentation'
 
 const Tabs = () => {
 	return (
 		<IonTabs>
 			<IonRouterOutlet>
 				<Route path="/tabs/feed" component={Home} exact={true} />
-				<Route path="/tabs/lists" component={Lists} exact={true} />
-				<Route
-					path="/tabs/lists/:listId"
-					component={ListDetail}
-					exact={true}
-				/>
-				<Route path="/tabs/settings" component={Settings} exact={true} />
-				<Route
-					path="/tabs"
-					render={() => <Redirect to="/tabs/feed" />}
-					exact={true}
-				/>
 			</IonRouterOutlet>
 			<IonTabBar slot="bottom">
 				<IonTabButton tab="tab1" href="/tabs/feed">

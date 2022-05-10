@@ -3,8 +3,8 @@ import { Route } from 'react-router-dom'
 import { IonApp, IonRouterOutlet, IonSplitPane } from '@ionic/react'
 import { IonReactRouter } from '@ionic/react-router'
 
-import Stacks from './pages/Stacks'
-import Tabs from './pages/Tabs'
+import Stacks from './Stacks'
+import Tabs from './Tabs'
 
 const AppShell = () => {
 	return (
