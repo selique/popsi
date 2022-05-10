@@ -13,7 +13,8 @@ module.exports = {
 			},
 			colors: {
 				blue: {
-					100: '#D8EAF6'
+					100: '#D8EAF6',
+					200: '#87C6EB'
 				},
 				black: {
 					DEFAULT: '#000000',
