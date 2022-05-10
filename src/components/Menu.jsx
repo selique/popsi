@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react'
+
 import { StatusBar, Style } from '@capacitor/status-bar'
 import {
 	IonContent,
@@ -11,7 +13,6 @@ import {
 	IonTitle,
 	IonToolbar
 } from '@ionic/react'
-import { useEffect, useState } from 'react'
 import { cog, flash, list } from 'ionicons/icons'
 
 const pages = [

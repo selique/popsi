@@ -1,5 +1,4 @@
 import { defineCustomElements as ionDefineCustomElements } from '@ionic/core/loader'
-
 import Head from 'next/head'
 
 import 'tailwindcss/tailwind.css'
@@ -38,7 +37,7 @@ function MyApp({ Component, pageProps }) {
 				<link
 					rel="preconnect"
 					href="https://fonts.gstatic.com"
-					crossorigin
+					crossOrigin
 				/>
 				<link
 					href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;500;600;700&display=swap"
