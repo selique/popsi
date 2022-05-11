@@ -238,3 +238,8 @@ ion-text {
 	text-decoration: none;
 	border: 0;
 }
+
+ion-tab-bar {
+	--background: #ffffff;
+	--border: 0;
+}

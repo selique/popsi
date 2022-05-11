@@ -8,28 +8,28 @@ import {
 	IonIcon,
 	IonLabel
 } from '@ionic/react'
-import { cog, flash, list } from 'ionicons/icons'
+import { globeOutline, flagOutline, personOutline } from 'ionicons/icons'
 
-import Home from '../components/pages/Apresentation'
+import Home from '../components/pages/Home'
 
 const Tabs = () => {
 	return (
 		<IonTabs>
 			<IonRouterOutlet>
-				<Route path="/tabs/feed" component={Home} exact={true} />
+				<Route path="/home" component={() => <Home />} exact={true} />
 			</IonRouterOutlet>
 			<IonTabBar slot="bottom">
-				<IonTabButton tab="tab1" href="/tabs/feed">
-					<IonIcon icon={flash} />
-					<IonLabel>Feed</IonLabel>
+				<IonTabButton tab="tab1" href="/home">
+					<IonIcon icon={globeOutline} />
+					<IonLabel>Home</IonLabel>
 				</IonTabButton>
-				<IonTabButton tab="tab2" href="/tabs/lists">
-					<IonIcon icon={list} />
-					<IonLabel>Lists</IonLabel>
+				<IonTabButton tab="tab2" href="/">
+					<IonIcon icon={flagOutline} />
+					<IonLabel>Planos</IonLabel>
 				</IonTabButton>
-				<IonTabButton tab="tab3" href="/tabs/settings">
-					<IonIcon icon={cog} />
-					<IonLabel>Settings</IonLabel>
+				<IonTabButton tab="tab3" href="/">
+					<IonIcon icon={personOutline} />
+					<IonLabel>Perfil</IonLabel>
 				</IonTabButton>
 			</IonTabBar>
 		</IonTabs>

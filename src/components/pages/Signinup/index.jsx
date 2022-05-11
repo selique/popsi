@@ -26,7 +26,7 @@ const Signinup = () => {
 							qui blanditiis praesenti.
 						</IonText>
 					</div>
-					<div className="w-full bg-blue-100 grid grid-cols-2">
+					<div className="w-full bg-blue-100 grid grid-cols-2 rounded-2xl">
 						<Link to="/login">
 							<Button className="bg-black w-full bg-blue-200 text-white">
 								Entrar
