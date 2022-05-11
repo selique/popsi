@@ -1,3 +1,5 @@
+/* eslint-disable import-helpers/order-imports */
+/* eslint-disable @next/next/no-page-custom-font */
 import { defineCustomElements as ionDefineCustomElements } from '@ionic/core/loader'
 import Head from 'next/head'
 
@@ -6,7 +8,7 @@ import 'tailwindcss/tailwind.css'
 // core css require for ionic components to work properly
 import '@ionic/core/css/core.css'
 
-// basic css for apps build with ionic
+// basic css for apps build with ionics
 import '@ionic/core/css/normalize.css'
 import '@ionic/core/css/structure.css'
 import '@ionic/core/css/typography.css'

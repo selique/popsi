@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 
 import { IonPage, IonContent, IonText } from '@ionic/react'
+import Router from 'next/router'
 
 import Facebook from '../../../assets/Facebook'
 import Google from '../../../assets/Google'
@@ -22,15 +23,19 @@ const Login = () => {
 						<Input
 							label="Usuário ou e-mail"
 							placeholder="usuario@usuario.com"
+							type="email"
 						/>
 						<Input
 							label="Senha"
 							placeholder="*********"
-							classContent="mt-2 mb-8"
+							classContent="mt-3 mb-8"
+							type="password"
 						/>
-						<Button className="bg-purple-100">
-							<IonText className="text-white">Entrar</IonText>
-						</Button>
+						<Link to="/home">
+							<Button className="bg-purple-100">
+								<IonText className="text-white">Entrar</IonText>
+							</Button>
+						</Link>
 					</div>
 					<div className="flex justify-center items-center">
 						<div className="w-full h-[1px] bg-black mr-2" />
@@ -40,11 +45,13 @@ const Login = () => {
 					<div>
 						<Button className="bg-white shadow-md">
 							<Google />
-							<IonText className="ml-2">Google</IonText>
+							<IonText className="ml-2 text-lg">Google</IonText>
 						</Button>
 						<Button className="bg-blue-500 shadow-md mt-4">
 							<Facebook />
-							<IonText className="ml-2 text-white">Facebook</IonText>
+							<IonText className="ml-2 text-white text-lg">
+								Facebook
+							</IonText>
 						</Button>
 					</div>
 					<div className="flex justify-center">
