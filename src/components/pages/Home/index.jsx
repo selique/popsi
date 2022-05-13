@@ -6,14 +6,14 @@ import {
 	IonText,
 	IonSlides,
 	IonSlide,
-	IonButton,
 	IonModal,
-	IonBackdrop
+	IonTitle
 } from '@ionic/react'
 import Image from 'next/image'
 import styled from 'styled-components'
 
 import Letter from '../../../assets/icons/Letter'
+import Lines from '../../../assets/Lines'
 import Profile from '../../../assets/Profile.png'
 import Button from '../../ui/Button'
 import Card from '../../ui/Card'
@@ -25,6 +25,52 @@ const Slide = styled(IonSlides)`
 		padding: 15px 0;
 	}
 `
+
+const months = [
+	'Janeiro',
+	'Fevereiro',
+	'Março',
+	'Abril',
+	'Maio',
+	'Junho',
+	'Julho',
+	'Agosto',
+	'Setembro',
+	'Outubro',
+	'Novembro',
+	'Dezembro'
+]
+
+const dayOfMonths = [
+	{
+		day: '01',
+		dayWeek: 'Dom'
+	},
+	{
+		day: '02',
+		dayWeek: 'Seg'
+	},
+	{
+		day: '03',
+		dayWeek: 'Ter'
+	},
+	{
+		day: '04',
+		dayWeek: 'Qua'
+	},
+	{
+		day: '05',
+		dayWeek: 'Qui'
+	},
+	{
+		day: '06',
+		dayWeek: 'Sex'
+	},
+	{
+		day: '07',
+		dayWeek: 'Sab'
+	}
+]
 
 const Home = () => {
 	const [modalOpen, setModalOpen] = React.useState(false)
@@ -62,13 +108,13 @@ const Home = () => {
 							</IonText>
 						</ShortcutCard>
 					</IonSlide>
-					<IonSlide style={{ height: '100% !important' }}>
+					<IonSlide>
 						<ShortcutCard>
 							<Letter color="#7A7A7A" />
-							<IonText className="text-white font-bold mt-4 mb-2 text-gray-900">
+							<IonText className="font-bold mt-4 mb-2 text-gray-900">
 								Agenda
 							</IonText>
-							<IonText className="text-white text-left text-xsm text-gray-900">
+							<IonText className="text-left text-xsm text-gray-900">
 								Agende horarios de consultas.
 							</IonText>
 						</ShortcutCard>
@@ -76,10 +122,10 @@ const Home = () => {
 					<IonSlide>
 						<ShortcutCard>
 							<Letter color="#7A7A7A" />
-							<IonText className="text-white font-bold mt-4 mb-2 text-gray-900">
+							<IonText className="font-bold mt-4 mb-2 text-gray-900">
 								Agenda
 							</IonText>
-							<IonText className="text-white text-left text-xsm text-gray-900">
+							<IonText className="text-left text-xsm text-gray-900">
 								Agende horarios de consultas.
 							</IonText>
 						</ShortcutCard>
@@ -133,6 +179,70 @@ const Home = () => {
 					</Button>
 				</Card>
 			</IonContent>
+			<IonModal
+				isOpen={modalOpen}
+				onDidDismiss={() => setModalOpen(false)}
+				breakpoints={[0, 0.8, 1]}
+				initialBreakpoint={0.8}
+				backdropBreakpoint={0.2}
+			>
+				<IonContent className="ion-padding">
+					<div className="flex justify-center my-4">
+						<IonText className="text-black font-semibold text-center">
+							Agenda
+						</IonText>
+					</div>
+					<div className="relative rounded-2xl bg-purple-100">
+						<Lines color="#fff" className="w-full absolute" />
+						<div className="p-4">
+							<IonSlides>
+								{months.map(item => (
+									<IonSlide key={item}>
+										<IonText className="text-white font-semibold">
+											{item}
+										</IonText>
+									</IonSlide>
+								))}
+							</IonSlides>
+							<IonSlides
+								options={{
+									slidesPerView: 5,
+									spaceBetween: 5
+								}}
+								className="my-6"
+							>
+								{dayOfMonths.map(item => (
+									<IonSlide key={item.day}>
+										<div
+											className="rounded-lg p-3"
+											style={{ border: '1px solid white' }}
+										>
+											<div className="flex flex-col">
+												<IonText className="text-white font-light text-xsm">
+													{item.dayWeek}
+												</IonText>
+												<IonText className="text-white text-xl mt-2">
+													{item.day}
+												</IonText>
+											</div>
+										</div>
+									</IonSlide>
+								))}
+							</IonSlides>
+							<Button>
+								<IonText className="text-black text-semibold">
+									Novo agendamento
+								</IonText>
+							</Button>
+						</div>
+					</div>
+					<div className="mt-5">
+						<IonText className="text-black font-semibold">
+							Quarta, 27 de abril
+						</IonText>
+					</div>
+				</IonContent>
+			</IonModal>
 		</IonPage>
 	)
 }
