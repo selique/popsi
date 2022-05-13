@@ -6,6 +6,7 @@ import { IonReactRouter } from '@ionic/react-router'
 import Apresentation from '../components/pages/Apresentation'
 import Home from '../components/pages/Home'
 import Login from '../components/pages/Login'
+import Patients from '../components/pages/Patients'
 import Scheduling from '../components/pages/Scheduling'
 import Signinup from '../components/pages/Signinup'
 // import Tabs from './Tabs'
@@ -35,6 +36,11 @@ const AppShell = () => {
 						<Route
 							path="/scheduling"
 							component={() => <Scheduling />}
+							exact={true}
+						/>
+						<Route
+							path="/patients"
+							component={() => <Patients />}
 							exact={true}
 						/>
 					</IonRouterOutlet>

@@ -170,82 +170,97 @@ const Home = () => {
 							</div>
 						</div>
 					</div>
-					<Link href="/scheduling" passHref>
-						<Button className="bg-blue-200">
-							<IonText className="text-white font-semibold">
-								Ver agenda completa
-							</IonText>
-						</Button>
-					</Link>
+					<Button
+						className="bg-blue-200"
+						onClick={() => setModalOpen(true)}
+					>
+						<IonText className="text-white font-semibold">
+							Ver agenda completa
+						</IonText>
+					</Button>
 				</Card>
-			</IonContent>
-			<IonModal
-				isOpen={modalOpen}
-				onDidDismiss={() => setModalOpen(false)}
-				breakpoints={[0, 0.8, 1]}
-				initialBreakpoint={0.8}
-				backdropBreakpoint={0.2}
-			>
-				<IonContent className="ion-padding">
-					<div className="flex justify-center my-4">
-						<IonText className="text-black font-semibold text-center">
-							Agenda
+				<Link href="/patients" passHref>
+					<Button className="bg-blue-200">
+						<IonText className="text-white font-semibold">
+							Ver Pacientes
 						</IonText>
-					</div>
-					<div className="relative rounded-2xl bg-purple-100">
-						<Lines
-							color="#fff"
-							className="w-full absolute top-0 left-[-5%]"
-						/>
-						<div className="p-4">
-							<IonSlides>
-								{months.map(item => (
-									<IonSlide key={item}>
-										<IonText className="text-white font-semibold">
-											{item}
-										</IonText>
-									</IonSlide>
-								))}
-							</IonSlides>
-							<IonSlides
-								options={{
-									slidesPerView: 5,
-									spaceBetween: 5
-								}}
-								className="my-6"
-							>
-								{dayOfMonths.map(item => (
-									<IonSlide key={item.day}>
-										<div
-											className="rounded-lg p-3"
-											style={{ border: '1px solid white' }}
-										>
-											<div className="flex flex-col">
-												<IonText className="text-white font-light text-xsm">
-													{item.dayWeek}
-												</IonText>
-												<IonText className="text-white text-xl mt-2">
-													{item.day}
-												</IonText>
-											</div>
-										</div>
-									</IonSlide>
-								))}
-							</IonSlides>
-							<Button onClick={() => console.log('Clickou')}>
-								<IonText className="text-black text-semibold">
-									Novo agendamento
-								</IonText>
-							</Button>
+					</Button>
+				</Link>
+				<Link href="/patients" passHref>
+					<Button className="bg-blue-200">
+						<IonText className="text-white font-semibold">
+							Ver Pacientes
+						</IonText>
+					</Button>
+				</Link>
+				<IonModal
+					isOpen={modalOpen}
+					onDidDismiss={() => setModalOpen(false)}
+					breakpoints={[0, 0.8, 1]}
+					initialBreakpoint={0.8}
+					backdropBreakpoint={0.2}
+				>
+					<IonContent className="ion-padding">
+						<div className="flex justify-center my-4">
+							<IonText className="text-black font-semibold text-center">
+								Agenda
+							</IonText>
 						</div>
-					</div>
-					<div className="mt-5">
-						<IonText className="text-black font-semibold">
-							Quarta, 27 de abril
-						</IonText>
-					</div>
-				</IonContent>
-			</IonModal>
+						<div className="relative rounded-2xl bg-purple-100">
+							<Lines
+								color="#fff"
+								className="w-full absolute top-0 left-[-5%]"
+							/>
+							<div className="p-4">
+								<IonSlides>
+									{months.map(item => (
+										<IonSlide key={item}>
+											<IonText className="text-white font-semibold">
+												{item}
+											</IonText>
+										</IonSlide>
+									))}
+								</IonSlides>
+								<IonSlides
+									options={{
+										slidesPerView: 5,
+										spaceBetween: 5
+									}}
+									className="my-6"
+								>
+									{dayOfMonths.map(item => (
+										<IonSlide key={item.day}>
+											<div
+												className="rounded-lg p-3"
+												style={{ border: '1px solid white' }}
+											>
+												<div className="flex flex-col">
+													<IonText className="text-white font-light text-xsm">
+														{item.dayWeek}
+													</IonText>
+													<IonText className="text-white text-xl mt-2">
+														{item.day}
+													</IonText>
+												</div>
+											</div>
+										</IonSlide>
+									))}
+								</IonSlides>
+								<Button onClick={() => console.log('Clickou')}>
+									<IonText className="text-black text-semibold">
+										Novo agendamento
+									</IonText>
+								</Button>
+							</div>
+						</div>
+						<div className="mt-5">
+							<IonText className="text-black font-semibold">
+								Quarta, 27 de abril
+							</IonText>
+						</div>
+					</IonContent>
+				</IonModal>
+			</IonContent>
 		</IonPage>
 	)
 }

@@ -1,4 +1,12 @@
-const Input = ({ label, name, classContent, ...props }) => {
+const Input = ({
+	label,
+	name,
+	classContent,
+	background,
+	className,
+	icon,
+	...props
+}) => {
 	return (
 		<div className={`w-full flex flex-col ${classContent}`}>
 			<label
@@ -7,11 +15,16 @@ const Input = ({ label, name, classContent, ...props }) => {
 			>
 				{label}
 			</label>
-			<input
-				id={name}
-				className="rounded-xl py-4 px-3 border-none bg-gray-100 text-sm outline-none"
-				{...props}
-			/>
+			<div className="relative w-full">
+				<div className="absolute top-4 left-4">{icon}</div>
+				<input
+					id={name}
+					className={`rounded-xl w-full py-4 px-3 border-none ${
+						background ?? 'bg-gray-100'
+					}  text-sm outline-none ${icon && 'pl-12'} ${className}`}
+					{...props}
+				/>
+			</div>
 		</div>
 	)
 }
