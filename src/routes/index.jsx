@@ -4,9 +4,10 @@ import { IonApp, IonRouterOutlet, IonSplitPane } from '@ionic/react'
 import { IonReactRouter } from '@ionic/react-router'
 
 import Apresentation from '../components/pages/Apresentation'
+import Home from '../components/pages/Home'
 import Login from '../components/pages/Login'
 import Signinup from '../components/pages/Signinup'
-import Tabs from './Tabs'
+// import Tabs from './Tabs'
 
 const AppShell = () => {
 	return (
@@ -29,7 +30,7 @@ const AppShell = () => {
 							component={() => <Login />}
 							exact={true}
 						/>
-						<Route path="/home" component={() => <Tabs />} exact={true} />
+						<Route path="/home" component={() => <Home />} exact={true} />
 					</IonRouterOutlet>
 				</IonSplitPane>
 			</IonReactRouter>

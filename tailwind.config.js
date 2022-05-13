@@ -18,6 +18,10 @@ module.exports = {
 				'6xl': '40px'
 			},
 			colors: {
+				white: {
+					DEFAULT: '#ffffff',
+					100: '#f4f4f4'
+				},
 				blue: {
 					100: '#D8EAF6',
 					200: '#87C6EB',
@@ -30,7 +34,8 @@ module.exports = {
 					300: '#3F3F3F'
 				},
 				gray: {
-					100: '#EAEAEA'
+					100: '#EAEAEA',
+					900: '#7A7A7A'
 				},
 				purple: {
 					DEFAULT: '#c700ff',

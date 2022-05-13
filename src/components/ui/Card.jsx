@@ -1,10 +1,6 @@
-import classNames from 'classnames'
-
 const Card = ({ children, className, ...props }) => (
-	<div {...props} className={classNames('max-w-xl', className)}>
-		<div className="bg-white shadow-md rounded-b-xl dark:bg-black">
-			{children}
-		</div>
+	<div className={`w-full ${className}`} {...props}>
+		<div className="bg-white shadow-md rounded-xl p-4">{children}</div>
 	</div>
 )
 
