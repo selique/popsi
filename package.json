@@ -2,7 +2,7 @@
   "name": "popsi",
   "version": "0.1.0",
   "private": true,
-  "author": "Moisés Lopes Ferreira <moises.ferreira@planyourlife.tech> (@selique)",
+  "author": "selique.tech",
   "engines": {
     "node": ">=16"
   },
