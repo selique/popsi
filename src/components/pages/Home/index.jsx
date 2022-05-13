@@ -10,6 +10,7 @@ import {
 	IonTitle
 } from '@ionic/react'
 import Image from 'next/image'
+import Link from 'next/link'
 import styled from 'styled-components'
 
 import Letter from '../../../assets/icons/Letter'
@@ -169,14 +170,13 @@ const Home = () => {
 							</div>
 						</div>
 					</div>
-					<Button
-						className="bg-blue-200"
-						onClick={() => setModalOpen(true)}
-					>
-						<IonText className="text-white font-semibold">
-							Ver agenda completa
-						</IonText>
-					</Button>
+					<Link href="/scheduling" passHref>
+						<Button className="bg-blue-200">
+							<IonText className="text-white font-semibold">
+								Ver agenda completa
+							</IonText>
+						</Button>
+					</Link>
 				</Card>
 			</IonContent>
 			<IonModal
@@ -193,7 +193,10 @@ const Home = () => {
 						</IonText>
 					</div>
 					<div className="relative rounded-2xl bg-purple-100">
-						<Lines color="#fff" className="w-full absolute" />
+						<Lines
+							color="#fff"
+							className="w-full absolute top-0 left-[-5%]"
+						/>
 						<div className="p-4">
 							<IonSlides>
 								{months.map(item => (
@@ -229,7 +232,7 @@ const Home = () => {
 									</IonSlide>
 								))}
 							</IonSlides>
-							<Button>
+							<Button onClick={() => console.log('Clickou')}>
 								<IonText className="text-black text-semibold">
 									Novo agendamento
 								</IonText>
