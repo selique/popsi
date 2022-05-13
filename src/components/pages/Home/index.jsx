@@ -186,11 +186,9 @@ const Home = () => {
 						</IonText>
 					</Button>
 				</Link>
-				<Link href="/patients" passHref>
+				<Link href="/profile" passHref>
 					<Button className="bg-blue-200">
-						<IonText className="text-white font-semibold">
-							Ver Pacientes
-						</IonText>
+						<IonText className="text-white font-semibold">Perfil</IonText>
 					</Button>
 				</Link>
 				<IonModal

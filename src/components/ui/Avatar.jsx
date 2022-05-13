@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-const Avatar = styled.div`
+const AvatarStyled = styled.div`
 	width: ${({ width }) => width || '80px'};
 	height: ${({ height }) => height || '80px'};
 	${({ background }) =>
@@ -20,5 +20,7 @@ const Avatar = styled.div`
 	align-items: center;
 	box-shadow: 0 4px 8px #00000022;
 `
+
+const Avatar = ({ ...props }) => <AvatarStyled {...props} />
 
 export default Avatar

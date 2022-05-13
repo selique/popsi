@@ -7,6 +7,7 @@ import Apresentation from '../components/pages/Apresentation'
 import Home from '../components/pages/Home'
 import Login from '../components/pages/Login'
 import Patients from '../components/pages/Patients'
+import Profile from '../components/pages/Profile'
 import Scheduling from '../components/pages/Scheduling'
 import Signinup from '../components/pages/Signinup'
 // import Tabs from './Tabs'
@@ -41,6 +42,11 @@ const AppShell = () => {
 						<Route
 							path="/patients"
 							component={() => <Patients />}
+							exact={true}
+						/>
+						<Route
+							path="/profile"
+							component={() => <Profile />}
 							exact={true}
 						/>
 					</IonRouterOutlet>
