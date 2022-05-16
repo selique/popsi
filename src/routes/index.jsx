@@ -4,6 +4,7 @@ import { IonApp, IonRouterOutlet, IonSplitPane } from '@ionic/react'
 import { IonReactRouter } from '@ionic/react-router'
 
 import Apresentation from '../components/pages/Apresentation'
+import Form from '../components/pages/Form'
 import Home from '../components/pages/Home'
 import Login from '../components/pages/Login'
 import Patients from '../components/pages/Patients'
@@ -51,6 +52,7 @@ const AppShell = () => {
 							exact={true}
 						/>
 						<Route path="/quiz" component={() => <Quiz />} exact={true} />
+						<Route path="/form" component={() => <Form />} exact={true} />
 					</IonRouterOutlet>
 				</IonSplitPane>
 			</IonReactRouter>

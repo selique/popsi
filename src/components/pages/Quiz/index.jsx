@@ -119,7 +119,7 @@ const Quiz = () => {
 					))}
 				</div>
 				<IonFab vertical="bottom" horizontal="end" slot="fixed">
-					<IonFabButton href="/quiz/create">
+					<IonFabButton href="/form">
 						<IonIcon icon={addOutline} color="#fff" />
 					</IonFabButton>
 				</IonFab>
