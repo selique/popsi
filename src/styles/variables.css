@@ -247,3 +247,12 @@ ion-tab-bar {
 ion-fab-button {
 	--background: #ac8fbf;
 }
+
+ion-item {
+	background: #ffffff;
+}
+
+ion-checkbox {
+	--background: #ffffff;
+	--border-radius: 5px;
+}
