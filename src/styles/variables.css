@@ -195,7 +195,7 @@ http://ionicframework.com/docs/theming/ */
   */
 
 	.md body {
-		--ion-background-color: #fafafa;
+		--ion-background-color: #f4f4f4;
 		--ion-background-color-rgb: 18, 18, 18;
 
 		--ion-text-color: #5e5a5a;
@@ -242,4 +242,8 @@ ion-text {
 ion-tab-bar {
 	--background: #ffffff;
 	--border: 0;
+}
+
+ion-fab-button {
+	--background: #ac8fbf;
 }

@@ -39,7 +39,10 @@ module.exports = {
 				},
 				purple: {
 					DEFAULT: '#c700ff',
-					100: '#AC8FBF'
+					100: '#AC8FBF',
+					opacity: {
+						100: '#7B61FF4D'
+					}
 				}
 			}
 		}
