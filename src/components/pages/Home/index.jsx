@@ -205,6 +205,13 @@ const Home = () => {
 						</IonText>
 					</Button>
 				</Link>
+				<Link href="/professional-profile" passHref>
+					<Button className="bg-blue-200">
+						<IonText className="text-white font-semibold">
+							Perfil do profissional
+						</IonText>
+					</Button>
+				</Link>
 				<IonModal
 					isOpen={modalOpen}
 					onDidDismiss={() => setModalOpen(false)}
