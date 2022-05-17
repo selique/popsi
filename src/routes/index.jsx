@@ -7,6 +7,7 @@ import Apresentation from '../components/pages/Apresentation'
 import Form from '../components/pages/Form'
 import Home from '../components/pages/Home'
 import Login from '../components/pages/Login'
+import Notification from '../components/pages/Notification'
 import Patients from '../components/pages/Patients'
 import Profile from '../components/pages/Profile'
 import Quiz from '../components/pages/Quiz'
@@ -53,6 +54,11 @@ const AppShell = () => {
 						/>
 						<Route path="/quiz" component={() => <Quiz />} exact={true} />
 						<Route path="/form" component={() => <Form />} exact={true} />
+						<Route
+							path="/notification"
+							component={() => <Notification />}
+							exact={true}
+						/>
 					</IonRouterOutlet>
 				</IonSplitPane>
 			</IonReactRouter>
