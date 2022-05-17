@@ -198,6 +198,13 @@ const Home = () => {
 						</IonText>
 					</Button>
 				</Link>
+				<Link href="/notification" passHref>
+					<Button className="bg-blue-200">
+						<IonText className="text-white font-semibold">
+							Notificações
+						</IonText>
+					</Button>
+				</Link>
 				<IonModal
 					isOpen={modalOpen}
 					onDidDismiss={() => setModalOpen(false)}
