@@ -1,8 +1,8 @@
 {
-	"appId": "com.planyourlife.app",
-	"appName": "Plan Your Life",
+	"appId": "com.popsii.app",
+	"appName": "Popsii",
 	"bundledWebRuntime": false,
-	"npmClient": "npm",
+	"npmClient": "yarn",
 	"webDir": "build",
 	"plugins": {
 		"SplashScreen": {

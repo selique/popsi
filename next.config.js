@@ -1,15 +1,15 @@
+const withTM = require('next-transpile-modules')([
+	'@ionic/react',
+	'@ionic/core',
+	'@stencil/core',
+	'ionicons'
+])
 const path = require('path')
 const CopyPlugin = require('copy-webpack-plugin')
 
-const nextConfig = {
+/** @type {import('next').NextConfig} */
+module.exports = withTM({
 	reactStrictMode: true,
-	basePath: '',
-	images: {
-		domains: ['images.unsplash.com']
-	}
-}
-
-module.exports = {
 	webpack: config => {
 		config.plugins.push(
 			new CopyPlugin({
@@ -25,6 +25,5 @@ module.exports = {
 			})
 		)
 		return config
-	},
-	nextConfig
-}
+	}
+})

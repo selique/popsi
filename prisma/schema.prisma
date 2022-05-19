@@ -1,0 +1,67 @@
+datasource db {
+   provider = "postgresql"
+   url      = env("DATABASE_URL")
+}
+
+generator client {
+   provider = "prisma-client-js"
+}
+
+model User {
+   userId    String   @id @unique @default(uuid())
+   createdAt DateTime @default(now())
+   firstName String
+   lastName  String
+   role      Role?    @default(PATIENT)
+   email     String   @unique
+   avatar    String?
+   Survey    Survey[]
+
+   @@map("users")
+}
+
+enum Role {
+   PATIENT
+   MEDIC
+
+   @@map("roles")
+}
+
+model Survey {
+   idSurvey  String     @id @unique @default(uuid())
+   createdAt DateTime   @default(now())
+   question  Question[]
+   user      User       @relation(fields: [idSurvey], references: [userId])
+
+   @@map("surveys")
+}
+
+model Question {
+   idQuestion          String   @id @unique @default(uuid())
+   createdAt           DateTime @default(now())
+   questionDescription String?
+   Answer              Answer[]
+   template_questions  Survey?  @relation(fields: [idQuestion], references: [idSurvey])
+
+   @@map("questions")
+}
+
+model Answer {
+   idAnswer   String     @id @unique @default(uuid())
+   createdAt  DateTime   @default(now())
+   question   Question   @relation(fields: [idAnswer], references: [idQuestion])
+   questionId String
+   AnswerType AnswerType
+   answer     String
+
+   @@map("answers")
+}
+
+enum AnswerType {
+   TEXT
+   BOOLEAN
+   MULTIPLE_CHOICE
+   SCALE
+
+   @@map("answer_types")
+}
