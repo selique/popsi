@@ -6,9 +6,9 @@ import {
 	IonText,
 	IonSlides,
 	IonSlide,
-	IonModal,
-	IonTitle
+	IonModal
 } from '@ionic/react'
+import Image from 'next/image'
 import Link from 'next/link'
 import styled from 'styled-components'
 
@@ -94,7 +94,7 @@ export default function Home() {
 							Drª Adriana
 						</IonText>
 					</div>
-					<img src={Profile} alt="Foto de perfil" />
+					<Image src={Profile} alt="Foto de perfil" />
 				</div>
 				<Slide options={slideOpts} className="mt-4 mb-3">
 					<IonSlide className="h-full">
@@ -142,7 +142,7 @@ export default function Home() {
 					</div>
 					<div className="my-4">
 						<div className="flex items-center">
-							<img src={Profile} alt="Foto de perfil" />
+							<Image src={Profile} alt="Foto de perfil" />
 							<div className="flex flex-col ml-3">
 								<IonText>Ana Lisa</IonText>
 								<IonText className="font-light text-sm">
@@ -151,7 +151,7 @@ export default function Home() {
 							</div>
 						</div>
 						<div className="flex items-center my-3">
-							<img src={Profile} alt="Foto de perfil" />
+							<Image src={Profile} alt="Foto de perfil" />
 							<div className="flex flex-col ml-3">
 								<IonText>Ana Lisa</IonText>
 								<IonText className="font-light text-sm">
@@ -160,7 +160,7 @@ export default function Home() {
 							</div>
 						</div>
 						<div className="flex items-center">
-							<img src={Profile} alt="Foto de perfil" />
+							<Image src={Profile} alt="Foto de perfil" />
 							<div className="flex flex-col ml-3">
 								<IonText>Ana Lisa</IonText>
 								<IonText className="font-light text-sm">
