@@ -29,7 +29,7 @@ const SignIn = () => {
 							classContent="mt-3 mb-8"
 							type="password"
 						/>
-						<Link passHref href="/home">
+						<Link passHref href="/app">
 							<Button className="bg-purple-100">
 								<IonText className="text-white">Entrar</IonText>
 							</Button>
