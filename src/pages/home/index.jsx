@@ -9,7 +9,6 @@ import {
 	IonModal
 } from '@ionic/react'
 import Image from 'next/image'
-import Link from 'next/link'
 import styled from 'styled-components'
 
 import Letter from '../../assets/icons/Letter'
@@ -17,6 +16,7 @@ import Lines from '../../assets/Lines'
 import Profile from '../../assets/profile.png'
 import Button from '../../components/ui/Button'
 import Card from '../../components/ui/Card'
+import Graph from '../../components/ui/Graph'
 import ShortcutCard from '../../components/ui/ShortcutCard'
 
 const Slide = styled(IonSlides)`
@@ -74,6 +74,21 @@ const dayOfMonths = [
 
 export default function Home() {
 	const [modalOpen, setModalOpen] = React.useState(false)
+
+	const configGraph = {
+		labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+		datasets: [
+			{
+				label: '# of Votes',
+				data: [12, 19, 3, 5, 2, 3],
+				backgroundColor: '#C437EC66',
+				borderColor: '#C437EC',
+				borderWidth: 3,
+				tension: 0.4,
+				fill: 1
+			}
+		]
+	}
 
 	const slideOpts = {
 		slidesPerView: 2.6,
@@ -178,39 +193,16 @@ export default function Home() {
 						</IonText>
 					</Button>
 				</Card>
-				<Link passHref href="/patients">
-					<Button className="bg-blue-200">
-						<IonText className="text-white font-semibold">
-							Ver Pacientes
+				<Card className="mt-4">
+					<div className="flex flex-col mb-3">
+						<IonText className="text-xsm text-gray-900 text-light">
+							Resumo semanal
 						</IonText>
-					</Button>
-				</Link>
-				<Link passHref href="/profile">
-					<Button className="bg-blue-200">
-						<IonText className="text-white font-semibold">Perfil</IonText>
-					</Button>
-				</Link>
-				<Link passHref href="/quiz">
-					<Button className="bg-blue-200">
-						<IonText className="text-white font-semibold">
-							Questionario
-						</IonText>
-					</Button>
-				</Link>
-				<Link passHref href="/notification">
-					<Button className="bg-blue-200">
-						<IonText className="text-white font-semibold">
-							Notificações
-						</IonText>
-					</Button>
-				</Link>
-				<Link passHref href="/professional-profile">
-					<Button className="bg-blue-200">
-						<IonText className="text-white font-semibold">
-							Perfil do profissional
-						</IonText>
-					</Button>
-				</Link>
+						<IonText className="text-medium">Hoje, 02 de maio</IonText>
+					</div>
+					<Graph data={configGraph} />
+				</Card>
+				{/* MODAL */}
 				<IonModal
 					isOpen={modalOpen}
 					onDidDismiss={() => setModalOpen(false)}
@@ -233,7 +225,7 @@ export default function Home() {
 								<IonSlides>
 									{months.map(item => (
 										<IonSlide key={item}>
-											<IonText className="text-white font-semibold">
+											<IonText className="text-white font-semibold mb-4">
 												{item}
 											</IonText>
 										</IonSlide>
@@ -244,7 +236,6 @@ export default function Home() {
 										slidesPerView: 5,
 										spaceBetween: 5
 									}}
-									className="my-6"
 								>
 									{dayOfMonths.map(item => (
 										<IonSlide key={item.day}>
@@ -264,7 +255,10 @@ export default function Home() {
 										</IonSlide>
 									))}
 								</IonSlides>
-								<Button onClick={() => console.log('Clickou')}>
+								<Button
+									onClick={() => console.log('Clickou')}
+									className="mt-4"
+								>
 									<IonText className="text-black text-semibold">
 										Novo agendamento
 									</IonText>
