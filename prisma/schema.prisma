@@ -1,0 +1,99 @@
+datasource db {
+   provider = "postgresql"
+   url      = env("DATABASE_URL")
+}
+
+generator client {
+   provider = "prisma-client-js"
+}
+
+model Profile {
+   id String @id @unique @default(uuid())
+
+   // Profile data mutable
+   full_name  String?
+   avatar_url String?
+   bio        String?
+   role       Role?   @default(PATIENT)
+
+   // Relation: Surveys
+   surveys Surveys[]
+
+   // Timestamp
+   created_at DateTime  @default(now())
+   updated_at DateTime?
+   @@map("profiles")
+}
+
+enum Role {
+   PATIENT
+   MEDIC
+
+   @@map("roles")
+}
+
+model Surveys {
+   id String @id @unique @default(uuid())
+
+   // Survey data
+   title       String
+   description String
+   question    Question[]
+
+   // Relation: Profiles
+   Profile   Profile? @relation(fields: [profileId], references: [id])
+   profileId String?
+
+   // Timestamp
+   created_at DateTime  @default(now())
+   updated_at DateTime?
+
+
+   @@map("surveys")
+}
+
+model Question {
+   id String @id @unique @default(uuid())
+
+   // Question data
+   title       String
+   description String?
+   type        QuestionTypes @default(TEXT)
+   Answer      Answer[]
+
+   // Relation: Surveys
+   Surveys   Surveys? @relation(fields: [surveysId], references: [id])
+   surveysId String?
+
+   // Timestamp
+   created_at DateTime  @default(now())
+   updated_at DateTime?
+
+   @@map("questions")
+}
+
+enum QuestionTypes {
+   TEXT
+   BOOLEAN
+   MULTIPLE_CHOICE
+   SCALE
+
+   @@map("answer_types")
+}
+
+model Answer {
+   id String @id @unique @default(uuid())
+
+   // Answer data
+   answer String
+
+   // Relation: Question
+   question Question @relation(fields: [answerId], references: [id])
+   answerId String
+
+   // Timestamp
+   created_at DateTime  @default(now())
+   updated_at DateTime?
+
+   @@map("answers")
+}

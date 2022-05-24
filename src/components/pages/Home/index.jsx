@@ -15,7 +15,7 @@ import styled from 'styled-components'
 
 import Letter from '../../../assets/icons/Letter'
 import Lines from '../../../assets/Lines'
-import Profile from '../../../assets/Profile.png'
+import Profile from '../../../assets/profile.png'
 import Button from '../../ui/Button'
 import Card from '../../ui/Card'
 import ShortcutCard from '../../ui/ShortcutCard'

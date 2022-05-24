@@ -11,5 +11,8 @@
   },
   "cordova": {
     "preferences": {}
+  },
+  "server": {
+    "url": "http://192.168.2.11:3000"
   }
 }

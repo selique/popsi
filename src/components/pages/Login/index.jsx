@@ -1,15 +1,44 @@
+import * as React from 'react'
 import { Link } from 'react-router-dom'
 
-import { IonPage, IonContent, IonText } from '@ionic/react'
-import Router from 'next/router'
+import {
+	IonPage,
+	IonContent,
+	IonText,
+	useIonLoading,
+	useIonToast
+} from '@ionic/react'
 
 import Facebook from '../../../assets/Facebook'
 import Google from '../../../assets/Google'
 import Lines from '../../../assets/Lines'
+import { supabase } from '../../../utils/supabaseClient'
 import Button from '../../ui/Button'
 import Input from '../../ui/Input'
 
 const Login = () => {
+	const [email, setEmail] = React.useState('')
+	const [password, setPassword] = React.useState('')
+
+	const [showLoading, hideLoading] = useIonLoading()
+	const [showToast] = useIonToast()
+	const handleLogin = async event => {
+		console.log()
+		event.preventDefault()
+		await showLoading()
+		try {
+			await supabase.auth.signIn({ email })
+			await showToast({ message: 'Check your email for the login link!' })
+		} catch (e) {
+			await showToast({
+				message: e.error_description || e.message,
+				duration: 5000
+			})
+		} finally {
+			await hideLoading()
+		}
+	}
+
 	return (
 		<IonPage>
 			<IonContent fullscreen>
@@ -19,24 +48,26 @@ const Login = () => {
 					<IonText className="text-6xl font-bold text-black-200">
 						Bem vindo de volta!
 					</IonText>
-					<div>
+					<form onSubmit={handleLogin}>
 						<Input
 							label="Usuário ou e-mail"
 							placeholder="usuario@usuario.com"
 							type="email"
+							value={email}
+							onChange={e => setEmail(e.target.value)}
 						/>
 						<Input
 							label="Senha"
 							placeholder="*********"
 							classContent="mt-3 mb-8"
 							type="password"
+							value={password}
+							onChange={e => setPassword(e.target.value)}
 						/>
-						<Link to="/home">
-							<Button className="bg-purple-100">
-								<IonText className="text-white">Entrar</IonText>
-							</Button>
-						</Link>
-					</div>
+						<Button className="bg-purple-100" type="submit">
+							<IonText className="text-white">Entrar</IonText>
+						</Button>
+					</form>
 					<div className="flex justify-center items-center">
 						<div className="w-full h-[1px] bg-black mr-2" />
 						<IonText>ou</IonText>

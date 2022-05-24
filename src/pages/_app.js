@@ -1,3 +1,5 @@
+import React from 'react'
+
 /* eslint-disable import-helpers/order-imports */
 /* eslint-disable @next/next/no-page-custom-font */
 import { defineCustomElements as ionDefineCustomElements } from '@ionic/core/loader'
@@ -23,13 +25,13 @@ import '@ionic/core/css/display.css'
 
 import '../styles/global.css'
 import '../styles/variables.css'
-import React from 'react'
+import { AuthProvider } from '../contexts/Auth'
 
 function MyApp({ Component, pageProps }) {
 	React.useEffect(() => ionDefineCustomElements(window))
 
 	return (
-		<>
+		<AuthProvider>
 			<Head>
 				<meta
 					name="viewport"
@@ -47,7 +49,7 @@ function MyApp({ Component, pageProps }) {
 				/>
 			</Head>
 			<Component {...pageProps} />
-		</>
+		</AuthProvider>
 	)
 }
 
