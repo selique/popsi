@@ -12,11 +12,12 @@ import {
 import Facebook from '../../../assets/Facebook'
 import Google from '../../../assets/Google'
 import Lines from '../../../assets/Lines'
-import { supabase } from '../../../utils/supabaseClient'
+import { useAuth } from '../../../contexts/Auth'
 import Button from '../../ui/Button'
 import Input from '../../ui/Input'
 
 const Login = () => {
+	const { signIn } = useAuth()
 	const [email, setEmail] = React.useState('')
 	const [password, setPassword] = React.useState('')
 
@@ -26,7 +27,7 @@ const Login = () => {
 		event.preventDefault()
 		await showLoading()
 		try {
-			await supabase.auth.signIn({ email })
+			await signIn({ email })
 			await showToast({ message: 'Check your email for the login link!' })
 		} catch (e) {
 			await showToast({

@@ -9,7 +9,6 @@ import {
 	IonLabel
 } from '@ionic/react'
 import {
-	cog,
 	flash,
 	list,
 	personOutline,
