@@ -11,10 +11,15 @@ model Profile {
    id String @id @unique @default(uuid())
 
    // Profile data mutable
-   full_name  String?
-   avatar_url String?
-   bio        String?
-   role       Role?   @default(PATIENT)
+   full_name        String
+   avatar_url       String?
+   bio              String?
+   nickname         String?
+   matrial_status   String?
+   gender           String
+   gender_indentity String?
+   age              Int
+   role             Role?   @default(PATIENT)
 
    // Relation: Surveys
    surveys Surveys[]

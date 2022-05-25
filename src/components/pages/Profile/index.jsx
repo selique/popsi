@@ -8,9 +8,61 @@ const imageTemp =
 	'https://i0.wp.com/www.kailagarcia.com/wp-content/uploads/2019/05/46846414_205184383758304_7255555943408505199_n.jpg?fit=1080%2C1350&ssl=1'
 
 const Profile = () => {
+	const [showLoading, hideLoading] = useIonLoading()
+	const [showToast] = useIonToast()
+	const [session] = useState(() => supabase.auth.session())
+	const router = useIonRouter()
+	const [profile, setProfile] = useState({
+		full_name: '',
+		bio: '',
+		avatar_url: '',
+		age: '',
+		matrial_status: '',
+		gender_indentity: ''
+	})
+	const getProfile = async () => {
+		console.log('get')
+		await showLoading()
+		try {
+			const user = supabase.auth.user()
+			let { data, error, status } = await supabase
+				.from('profiles')
+				.select(
+					`full_name, bio, avatar_url, age, matrial_status, gender_indentity`
+				)
+				.eq('id', user.id)
+				.single()
+
+			if (error && status !== 406) {
+				throw error
+			}
+
+			if (data) {
+				setProfile({
+					full_name: data.full_name,
+					bio: data.bio,
+					avatar_url: data.avatar_url,
+					age: data.age,
+					matrial_status: data.matrial_status,
+					gender_indentity: data.gender_indentity
+				})
+			}
+		} catch (error) {
+			showToast({ message: error.message, duration: 5000 })
+		} finally {
+			await hideLoading()
+		}
+	}
+
+	useEffect(() => {
+		getProfile()
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [session])
+
 	return (
 		<IonPage>
-			<IonContent>
+			<IonContent className="ion-padding" fullscreen>
 				<div className="relative">
 					<div
 						className="absolute top-4 left-4 text-white text-2xl"
@@ -23,7 +75,8 @@ const Profile = () => {
 						<Avatar
 							width={'100px'}
 							height={'100px'}
-							background={imageTemp}
+							url={profile.avatar_url}
+							onUpload={updateProfile}
 							style={{ outline: '20px solid #fafafa', border: 0 }}
 						/>
 					</div>
@@ -31,22 +84,22 @@ const Profile = () => {
 				<div className="mt-[7vh] ion-padding">
 					<div className="flex flex-col items-center">
 						<IonText className="w-full font-bold text-black text-lg text-center">
-							Cintia S. Amaro
+							{profile.full_name}
 						</IonText>
 						<IonText className="text-gray-900 mt-4 text-sm text-center">
-							But I must explain to you how all this mistaken idea of
-							denouncing pleasure and praising pain was born this
-							mistaken idea of denouncing pleasure
+							{profile.bio}
 						</IonText>
 					</div>
 					<div>
 						<ul className="pl-4 text-gray-900">
-							<li className="text-gray-900 text-sm">Idade: 36 anos</li>
 							<li className="text-gray-900 text-sm">
-								Estado Civil: Solteira
+								Idade: {profile.age} anos
 							</li>
 							<li className="text-gray-900 text-sm">
-								Se identifica: Heterosexual
+								Estado Civil: {profile.matrial_status}
+							</li>
+							<li className="text-gray-900 text-sm">
+								Se identifica: {profile.gender_indentity}
 							</li>
 						</ul>
 					</div>
