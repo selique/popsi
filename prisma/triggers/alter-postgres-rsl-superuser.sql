@@ -6,6 +6,7 @@ ALTER table profiles enable row level security;
 ALTER table answers enable row level security;
 ALTER table questions enable row level security;
 ALTER table surveys enable row level security;
+ALTER table _prisma_migrations enable row level security;
 
 create policy "Profiles are viewable by users who created them."
   on profiles for select
