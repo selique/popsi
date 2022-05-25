@@ -17,7 +17,7 @@ const imageTemp =
 const Patients = () => {
 	return (
 		<IonPage>
-			<IonContent className="ion-padding bg-black">
+			<IonContent className="ion-padding bg-black" fullscreen>
 				<div className="flex justify-center">
 					<IonText className="text-black font-semibold">
 						Meus paciêntes
@@ -54,7 +54,7 @@ const Patients = () => {
 					{[...Array(10)].map((_, index) => (
 						<div
 							key={index}
-							className="my-8 grid grid-cols-[auto_1fr_auto] items-center gap-3"
+							className="my-8 grid grid-cols-3 items-center"
 						>
 							<Avatar background={imageTemp} />
 							<div className="flex flex-col">

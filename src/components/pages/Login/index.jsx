@@ -40,8 +40,8 @@ const Login = () => {
 
 	return (
 		<IonPage>
-			<IonContent fullscreen>
-				<div className="relative w-full h-full p-8 flex flex-col justify-between overflow-hidden">
+			<IonContent className="ion-padding" fullscreen>
+				<div className="relative w-full h-full flex flex-col justify-between overflow-hidden">
 					<Lines className="absolute top-0 right-[28%] rotate-[100deg] z-[-1] w-full" />
 					<div />
 					<IonText className="text-6xl font-bold text-black-200">

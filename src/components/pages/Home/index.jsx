@@ -178,39 +178,6 @@ const Home = () => {
 						</IonText>
 					</Button>
 				</Card>
-				<Link href="/patients" passHref>
-					<Button className="bg-blue-200">
-						<IonText className="text-white font-semibold">
-							Ver Pacientes
-						</IonText>
-					</Button>
-				</Link>
-				<Link href="/profile" passHref>
-					<Button className="bg-blue-200">
-						<IonText className="text-white font-semibold">Perfil</IonText>
-					</Button>
-				</Link>
-				<Link href="/quiz" passHref>
-					<Button className="bg-blue-200">
-						<IonText className="text-white font-semibold">
-							Questionario
-						</IonText>
-					</Button>
-				</Link>
-				<Link href="/notification" passHref>
-					<Button className="bg-blue-200">
-						<IonText className="text-white font-semibold">
-							Notificações
-						</IonText>
-					</Button>
-				</Link>
-				<Link href="/professional-profile" passHref>
-					<Button className="bg-blue-200">
-						<IonText className="text-white font-semibold">
-							Perfil do profissional
-						</IonText>
-					</Button>
-				</Link>
 				<IonModal
 					isOpen={modalOpen}
 					onDidDismiss={() => setModalOpen(false)}

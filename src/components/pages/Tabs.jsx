@@ -8,36 +8,62 @@ import {
 	IonIcon,
 	IonLabel
 } from '@ionic/react'
-import { IonReactRouter } from '@ionic/react-router'
-import { cog, flash, list } from 'ionicons/icons'
+import {
+	cog,
+	flash,
+	list,
+	personOutline,
+	notificationsOutline,
+	fileTrayOutline
+} from 'ionicons/icons'
 
+import Form from './Form'
 import Home from './Home'
 import Notification from './Notification'
+import Patients from './Patients'
+import Profile from './Profile'
+import Quiz from './Quiz'
 
 const Tabs = () => {
 	return (
 		<IonTabs>
 			<IonRouterOutlet>
-				<Route path="/tabs/feed" component={Home} exact={true} />
-				<Route path="/tabs/lists" component={Notification} exact={true} />
+				<Route path="/app/home" component={Home} exact={true} />
+				<Route path="/app/patients" component={Patients} exact={true} />
+				<Route path="/app/quiz" component={Quiz} exact={true} />
 				<Route
-					path="/tabs"
-					render={() => <Redirect to="/tabs/feed" />}
+					path="/app/notification"
+					component={Notification}
+					exact={true}
+				/>
+				<Route path="/app/profile" component={Profile} exact={true} />
+				<Route path="/app/form" component={Form} exact={true} />
+				<Route
+					path="/app"
+					render={() => <Redirect to="/app/home" />}
 					exact={true}
 				/>
 			</IonRouterOutlet>
 			<IonTabBar slot="bottom">
-				<IonTabButton tab="tab1" href="/tabs/feed">
+				<IonTabButton tab="tab1" href="/app/home">
 					<IonIcon icon={flash} />
-					<IonLabel>Feed</IonLabel>
+					<IonLabel>Home</IonLabel>
 				</IonTabButton>
-				<IonTabButton tab="tab2" href="/tabs/lists">
+				<IonTabButton tab="tab2" href="/app/patients">
 					<IonIcon icon={list} />
-					<IonLabel>Lists</IonLabel>
+					<IonLabel>Pacients</IonLabel>
 				</IonTabButton>
-				<IonTabButton tab="tab3" href="/tabs/settings">
-					<IonIcon icon={cog} />
-					<IonLabel>Settings</IonLabel>
+				<IonTabButton tab="tab3" href="/app/quiz">
+					<IonIcon icon={fileTrayOutline} />
+					<IonLabel>Questionário</IonLabel>
+				</IonTabButton>
+				<IonTabButton tab="tab4" href="/app/notification">
+					<IonIcon icon={notificationsOutline} />
+					<IonLabel>Notificação</IonLabel>
+				</IonTabButton>
+				<IonTabButton tab="tab5" href="/app/profile">
+					<IonIcon icon={personOutline} />
+					<IonLabel>Perfil</IonLabel>
 				</IonTabButton>
 			</IonTabBar>
 		</IonTabs>

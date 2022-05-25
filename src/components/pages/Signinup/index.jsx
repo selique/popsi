@@ -9,8 +9,8 @@ import Button from '../../ui/Button'
 const Signinup = () => {
 	return (
 		<IonPage>
-			<IonContent fullscreen>
-				<div className="relative w-full h-full p-8 flex flex-col justify-between items-center overflow-hidden">
+			<IonContent className="ion-padding" fullscreen>
+				<div className="relative w-full h-full flex flex-col justify-between items-center overflow-hidden">
 					<Lines className="absolute top-0 right-[28%] rotate-[100deg] z-[-1] w-full" />
 					<div />
 					<div className="flex flex-col items-center w-full">

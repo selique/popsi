@@ -18,10 +18,13 @@ import Input from '../../ui/Input'
 const Form = () => {
 	return (
 		<IonPage>
-			<IonContent>
+			<IonContent fullscreen>
 				<div className="bg-purple-100 p-4">
 					<div className="flex justify-between items-center">
-						<IonBackButton defaultHref="/quiz" className="text-white" />
+						<IonBackButton
+							defaultHref="/app/quiz"
+							className="text-white"
+						/>
 						<div className="flex text-2xl text-white">
 							<IonIcon
 								src={shareSocialOutline}
