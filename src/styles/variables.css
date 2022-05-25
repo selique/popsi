@@ -81,9 +81,9 @@ http://ionicframework.com/docs/theming/ */
 
 @media (prefers-color-scheme: dark) {
 	/*
-   * Dark Colors
-   * -------------------------------------------
-   */
+	 * Dark Colors
+	 * -------------------------------------------
+	 */
 
 	body {
 		--ion-color-primary: #428cff;
@@ -151,9 +151,9 @@ http://ionicframework.com/docs/theming/ */
 	}
 
 	/*
-   * iOS Dark Theme
-   * -------------------------------------------
-   */
+	 * iOS Dark Theme
+	 * -------------------------------------------
+	 */
 
 	.ios body {
 		--ion-background-color: #fafafa;
@@ -190,9 +190,9 @@ http://ionicframework.com/docs/theming/ */
 	}
 
 	/*
-   * Material Design Dark Theme
-   * -------------------------------------------
-  */
+	 * Material Design Dark Theme
+	 * -------------------------------------------
+	*/
 
 	.md body {
 		--ion-background-color: #f4f4f4;

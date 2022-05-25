@@ -1,7 +1,6 @@
-import { Link } from 'react-router-dom'
-
 import { IonPage, IonContent, IonIcon, IonText } from '@ionic/react'
 import { chevronForward } from 'ionicons/icons'
+import Link from 'next/link'
 
 import ApresentationImage from '../../../assets/Apresentation'
 import Lines from '../../../assets/Lines'
@@ -14,7 +13,7 @@ const Apresentation = () => {
 				<div className="relative w-full h-full p-8 flex flex-col justify-between items-center overflow-hidden">
 					<Lines className="absolute top-0 right-[28%] rotate-[100deg] z-[-1]" />
 					<div className="w-full flex justify-end">
-						<Link to="/signinup">
+						<Link href="/signinup" passHref>
 							<div className="flex items-center">
 								<IonText className="capitalize text-medium">
 									Pular
@@ -40,7 +39,7 @@ const Apresentation = () => {
 						</IonText>
 					</div>
 					<div className="w-2/3">
-						<Link to="#">
+						<Link href="#" passHref>
 							<Button className="bg-blue-100">Proximo</Button>
 						</Link>
 					</div>

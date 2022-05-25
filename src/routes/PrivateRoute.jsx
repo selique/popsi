@@ -1,4 +1,4 @@
-import { Route, Redirect, RouteProps } from 'react-router-dom'
+import { Route, Redirect } from 'react-router-dom'
 
 import { useAuth } from '../contexts/Auth'
 

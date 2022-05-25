@@ -23,7 +23,6 @@ const Login = () => {
 	const [showLoading, hideLoading] = useIonLoading()
 	const [showToast] = useIonToast()
 	const handleLogin = async event => {
-		console.log()
 		event.preventDefault()
 		await showLoading()
 		try {

@@ -1,55 +1,30 @@
-import React from 'react'
-
-/* eslint-disable import-helpers/order-imports */
-/* eslint-disable @next/next/no-page-custom-font */
-import { defineCustomElements as ionDefineCustomElements } from '@ionic/core/loader'
 import Head from 'next/head'
+import Script from 'next/script'
 
 import 'tailwindcss/tailwind.css'
-
-// core css require for ionic components to work properly
-import '@ionic/core/css/core.css'
-
-// basic css for apps build with ionics
-import '@ionic/core/css/normalize.css'
-import '@ionic/core/css/structure.css'
-import '@ionic/core/css/typography.css'
-
-// optional css utils that can be commented out
-import '@ionic/core/css/padding.css'
-import '@ionic/core/css/float-elements.css'
-import '@ionic/core/css/text-alignment.css'
-import '@ionic/core/css/text-transformation.css'
-import '@ionic/core/css/flex-utils.css'
-import '@ionic/core/css/display.css'
+import '@ionic/react/css/core.css'
+import '@ionic/react/css/padding.css'
+import '@ionic/react/css/float-elements.css'
+import '@ionic/react/css/text-alignment.css'
+import '@ionic/react/css/text-transformation.css'
+import '@ionic/react/css/flex-utils.css'
+import '@ionic/react/css/display.css'
 
 import '../styles/global.css'
 import '../styles/variables.css'
-import { AuthProvider } from '../contexts/Auth'
 
 function MyApp({ Component, pageProps }) {
-	React.useEffect(() => ionDefineCustomElements(window))
-
 	return (
-		<AuthProvider>
+		<>
 			<Head>
 				<meta
 					name="viewport"
 					content="width=device-width, initial-scale=1.0, viewport-fit=cover"
 				></meta>
-				<link rel="preconnect" href="https://fonts.googleapis.com" />
-				<link
-					rel="preconnect"
-					href="https://fonts.gstatic.com"
-					crossOrigin="true"
-				/>
-				<link
-					href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;500;600;700&display=swap"
-					rel="stylesheet"
-				/>
 			</Head>
 			<Component {...pageProps} />
-		</AuthProvider>
+			<Script src="https://unpkg.com/ionicons@5.2.3/dist/ionicons.js"></Script>
+		</>
 	)
 }
 

@@ -6,8 +6,7 @@ import {
 	IonText,
 	IonSlides,
 	IonSlide,
-	IonModal,
-	IonTitle
+	IonModal
 } from '@ionic/react'
 import Image from 'next/image'
 import Link from 'next/link'
