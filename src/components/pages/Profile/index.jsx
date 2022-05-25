@@ -1,6 +1,13 @@
-import { IonPage, IonContent, IonText, IonIcon } from '@ionic/react'
+import {
+	IonPage,
+	IonContent,
+	IonText,
+	IonIcon,
+	useIonLoading,
+	useIonToast,
+	useIonRouter
+} from '@ionic/react'
 import { arrowBack } from 'ionicons/icons'
-import Router from 'next/router'
 
 import Avatar from '../../ui/Avatar'
 
@@ -9,9 +16,9 @@ const imageTemp =
 
 const Profile = () => {
 	const [showLoading, hideLoading] = useIonLoading()
+	const router = useIonRouter()
 	const [showToast] = useIonToast()
 	const [session] = useState(() => supabase.auth.session())
-	const router = useIonRouter()
 	const [profile, setProfile] = useState({
 		full_name: '',
 		bio: '',
@@ -66,7 +73,7 @@ const Profile = () => {
 				<div className="relative">
 					<div
 						className="absolute top-4 left-4 text-white text-2xl"
-						onClick={() => Router.back()}
+						onClick={() => router.goBack()}
 					>
 						<IonIcon src={arrowBack} color="#fff" />
 					</div>

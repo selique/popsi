@@ -1,6 +1,11 @@
-import { IonContent, IonPage, IonIcon, IonText } from '@ionic/react'
+import {
+	IonContent,
+	IonPage,
+	IonIcon,
+	IonText,
+	useIonRouter
+} from '@ionic/react'
 import { arrowBack } from 'ionicons/icons'
-import Router from 'next/router'
 
 import Avatar from '../../ui/Avatar'
 import Button from '../../ui/Button'
@@ -9,13 +14,14 @@ const imageTemp =
 	'https://i0.wp.com/www.kailagarcia.com/wp-content/uploads/2019/05/46846414_205184383758304_7255555943408505199_n.jpg?fit=1080%2C1350&ssl=1'
 
 const ProfessionalProfile = () => {
+	const router = useIonRouter()
 	return (
 		<IonPage>
 			<IonContent>
 				<div className="relative">
 					<div
 						className="absolute top-4 left-4 text-white text-2xl"
-						onClick={() => Router.back()}
+						onClick={() => router.goBack()}
 					>
 						<IonIcon src={arrowBack} color="#fff" />
 					</div>

@@ -9,7 +9,6 @@ import {
 	IonModal
 } from '@ionic/react'
 import Image from 'next/image'
-import Link from 'next/link'
 import styled from 'styled-components'
 
 import Letter from '../../../assets/icons/Letter'
