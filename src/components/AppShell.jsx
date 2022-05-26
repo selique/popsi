@@ -22,7 +22,7 @@ const AppShell = () => {
 						path="/"
 						render={() => {
 							return user ? (
-								<Redirect to="/app/home" />
+								<Redirect to="/app/homeclient" />
 							) : (
 								<Apresentation />
 							)

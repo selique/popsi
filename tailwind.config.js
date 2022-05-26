@@ -35,11 +35,13 @@ module.exports = {
 				},
 				gray: {
 					100: '#EAEAEA',
+					200: '#e4e4e4',
 					900: '#7A7A7A'
 				},
 				purple: {
 					DEFAULT: '#c700ff',
 					100: '#AC8FBF',
+					200: '#c5bdec',
 					opacity: {
 						100: '#7B61FF4D'
 					}

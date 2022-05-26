@@ -46,7 +46,8 @@
     "react-input-mask": "^2.0.4",
     "react-router-dom": "^5.2.0",
     "react-virtuoso": "^1.1.1",
-    "styled-components": "5.3.3"
+    "styled-components": "5.3.3",
+    "tailwindcss": "3.0.19"
   },
   "devDependencies": {
     "@commitlint/cli": "16.1.0",

@@ -21,7 +21,7 @@ import ShortcutCard from '../../ui/ShortcutCard'
 const Slide = styled(IonSlides)`
 	ion-slide {
 		height: 100% !important;
-		padding: 15px 0;
+		padding: 30px 0;
 	}
 `
 
@@ -210,7 +210,7 @@ const Home = () => {
 										slidesPerView: 5,
 										spaceBetween: 5
 									}}
-									className="my-6"
+									className="my-10"
 								>
 									{dayOfMonths.map(item => (
 										<IonSlide key={item.day}>

@@ -18,6 +18,7 @@ import {
 
 import Form from './Form'
 import Home from './Home'
+import HomeClient from './HomeClient'
 import Notification from './Notification'
 import Patients from './Patients'
 import Profile from './Profile'
@@ -28,6 +29,7 @@ const Tabs = () => {
 		<IonTabs>
 			<IonRouterOutlet>
 				<Route path="/app/home" component={Home} exact={true} />
+				<Route path="/app/homeclient" component={HomeClient} exact={true} />
 				<Route path="/app/patients" component={Patients} exact={true} />
 				<Route path="/app/quiz" component={Quiz} exact={true} />
 				<Route
@@ -39,7 +41,7 @@ const Tabs = () => {
 				<Route path="/app/form" component={Form} exact={true} />
 				<Route
 					path="/app"
-					render={() => <Redirect to="/app/home" />}
+					render={() => <Redirect to="/app/homeclient" />}
 					exact={true}
 				/>
 			</IonRouterOutlet>
