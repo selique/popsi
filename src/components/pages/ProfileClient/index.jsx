@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 import { IonContent, IonPage, IonSlide, IonSlides } from '@ionic/react'
 
 import Button from '../../ui/Button'
@@ -45,11 +47,13 @@ const ProfileClient = () => {
 							</p>
 						</div>
 					</div>
-					<Button className="bg-blue-200 py-1 mt-8">
-						<p className="text-white font-medium text-sm">
-							Editar perfil
-						</p>
-					</Button>
+					<Link to="/app/edit">
+						<Button className="bg-blue-200 py-1 mt-8">
+							<p className="text-white font-medium text-sm">
+								Editar perfil
+							</p>
+						</Button>
+					</Link>
 					<div>
 						<p className="font-bold text-black text-lg">Conquistas</p>
 						<IonSlides options={slideOpts} className="w-full">

@@ -16,6 +16,7 @@ import {
 	fileTrayOutline
 } from 'ionicons/icons'
 
+import EditProfile from './EditProfile'
 import Form from './Form'
 import Home from './Home'
 import HomeClient from './HomeClient'
@@ -44,6 +45,7 @@ const Tabs = () => {
 					render={() => <Redirect to="/app/homeclient" />}
 					exact={true}
 				/>
+				<Route path="/app/edit" component={EditProfile} exact={true} />
 
 				{/* Routes do clientes */}
 				<Route path="/app/homeclient" component={HomeClient} exact={true} />
