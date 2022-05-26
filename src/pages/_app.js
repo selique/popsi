@@ -1,6 +1,4 @@
 import Head from 'next/head'
-import Script from 'next/script'
-
 import 'tailwindcss/tailwind.css'
 import '@ionic/core/css/core.css'
 import '@ionic/core/css/padding.css'
@@ -23,7 +21,6 @@ function MyApp({ Component, pageProps }) {
 				></meta>
 			</Head>
 			<Component {...pageProps} />
-			<Script src="https://unpkg.com/ionicons@5.2.3/dist/ionicons.js"></Script>
 		</>
 	)
 }
