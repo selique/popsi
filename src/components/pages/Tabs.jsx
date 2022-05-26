@@ -22,6 +22,7 @@ import HomeClient from './HomeClient'
 import Notification from './Notification'
 import Patients from './Patients'
 import Profile from './Profile'
+import ProfileClient from './ProfileClient'
 import Quiz from './Quiz'
 
 const Tabs = () => {
@@ -29,7 +30,6 @@ const Tabs = () => {
 		<IonTabs>
 			<IonRouterOutlet>
 				<Route path="/app/home" component={Home} exact={true} />
-				<Route path="/app/homeclient" component={HomeClient} exact={true} />
 				<Route path="/app/patients" component={Patients} exact={true} />
 				<Route path="/app/quiz" component={Quiz} exact={true} />
 				<Route
@@ -44,9 +44,17 @@ const Tabs = () => {
 					render={() => <Redirect to="/app/homeclient" />}
 					exact={true}
 				/>
+
+				{/* Routes do clientes */}
+				<Route path="/app/homeclient" component={HomeClient} exact={true} />
+				<Route
+					path="/app/profileclient"
+					component={ProfileClient}
+					exact={true}
+				/>
 			</IonRouterOutlet>
 			<IonTabBar slot="bottom">
-				<IonTabButton tab="tab1" href="/app/home">
+				<IonTabButton tab="tab1" href="/app/homeclient">
 					<IonIcon icon={flash} />
 					<IonLabel>Home</IonLabel>
 				</IonTabButton>
@@ -62,7 +70,7 @@ const Tabs = () => {
 					<IonIcon icon={notificationsOutline} />
 					<IonLabel>Notificação</IonLabel>
 				</IonTabButton>
-				<IonTabButton tab="tab5" href="/app/profile">
+				<IonTabButton tab="tab5" href="/app/profileclient">
 					<IonIcon icon={personOutline} />
 					<IonLabel>Perfil</IonLabel>
 				</IonTabButton>

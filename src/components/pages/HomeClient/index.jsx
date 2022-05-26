@@ -34,7 +34,9 @@ const HomeClient = () => {
 					</ShortcutCard>
 					<div className="bg-white flex justify-between items-center shadow-md p-4 rounded-2xl">
 						<div className="w-[50px] h-[50px] bg-gray-900 rounded-full" />
-						<p className="w-[70%]">Como você esta se sentindo hoje?</p>
+						<p className="w-[70%] font-bold">
+							Como você esta se sentindo hoje?
+						</p>
 					</div>
 				</div>
 				<Card>
