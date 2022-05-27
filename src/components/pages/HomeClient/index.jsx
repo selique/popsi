@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 import { IonPage, IonContent, IonText, IonIcon } from '@ionic/react'
 import { shareSocialOutline, documentTextOutline } from 'ionicons/icons'
 import Image from 'next/image'
@@ -24,14 +26,16 @@ const HomeClient = () => {
 					<Image src={Profile} alt="Foto de perfil" />
 				</div>
 				<div className="grid grid-cols-[30%_1fr] gap-4 my-4">
-					<ShortcutCard background="bg-purple-100 w-auto p-3 py-5">
-						<div className="flex flex-col justify-center items-center h-full">
-							<Image src={Yoga} alt="Yoga image" />
-							<p className="text-white text-sm text-center font-bold">
-								Controle de respiração
-							</p>
-						</div>
-					</ShortcutCard>
+					<Link to="/breathing">
+						<ShortcutCard background="bg-purple-100 w-auto p-3 py-5">
+							<div className="flex flex-col justify-center items-center h-full">
+								<Image src={Yoga} alt="Yoga image" />
+								<p className="text-white text-sm text-center font-bold">
+									Controle de respiração
+								</p>
+							</div>
+						</ShortcutCard>
+					</Link>
 					<div className="bg-white flex justify-between items-center shadow-md p-4 rounded-2xl">
 						<div className="w-[50px] h-[50px] bg-gray-900 rounded-full" />
 						<p className="w-[70%] font-bold">

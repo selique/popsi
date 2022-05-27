@@ -5,6 +5,7 @@ import { IonReactRouter } from '@ionic/react-router'
 
 import { useAuth } from '../contexts/Auth'
 import Apresentation from './pages/Apresentation'
+import Breathing from './pages/Breathing'
 import Form from './pages/Form'
 import Login from './pages/Login'
 import ProfessionalProfile from './pages/ProfessionalProfile'
@@ -51,6 +52,7 @@ const AppShell = () => {
 						exact={true}
 					/>
 					<Route path="/app" render={() => <Tabs />} />
+					<Route path="/breathing" render={() => <Breathing />} />
 				</IonRouterOutlet>
 			</IonReactRouter>
 		</IonApp>

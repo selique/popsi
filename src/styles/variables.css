@@ -256,3 +256,15 @@ ion-checkbox {
 	--background: #ffffff;
 	--border-radius: 5px;
 }
+
+ion-toolbar {
+	--background: #f4f4f4;
+	--border-width: 1px;
+	--border-color: #e7e7e7;
+	--padding-bottom: 15px;
+	--padding-top: 15px;
+}
+
+ion-content {
+	--background: #f4f4f4;
+}
