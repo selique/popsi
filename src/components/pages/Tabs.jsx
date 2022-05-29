@@ -27,6 +27,8 @@ import ProfileClient from './ProfileClient'
 import Quiz from './Quiz'
 
 const Tabs = () => {
+	const professional = true
+
 	return (
 		<IonTabs>
 			<IonRouterOutlet>
@@ -60,10 +62,12 @@ const Tabs = () => {
 					<IonIcon icon={flash} />
 					<IonLabel>Home</IonLabel>
 				</IonTabButton>
-				<IonTabButton tab="tab2" href="/app/patients">
-					<IonIcon icon={list} />
-					<IonLabel>Pacients</IonLabel>
-				</IonTabButton>
+				{professional && (
+					<IonTabButton tab="tab2" href="/app/patients">
+						<IonIcon icon={list} />
+						<IonLabel>Pacients</IonLabel>
+					</IonTabButton>
+				)}
 				<IonTabButton tab="tab3" href="/app/quiz">
 					<IonIcon icon={fileTrayOutline} />
 					<IonLabel>Questionário</IonLabel>

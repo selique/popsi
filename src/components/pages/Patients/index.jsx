@@ -4,7 +4,10 @@ import {
 	IonPage,
 	IonSlide,
 	IonSlides,
-	IonText
+	IonText,
+	IonHeader,
+	IonToolbar,
+	IonTitle
 } from '@ionic/react'
 import { search, filterOutline, addOutline } from 'ionicons/icons'
 
@@ -17,12 +20,12 @@ const imageTemp =
 const Patients = () => {
 	return (
 		<IonPage>
+			<IonHeader>
+				<IonToolbar>
+					<IonTitle className="text-lg font-semibold">Pacientes</IonTitle>
+				</IonToolbar>
+			</IonHeader>
 			<IonContent className="ion-padding bg-black" fullscreen>
-				<div className="flex justify-center">
-					<IonText className="text-black font-semibold">
-						Meus paciêntes
-					</IonText>
-				</div>
 				<Input
 					placeholder="Pesquisar"
 					icon={<IonIcon src={search} />}

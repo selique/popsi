@@ -1,4 +1,13 @@
-import { IonPage, IonContent, IonBackButton, IonText } from '@ionic/react'
+import {
+	IonPage,
+	IonContent,
+	IonBackButton,
+	IonText,
+	IonHeader,
+	IonToolbar,
+	IonButtons,
+	IonTitle
+} from '@ionic/react'
 import styled from 'styled-components'
 
 import Avatar from '../../ui/Avatar'
@@ -13,13 +22,14 @@ const imageTemp =
 const Notification = () => {
 	return (
 		<IonPage>
-			<IonContent>
-				<div className="flex justify-center py-6">
-					<IonText className="text-black font-semibold">
+			<IonHeader>
+				<IonToolbar>
+					<IonTitle className="text-lg font-semibold">
 						Notificações
-					</IonText>
-				</div>
-				<Line />
+					</IonTitle>
+				</IonToolbar>
+			</IonHeader>
+			<IonContent>
 				<div>
 					<div className="grid grid-cols-[auto_1fr] items-center gap-3 px-4">
 						<Avatar background={imageTemp} width="80px" height="80px" />
