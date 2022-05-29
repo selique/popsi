@@ -268,3 +268,12 @@ ion-toolbar {
 ion-content {
 	--background: #f4f4f4;
 }
+
+ion-item {
+	--background: #fff;
+	--border-width: 0;
+}
+
+ion-radio-group {
+	--background: #f4f4f4;
+}

@@ -42,7 +42,7 @@ const AppShell = () => {
 						exact={true}
 					/>
 					<PrivateRoute
-						path="/form"
+						path="/form/:id"
 						component={() => <Form />}
 						exact={true}
 					/>
