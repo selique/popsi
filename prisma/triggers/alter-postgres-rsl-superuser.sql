@@ -8,17 +8,22 @@ ALTER table questions enable row level security;
 ALTER table surveys enable row level security;
 ALTER table _prisma_migrations enable row level security;
 
-create policy "Profiles are viewable by users who created them."
-  on profiles for select
-  using ( auth.uid()::text = id );
 
-create policy "Users can insert their own profile."
-  on profiles for insert
-  with check ( auth.uid()::text = id );
+CREATE POLICY "Enable read access to everyone"
+	ON "public"."profiles"
+	FOR SELECT USING (true);
 
-create policy "Users can update own profile."
-  on profiles for update
-  using ( auth.uid()::text = id );
+CREATE POLICY "Enable insert access for authenticated users only"
+	ON "public"."profiles" FOR INSERT TO authenticated WITH CHECK (true);
+
+CREATE POLICY "Enable update access for users based  on their user ID"
+	ON "public"."profiles" FOR UPDATE
+	USING (auth.uid()::text = id)
+	WITH CHECK (auth.uid()::text = id);
+
+CREATE POLICY "Enable delete access for users based on their user ID"
+	ON "public"."profiles"
+	FOR DELETE USING (auth.uid()::text = id);
 
 /**
  * REALTIME SUBSCRIPTIONS

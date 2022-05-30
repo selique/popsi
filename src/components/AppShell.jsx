@@ -1,6 +1,6 @@
 import { Route, Redirect } from 'react-router-dom'
 
-import { IonApp, IonRouterOutlet, IonSplitPane } from '@ionic/react'
+import { IonApp, IonRouterOutlet } from '@ionic/react'
 import { IonReactRouter } from '@ionic/react-router'
 
 import { useAuth } from '../contexts/Auth'
@@ -11,8 +11,10 @@ import Login from './pages/Login'
 import ProfessionalProfile from './pages/ProfessionalProfile'
 import Scheduling from './pages/Scheduling'
 import Signinup from './pages/Signinup'
+import SignUp from './pages/SignUp'
 import Tabs from './pages/Tabs'
 import PrivateRoute from './PrivateRoute'
+
 const AppShell = () => {
 	const { user } = useAuth()
 	return (
@@ -33,6 +35,11 @@ const AppShell = () => {
 					<Route
 						path="/signinup"
 						component={() => <Signinup />}
+						exact={true}
+					/>
+					<Route
+						path="/sign-up"
+						component={() => <SignUp />}
 						exact={true}
 					/>
 					<Route path="/login" component={() => <Login />} exact={true} />

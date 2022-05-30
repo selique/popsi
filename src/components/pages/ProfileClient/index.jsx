@@ -1,9 +1,18 @@
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
-import { IonContent, IonPage, IonSlide, IonSlides } from '@ionic/react'
+import {
+	IonContent,
+	IonPage,
+	IonSlide,
+	IonSlides,
+	useIonLoading,
+	useIonRouter,
+	useIonToast
+} from '@ionic/react'
 
+import { supabase } from '../../../utils/supabaseClient'
 import Button from '../../ui/Button'
-
 const ProfileClient = () => {
 	const slideOpts = {
 		slidesPerView: 2.8,
@@ -11,6 +20,66 @@ const ProfileClient = () => {
 		speed: 400,
 		autoHeight: true
 	}
+
+	const [showLoading, hideLoading] = useIonLoading()
+	const router = useIonRouter()
+	const [showToast] = useIonToast()
+	const [session] = useState(() => supabase.auth.session())
+	const [profile, setProfile] = useState({
+		full_name: '',
+		avatar_url: '',
+		bio: '',
+		nickname: '',
+		matrial_status: '',
+		gender: '',
+		gender_indentity: '',
+		cpf: '',
+		brith_date: ''
+	})
+	const getProfile = async () => {
+		console.log('get')
+
+		await showLoading()
+		try {
+			const user = supabase.auth.user()
+			let { data, error, status } = await supabase
+				.from('profiles')
+				.select(
+					`full_name,avatar_url,bio,nickname,matrial_status,gender,gender_indentity,cpf,brith_date
+					`
+				)
+				.eq('id', user.id)
+				.single()
+
+			if (error && status !== 406) {
+				throw error
+			}
+
+			if (data) {
+				setProfile({
+					full_name: data.full_name,
+					avatar_url: data.avatar_url,
+					bio: data.bio,
+					nickname: data.nickname,
+					matrial_status: data.matrial_status,
+					gender: data.gender,
+					gender_indentity: data.gender_indentity,
+					cpf: data.cpf,
+					brith_date: data.brith_date
+				})
+			}
+		} catch (error) {
+			showToast({ message: error.message, duration: 5000 })
+		} finally {
+			await hideLoading()
+		}
+	}
+
+	useEffect(() => {
+		getProfile()
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [session])
 
 	return (
 		<IonPage>
@@ -20,30 +89,47 @@ const ProfileClient = () => {
 				</div>
 				<div className="mt-[6vh] ion-padding">
 					<p className="text-center font-bold text-black text-xl">
-						Geovane
+						{profile.full_name}
 					</p>
-					<p className="text-sm text-center">
-						But I must explain to you how all this mistaken idea of
-						denouncing pleasure and praising pain was born this mistaken
-						idea of denouncing pleasure
+					<p className="text-center font-bold text-black text-lg">
+						{profile.nickname}
 					</p>
+					<p className="text-sm text-center">{profile.bio}</p>
 					<div>
 						<div className="flex items-center">
 							<div className="w-[5px] h-[5px] rounded-full bg-gray-900" />
 							<p className="text-sm ml-2 leading-[1px]">
-								Idade: 24 anos
+								Idade: {profile.brith_date} anos
 							</p>
 						</div>
 						<div className="flex items-center">
 							<div className="w-[5px] h-[5px] rounded-full bg-gray-900" />
 							<p className="text-sm ml-2 leading-[1px]">
-								Estado Civil: Solteira
+								Estado Civil: {profile.matrial_status}
 							</p>
 						</div>
 						<div className="flex items-center">
 							<div className="w-[5px] h-[5px] rounded-full bg-gray-900" />
 							<p className="text-sm ml-2 leading-[1px]">
-								Se identifica: Heterosexual
+								Sexo: {profile.gender}
+							</p>
+						</div>
+						<div className="flex items-center">
+							<div className="w-[5px] h-[5px] rounded-full bg-gray-900" />
+							<p className="text-sm ml-2 leading-[1px]">
+								Se identifica: {profile.gender_indentity}
+							</p>
+						</div>
+						<div className="flex items-center">
+							<div className="w-[5px] h-[5px] rounded-full bg-gray-900" />
+							<p className="text-sm ml-2 leading-[1px]">
+								CPF: {profile.cpf}
+							</p>
+						</div>
+						<div className="flex items-center">
+							<div className="w-[5px] h-[5px] rounded-full bg-gray-900" />
+							<p className="text-sm ml-2 leading-[1px]">
+								role: {profile.role}
 							</p>
 						</div>
 					</div>

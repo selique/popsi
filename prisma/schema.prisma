@@ -18,8 +18,9 @@ model Profile {
    matrial_status   String?
    gender           String
    gender_indentity String?
-   age              Int
-   role             Role?   @default(PATIENT)
+   cpf              Int
+   brith_date       DateTime
+   role             Role?    @default(PATIENT)
 
    // Relation: Surveys
    surveys Surveys[]

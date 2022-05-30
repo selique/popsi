@@ -1,13 +1,21 @@
 import * as React from 'react'
+import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
 
+import { ErrorMessage } from '@hookform/error-message'
 import {
 	IonPage,
 	IonContent,
 	IonText,
 	useIonLoading,
-	useIonToast
+	useIonToast,
+	IonInput,
+	IonLabel,
+	IonList,
+	IonItem,
+	IonButton
 } from '@ionic/react'
+import * as Yup from 'yup'
 
 import Facebook from '../../../assets/Facebook'
 import Google from '../../../assets/Google'
@@ -23,11 +31,26 @@ const Login = () => {
 
 	const [showLoading, hideLoading] = useIonLoading()
 	const [showToast] = useIonToast()
-	const handleLogin = async event => {
-		event.preventDefault()
+
+	const {
+		handleSubmit,
+		register,
+		formState: { errors }
+	} = useForm({
+		mode: 'onChange'
+		// validationSchema: Yup.object().shape({
+		// 	email: Yup.string()
+		// 		.email('Insira um e-mail válido')
+		// 		.required('O e-mail é obrigatório'),
+		// 	password: Yup.string()
+		// 		.min(6, 'A senha deve ter no mínimo 6 caracteres')
+		// 		.required('A senha é obrigatória'),
+		// })
+	})
+	const handleLogin = async data => {
 		await showLoading()
 		try {
-			await signIn({ email })
+			await signIn(data)
 			await showToast({ message: 'Check your email for the login link!' })
 		} catch (e) {
 			await showToast({
@@ -48,25 +71,49 @@ const Login = () => {
 					<IonText className="text-6xl font-bold text-black-200">
 						Bem vindo de volta!
 					</IonText>
-					<form onSubmit={handleLogin}>
-						<Input
-							label="Usuário ou e-mail"
-							placeholder="usuario@usuario.com"
-							type="email"
-							value={email}
-							onChange={e => setEmail(e.target.value)}
-						/>
-						<Input
-							label="Senha"
-							placeholder="*********"
-							classContent="mt-3 mb-8"
-							type="password"
-							value={password}
-							onChange={e => setPassword(e.target.value)}
-						/>
-						<Button className="bg-purple-100" type="submit">
-							<IonText className="text-white">Entrar</IonText>
-						</Button>
+					<form onSubmit={handleSubmit(handleLogin)}>
+						<IonList>
+							<IonItem lines="none">
+								<IonLabel position="stacked">Email</IonLabel>
+								<IonInput
+									placeholder="Digite seu e-mail"
+									{...register('email', {
+										required: 'E-mail é obrigatório',
+										pattern: {
+											value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+											message: 'E-mail inválido'
+										}
+									})}
+								/>
+								<ErrorMessage
+									errors={errors}
+									name="email"
+									as={<div style={{ color: 'red' }} />}
+								/>
+							</IonItem>
+							<IonItem lines="none">
+								<IonLabel position="stacked">Senha</IonLabel>
+								<IonInput
+									placeholder="Senha"
+									{...register('password', {
+										required: 'Senha é obrigatória'
+									})}
+								/>
+								<ErrorMessage
+									errors={errors}
+									name="password"
+									as={<div style={{ color: 'red' }} />}
+								/>
+							</IonItem>
+						</IonList>
+						<IonButton
+							color="purple"
+							expand="full"
+							shape="round"
+							type="submit"
+						>
+							<IonText className="text-white">Cadastrar</IonText>
+						</IonButton>
 					</form>
 					<div className="flex justify-center items-center">
 						<div className="w-full h-[1px] bg-black mr-2" />
@@ -89,7 +136,7 @@ const Login = () => {
 						<IonText className="font-medium">
 							Não tem cadastro?
 							<Link to="#">
-								<IonText className="text-purple"> Registre-se</IonText>
+								<IonText className="text-purple">Registre-se</IonText>
 							</Link>
 						</IonText>
 					</div>

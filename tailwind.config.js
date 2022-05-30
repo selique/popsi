@@ -45,9 +45,6 @@ module.exports = {
 					opacity: {
 						100: '#7B61FF4D'
 					}
-				},
-				red: {
-					DEFAULT: '#FF7E7E'
 				}
 			}
 		}
