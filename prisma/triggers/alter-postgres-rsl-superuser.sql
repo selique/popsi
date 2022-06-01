@@ -18,12 +18,12 @@ CREATE POLICY "Enable insert access for authenticated users only"
 
 CREATE POLICY "Enable update access for users based  on their user ID"
 	ON "public"."profiles" FOR UPDATE
-	USING (auth.uid()::text = id)
-	WITH CHECK (auth.uid()::text = id);
+	USING (auth.uid() = id)
+	WITH CHECK (auth.uid() = id);
 
 CREATE POLICY "Enable delete access for users based on their user ID"
 	ON "public"."profiles"
-	FOR DELETE USING (auth.uid()::text = id);
+	FOR DELETE USING (auth.uid() = id);
 
 /**
  * REALTIME SUBSCRIPTIONS

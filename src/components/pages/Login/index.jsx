@@ -25,9 +25,7 @@ import Button from '../../ui/Button'
 import Input from '../../ui/Input'
 
 const Login = () => {
-	const { signIn } = useAuth()
-	const [email, setEmail] = React.useState('')
-	const [password, setPassword] = React.useState('')
+	const { signUp } = useAuth()
 
 	const [showLoading, hideLoading] = useIonLoading()
 	const [showToast] = useIonToast()
@@ -50,7 +48,7 @@ const Login = () => {
 	const handleLogin = async data => {
 		await showLoading()
 		try {
-			await signIn(data)
+			await signUp(data)
 			await showToast({ message: 'Check your email for the login link!' })
 		} catch (e) {
 			await showToast({
@@ -135,8 +133,10 @@ const Login = () => {
 					<div className="flex justify-center">
 						<IonText className="font-medium">
 							Não tem cadastro?
-							<Link to="#">
-								<IonText className="text-purple">Registre-se</IonText>
+							<Link to="/sign-up">
+								<IonText className="text-purple ml-2">
+									Registre-se
+								</IonText>
 							</Link>
 						</IonText>
 					</div>

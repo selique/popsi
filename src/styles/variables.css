@@ -79,7 +79,7 @@ http://ionicframework.com/docs/theming/ */
 	--ion-color-light-tint: #f5f6f9;
 
 	/** purple **/
-	--ion-color-purple: #AC8FBF;
+	--ion-color-purple: #ac8fbf;
 	--ion-color-purple-rgb: 172, 143, 191;
 	--ion-color-purple-contrast: #c5bdec;
 	--ion-color-purple-contrast-rgb: 197, 189, 236;
@@ -157,7 +157,7 @@ http://ionicframework.com/docs/theming/ */
 		--ion-color-light-shade: #1e2023;
 		--ion-color-light-tint: #383a3e;
 
-		--ion-color-purple: #AC8FBF;
+		--ion-color-purple: #ac8fbf;
 		--ion-color-purple-rgb: 172, 143, 191;
 		--ion-color-purple-contrast: #c5bdec;
 		--ion-color-purple-contrast-rgb: 197, 189, 236;
@@ -313,14 +313,14 @@ ion-radio-group {
 	--background: #f4f4f4;
 }
 
-ion-list.list-md {
+ion-list {
 	@apply p-0 !important;
+	--background: #f4f4f4;
 }
 /* Targeting the native input element inside the ion-item. */
 form ion-item::part(native) {
 	--background: #f4f4f4;
 }
-
 
 ion-label.label-stacked {
 	margin-bottom: 10px !important;
@@ -360,6 +360,10 @@ ion-datetime {
 	@apply text-black-300 !important;
 }
 
+ion-picker .picker-wrapper {
+	@apply bg-gray-100 !important;
+}
+
 ion-radio-group {
 	@apply flex !important;
 	@apply w-full !important;
@@ -374,14 +378,12 @@ ion-radio-group > ion-item {
 	@apply rounded-xl !important;
 	@apply bg-gray-100 !important;
 	@apply text-black-300 !important;
-
 }
 
 ion-radio-group > ion-item > ion-label {
 	@apply p-0 !important;
 	@apply text-sm !important;
 }
-
 
 /* .radio-group > ion-item::part(item-inner) {
 	outline: yellow solid 1px;

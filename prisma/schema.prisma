@@ -8,7 +8,7 @@ generator client {
 }
 
 model Profile {
-   id String @id @unique @default(uuid())
+   id String @id @unique @default(uuid()) @db.Uuid
 
    // Profile data mutable
    full_name        String
@@ -39,7 +39,7 @@ enum Role {
 }
 
 model Surveys {
-   id String @id @unique @default(uuid())
+   id String @id @unique @default(uuid()) @db.Uuid
 
    // Survey data
    title       String
@@ -48,7 +48,7 @@ model Surveys {
 
    // Relation: Profiles
    Profile   Profile? @relation(fields: [profileId], references: [id])
-   profileId String?
+   profileId String   @db.Uuid
 
    // Timestamp
    created_at DateTime  @default(now())
@@ -59,7 +59,7 @@ model Surveys {
 }
 
 model Question {
-   id String @id @unique @default(uuid())
+   id String @id @unique @default(uuid()) @db.Uuid
 
    // Question data
    title       String
@@ -69,7 +69,7 @@ model Question {
 
    // Relation: Surveys
    Surveys   Surveys? @relation(fields: [surveysId], references: [id])
-   surveysId String?
+   surveysId String   @db.Uuid
 
    // Timestamp
    created_at DateTime  @default(now())
@@ -88,14 +88,14 @@ enum QuestionTypes {
 }
 
 model Answer {
-   id String @id @unique @default(uuid())
+   id String @id @unique @default(uuid()) @db.Uuid
 
    // Answer data
    answer String
 
    // Relation: Question
    question Question @relation(fields: [answerId], references: [id])
-   answerId String
+   answerId String   @db.Uuid
 
    // Timestamp
    created_at DateTime  @default(now())

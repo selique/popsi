@@ -6,7 +6,7 @@ CREATE TYPE "answer_types" AS ENUM ('TEXT', 'BOOLEAN', 'MULTIPLE_CHOICE', 'SCALE
 
 -- CreateTable
 CREATE TABLE "profiles" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL,
     "full_name" TEXT NOT NULL,
     "avatar_url" TEXT,
     "bio" TEXT,
@@ -25,10 +25,10 @@ CREATE TABLE "profiles" (
 
 -- CreateTable
 CREATE TABLE "surveys" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL,
     "title" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "profileId" TEXT,
+    "profileId" UUID NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3),
 
@@ -37,11 +37,11 @@ CREATE TABLE "surveys" (
 
 -- CreateTable
 CREATE TABLE "questions" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL,
     "title" TEXT NOT NULL,
     "description" TEXT,
     "type" "answer_types" NOT NULL DEFAULT E'TEXT',
-    "surveysId" TEXT,
+    "surveysId" UUID NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3),
 
@@ -50,9 +50,9 @@ CREATE TABLE "questions" (
 
 -- CreateTable
 CREATE TABLE "answers" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL,
     "answer" TEXT NOT NULL,
-    "answerId" TEXT NOT NULL,
+    "answerId" UUID NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3),
 
@@ -72,10 +72,10 @@ CREATE UNIQUE INDEX "questions_id_key" ON "questions"("id");
 CREATE UNIQUE INDEX "answers_id_key" ON "answers"("id");
 
 -- AddForeignKey
-ALTER TABLE "surveys" ADD CONSTRAINT "surveys_profileId_fkey" FOREIGN KEY ("profileId") REFERENCES "profiles"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "surveys" ADD CONSTRAINT "surveys_profileId_fkey" FOREIGN KEY ("profileId") REFERENCES "profiles"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "questions" ADD CONSTRAINT "questions_surveysId_fkey" FOREIGN KEY ("surveysId") REFERENCES "surveys"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "questions" ADD CONSTRAINT "questions_surveysId_fkey" FOREIGN KEY ("surveysId") REFERENCES "surveys"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "answers" ADD CONSTRAINT "answers_answerId_fkey" FOREIGN KEY ("answerId") REFERENCES "questions"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
