@@ -32,9 +32,9 @@ const ProfileClient = () => {
 		nickname: '',
 		matrial_status: '',
 		gender: '',
-		gender_indentity: '',
+		gender_identity: '',
 		cpf: '',
-		brith_date: ''
+		birth_date: ''
 	})
 	const getProfile = async () => {
 		console.log('get')
@@ -45,7 +45,7 @@ const ProfileClient = () => {
 			let { data, error, status } = await supabase
 				.from('profiles')
 				.select(
-					`full_name,avatar_url,bio,nickname,matrial_status,gender,gender_indentity,cpf,brith_date
+					`full_name,avatar_url,bio,nickname,matrial_status,gender,gender_identity,cpf,birth_date
 					`
 				)
 				.eq('id', user.id)
@@ -63,9 +63,9 @@ const ProfileClient = () => {
 					nickname: data.nickname,
 					matrial_status: data.matrial_status,
 					gender: data.gender,
-					gender_indentity: data.gender_indentity,
+					gender_identity: data.gender_identity,
 					cpf: data.cpf,
-					brith_date: data.brith_date
+					birth_date: data.birth_date
 				})
 			}
 		} catch (error) {
@@ -99,7 +99,7 @@ const ProfileClient = () => {
 						<div className="flex items-center">
 							<div className="w-[5px] h-[5px] rounded-full bg-gray-900" />
 							<p className="text-sm ml-2 leading-[1px]">
-								Idade: {profile.brith_date} anos
+								Idade: {profile.birth_date} anos
 							</p>
 						</div>
 						<div className="flex items-center">
@@ -117,7 +117,7 @@ const ProfileClient = () => {
 						<div className="flex items-center">
 							<div className="w-[5px] h-[5px] rounded-full bg-gray-900" />
 							<p className="text-sm ml-2 leading-[1px]">
-								Se identifica: {profile.gender_indentity}
+								Se identifica: {profile.gender_identity}
 							</p>
 						</div>
 						<div className="flex items-center">

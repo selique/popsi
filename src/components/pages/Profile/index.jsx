@@ -25,7 +25,7 @@ const Profile = () => {
 		avatar_url: '',
 		age: '',
 		matrial_status: '',
-		gender_indentity: ''
+		gender_identity: ''
 	})
 	const getProfile = async () => {
 		console.log('get')
@@ -35,7 +35,7 @@ const Profile = () => {
 			let { data, error, status } = await supabase
 				.from('profiles')
 				.select(
-					`full_name, bio, avatar_url, age, matrial_status, gender_indentity`
+					`full_name, bio, avatar_url, age, matrial_status, gender_identity`
 				)
 				.eq('id', user.id)
 				.single()
@@ -51,7 +51,7 @@ const Profile = () => {
 					avatar_url: data.avatar_url,
 					age: data.age,
 					matrial_status: data.matrial_status,
-					gender_indentity: data.gender_indentity
+					gender_identity: data.gender_identity
 				})
 			}
 		} catch (error) {
@@ -106,7 +106,7 @@ const Profile = () => {
 								Estado Civil: {profile.matrial_status}
 							</li>
 							<li className="text-gray-900 text-sm">
-								Se identifica: {profile.gender_indentity}
+								Se identifica: {profile.gender_identity}
 							</li>
 						</ul>
 					</div>

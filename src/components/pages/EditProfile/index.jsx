@@ -48,9 +48,9 @@ const EditProfile = () => {
 		nickname: '',
 		matrial_status: '',
 		gender: '',
-		gender_indentity: '',
+		gender_identity: '',
 		cpf: '',
-		brith_date: ''
+		birth_date: ''
 	})
 
 	const {
@@ -104,9 +104,9 @@ const EditProfile = () => {
 						nickname,
 						matrial_status,
 						gender,
-						gender_indentity,
+						gender_identity,
 						cpf,
-						brith_date
+						birth_date
 					`
 			)
 			console.log(data)
@@ -122,9 +122,9 @@ const EditProfile = () => {
 					nickname: data.nickname,
 					matrial_status: data.matrial_status,
 					gender: data.gender,
-					gender_indentity: data.gender_indentity,
+					gender_identity: data.gender_identity,
 					cpf: data.cpf,
-					brith_date: data.brith_date
+					birth_date: data.birth_date
 				})
 			}
 		} catch (error) {
@@ -155,9 +155,9 @@ const EditProfile = () => {
 				nickname: data.nickname,
 				matrial_status: data.matrial_status,
 				gender: data.gender,
-				gender_indentity: data.gender_indentity,
+				gender_identity: data.gender_identity,
 				cpf: data.cpf,
-				brith_date: data.brith_date
+				birth_date: data.birth_date
 			}
 
 			let { error } = await supabase.from('profiles').upsert(updates, {
@@ -319,7 +319,7 @@ const EditProfile = () => {
 											placeholder="como você se reconhece"
 											value={field.value}
 											onIonChange={e =>
-												setValue('gender_indentity', e.detail.value)
+												setValue('gender_identity', e.detail.value)
 											}
 										>
 											<IonSelectOption value="cisgenero">{`Cisgênero`}</IonSelectOption>
@@ -328,14 +328,14 @@ const EditProfile = () => {
 										</IonSelect>
 									)}
 									control={control}
-									name="gender_indentity"
+									name="gender_identity"
 									rules={{
 										required: 'Identidade de Gênero é obrigatório'
 									}}
 								/>
 								<ErrorMessage
 									errors={errors}
-									name="gender_indentity"
+									name="gender_identity"
 									as={<div style={{ color: 'red' }} />}
 								/>
 							</IonItem>

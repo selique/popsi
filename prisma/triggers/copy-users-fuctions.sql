@@ -16,7 +16,7 @@ as $$
 			nickname,
 			matrial_status,
 			gender,
-			gender_indentity,
+			gender_identity,
 			cpf,
 			birth_date,
 			created_at
@@ -27,7 +27,7 @@ as $$
 		new.raw_user_meta_data->>'nickname',
 		new.raw_user_meta_data->>'matrial_status',
 		new.raw_user_meta_data->>'gender',
-		new.raw_user_meta_data->>'gender_indentity',
+		new.raw_user_meta_data->>'gender_identity',
 		new.raw_user_meta_data->>'cpf',
 		to_date(new.raw_user_meta_data->>'birth_date', 'YYYY-MM-DD'),
 		current_timestamp

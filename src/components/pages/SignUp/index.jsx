@@ -91,7 +91,7 @@ const SignUp = () => {
 						matrial_status: data.matrial_status,
 						birth_date: format(parseISO(data.birth_date), 'yyyy-MM-dd'),
 						gender: data.gender,
-						gender_identity: data.gender_indentity
+						gender_identity: data.gender_identity
 					}
 				}
 			)
@@ -110,7 +110,7 @@ const SignUp = () => {
 						matrial_status: data.matrial_status,
 						birth_date: format(parseISO(data.birth_date), 'yyyy-MM-dd'),
 						gender: data.gender,
-						gender_identity: data.gender_indentity
+						gender_identity: data.gender_identity
 					}
 				}
 			)
@@ -274,7 +274,7 @@ const SignUp = () => {
 										placeholder="como você se reconhece"
 										value={field.value}
 										onIonChange={e =>
-											setValue('gender_indentity', e.detail.value)
+											setValue('gender_identity', e.detail.value)
 										}
 									>
 										<IonSelectOption value="cisgenero">{`Cisgênero`}</IonSelectOption>
@@ -283,14 +283,14 @@ const SignUp = () => {
 									</IonSelect>
 								)}
 								control={control}
-								name="gender_indentity"
+								name="gender_identity"
 								rules={{
 									required: 'Identidade de Gênero é obrigatório'
 								}}
 							/>
 							<ErrorMessage
 								errors={errors}
-								name="gender_indentity"
+								name="gender_identity"
 								as={<div style={{ color: 'red' }} />}
 							/>
 						</IonItem>

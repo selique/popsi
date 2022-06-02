@@ -1,5 +1,0 @@
--- AlterTable
-ALTER TABLE "profiles" ALTER COLUMN "full_name" DROP NOT NULL,
-ALTER COLUMN "gender" DROP NOT NULL,
-ALTER COLUMN "cpf" DROP NOT NULL,
-ALTER COLUMN "birth_date" DROP NOT NULL;
