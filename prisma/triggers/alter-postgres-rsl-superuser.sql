@@ -1,6 +1,3 @@
--- 1. set superuser
-ALTER USER postgres WITH superuser;
-
 -- 2. Enabled RLS to all tables for public.schema
 ALTER table profiles enable row level security;
 ALTER table answers enable row level security;

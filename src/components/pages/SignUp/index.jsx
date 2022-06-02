@@ -27,7 +27,7 @@ import {
 	IonTitle,
 	IonList
 } from '@ionic/react'
-import { format, parseISO } from 'date-fns'
+import { format, parseISO, formatISO } from 'date-fns'
 import { calendar } from 'ionicons/icons'
 import * as Yup from 'yup'
 
@@ -76,19 +76,53 @@ const SignUp = () => {
 		await showLoading()
 
 		try {
-			await signUp({
-				email: data.email,
-				password: data.password
-			})
+			console.log(
+				'creating a new user account with: ',
+				{
+					email: data.email,
+					password: data.password
+				},
+				{
+					data: {
+						full_name: data.full_name,
+						avatar_url: data.avatar_url,
+						nickname: data.nickname,
+						cpf: data.cpf,
+						matrial_status: data.matrial_status,
+						birth_date: format(parseISO(data.birth_date), 'yyyy-MM-dd'),
+						gender: data.gender,
+						gender_identity: data.gender_indentity
+					}
+				}
+			)
+
+			await signUp(
+				{
+					email: data.email,
+					password: data.password
+				},
+				{
+					data: {
+						full_name: data.full_name,
+						avatar_url: 'teste',
+						nickname: data.nickname,
+						cpf: data.cpf,
+						matrial_status: data.matrial_status,
+						birth_date: format(parseISO(data.birth_date), 'yyyy-MM-dd'),
+						gender: data.gender,
+						gender_identity: data.gender_indentity
+					}
+				}
+			)
 
 			await showToast({
 				message: 'Check your email for confirm register!',
-				duration: 5000
+				duration: 1000
 			})
 		} catch (e) {
 			await showToast({
 				message: e.error_description || e.message,
-				duration: 5000
+				duration: 1000
 			})
 		} finally {
 			await hideLoading()
@@ -114,6 +148,7 @@ const SignUp = () => {
 							<IonLabel position="stacked">E-mail</IonLabel>
 							<IonInput
 								placeholder="Digite seu e-mail"
+								type="email"
 								{...register('email', {
 									required: 'E-mail é obrigatório',
 									pattern: {
@@ -134,6 +169,7 @@ const SignUp = () => {
 							<IonLabel position="stacked">Nome</IonLabel>
 							<IonInput
 								placeholder="Nome completo"
+								type="text"
 								{...register('full_name', {
 									required: 'Nome é obrigatório'
 								})}
@@ -141,6 +177,162 @@ const SignUp = () => {
 							<ErrorMessage
 								errors={errors}
 								name="full_name"
+								as={<div style={{ color: 'red' }} />}
+							/>
+						</IonItem>
+
+						<IonItem lines="none">
+							{/* === ION INPUT === */}
+							<IonLabel position="stacked">Nome Social</IonLabel>
+							<IonInput
+								placeholder="Nome Social"
+								type="text"
+								{...register('nickname', {
+									required: 'Nome Social é obrigatório'
+								})}
+							/>
+							<ErrorMessage
+								errors={errors}
+								name="nickname"
+								as={<div style={{ color: 'red' }} />}
+							/>
+						</IonItem>
+
+						<IonItem lines="none">
+							{/* === ION INPUT === */}
+							<IonLabel position="stacked">CPF</IonLabel>
+							<IonInput
+								placeholder="000.000.000-00"
+								type="text"
+								{...register('cpf', {
+									required: 'CPF é obrigatório'
+								})}
+							/>
+							<ErrorMessage
+								errors={errors}
+								name="cpf"
+								as={<div style={{ color: 'red' }} />}
+							/>
+						</IonItem>
+						<IonItem lines="none">
+							{/* === ION SELECT === */}
+							<IonLabel position="stacked">Estado Civil</IonLabel>
+							<Controller
+								render={({ field }) => (
+									<IonSelect
+										placeholder="Estado Civil"
+										value={field.value}
+										onIonChange={e =>
+											setValue('matrial_status', e.detail.value)
+										}
+									>
+										<IonSelectOption value="married">{`Casado (a)`}</IonSelectOption>
+										<IonSelectOption value="single">{`Solteiro (a)`}</IonSelectOption>
+										<IonSelectOption value="stable_union">{`União Estavel`}</IonSelectOption>
+										<IonSelectOption value="widower">{`Viúvo (a)`}</IonSelectOption>
+										<IonSelectOption value="divorced">{`Divorciado (a)`}</IonSelectOption>
+									</IonSelect>
+								)}
+								control={control}
+								name="matrial_status"
+								rules={{
+									required: 'Estado Civil é obrigatório'
+								}}
+							/>
+							<ErrorMessage
+								errors={errors}
+								name="matrial_status"
+								as={<div style={{ color: 'red' }} />}
+							/>
+						</IonItem>
+
+						<IonItem lines="none">
+							{/* === ION DATE TIME === */}
+							<IonLabel position="stacked">Data de nascimento</IonLabel>
+							<IonDatetime
+								locale="pt-BR"
+								displayFormat="DD/MM/YYYY"
+								placeholder="Selecione a data de nascimento"
+								{...register('birth_date', {
+									required: 'Data de nascimento é obrigatória'
+								})}
+							/>
+							<ErrorMessage
+								errors={errors}
+								name="birth_date"
+								as={<div style={{ color: 'red' }} />}
+							/>
+						</IonItem>
+						<IonItem lines="none">
+							{/* === ION SELECT === */}
+							<IonLabel position="stacked">
+								Identidade de Gênero
+							</IonLabel>
+							<Controller
+								render={({ field }) => (
+									<IonSelect
+										placeholder="como você se reconhece"
+										value={field.value}
+										onIonChange={e =>
+											setValue('gender_indentity', e.detail.value)
+										}
+									>
+										<IonSelectOption value="cisgenero">{`Cisgênero`}</IonSelectOption>
+										<IonSelectOption value="transgenero">{`Transgênero`}</IonSelectOption>
+										<IonSelectOption value="nao_binanrio">{`Não-binário`}</IonSelectOption>
+									</IonSelect>
+								)}
+								control={control}
+								name="gender_indentity"
+								rules={{
+									required: 'Identidade de Gênero é obrigatório'
+								}}
+							/>
+							<ErrorMessage
+								errors={errors}
+								name="gender_indentity"
+								as={<div style={{ color: 'red' }} />}
+							/>
+						</IonItem>
+						<IonItem lines="none">
+							{/* === ION SELECT === */}
+							<IonLabel position="stacked">Sexo</IonLabel>
+							<Controller
+								render={({ field }) => (
+									<IonSelect
+										placeholder="Selecione o sexo"
+										value={field.value}
+										onIonChange={e =>
+											setValue('gender', e.detail.value)
+										}
+									>
+										<IonSelectOption value="m">{`Masculino`}</IonSelectOption>
+										<IonSelectOption value="f">{`Feminino`}</IonSelectOption>
+									</IonSelect>
+								)}
+								control={control}
+								name="gender"
+								rules={{ required: 'Sexo é obrigatório' }}
+							/>
+							<ErrorMessage
+								errors={errors}
+								name="gender"
+								as={<div style={{ color: 'red' }} />}
+							/>
+						</IonItem>
+						<IonItem lines="none">
+							{/* === ION INPUT === */}
+							<IonLabel position="stacked">Senha</IonLabel>
+							<IonInput
+								type="password"
+								placeholder="Senha"
+								{...register('password', {
+									required: 'Senha é obrigatório'
+								})}
+							/>
+							<ErrorMessage
+								errors={errors}
+								name="password"
 								as={<div style={{ color: 'red' }} />}
 							/>
 						</IonItem>
@@ -160,6 +352,29 @@ const SignUp = () => {
 								as={<div style={{ color: 'red' }} />}
 							/>
 						</IonItem>
+						{/* === ION RADIO === */}
+						{/* <IonText>
+						<IonLabel position="stacked">Sexo</IonLabel>
+						<IonRadioGroup
+							className="radio-group"
+							{...register('radioGrp', { required: true })}
+							defaultValue={getValues('radioGrp')}
+							onIonChange={e => setValue('radioGrp', e.detail.value)}
+						>
+							<IonItem lines="none">
+								<IonLabel position="fixed">Feminino</IonLabel>
+								<IonRadio slot="end" value="M" />
+							</IonItem>
+
+							<IonItem lines="none">
+								<IonLabel position="fixed">Masculino</IonLabel>
+								<IonRadio slot="end" value="F" />
+							</IonItem>
+						</IonRadioGroup>
+					</IonText>
+					{errors.radioGrp && (
+						<span className="error-msg">This field is required</span>
+					)} */}
 					</IonList>
 					<IonButton
 						color="purple"
@@ -169,6 +384,66 @@ const SignUp = () => {
 					>
 						<IonText className="text-white">Cadastrar</IonText>
 					</IonButton>
+					{/* <Input
+						name="full_name"
+						label="Nome"
+						placeholder="Nome completo"
+						type="text"
+						register={register}
+						error={errors.full_name}
+					/>
+					<Input
+						name="nickname"
+						label="Nome Social"
+						placeholder="Como você gostaria de ser chamado"
+						type="text"
+						register={register}
+						error={errors.nickname}
+					/>
+					<Input
+						name="email"
+						label="E-mail"
+						placeholder="exemplo@email.com"
+						type="email"
+						register={register}
+						error={errors.email}
+					/>
+					<Input
+						name="cpf"
+						label="CPF"
+						placeholder="000.000.000-00"
+						type="string"
+						register={register}
+						error={errors.cpf}
+					/>
+					<Input
+						name="birth_date"
+						label="Data de Nascimento"
+						placeholder="00/00/0000"
+						// pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
+						type="datetime"
+						register={register}
+						error={errors.birth_date}
+					/>
+					<Input
+						name="password"
+						label="Senha"
+						placeholder=""
+						type="password"
+						register={register}
+						error={errors.password}
+					/>
+					<Input
+						name="confirm_password"
+						label="Confirmar Senha"
+						placeholder=""
+						type="password"
+						register={register}
+						error={errors.confirm_password}
+					/>
+					<Button className="bg-purple-100" type="submit">
+						<IonText className="text-white">Cadastrar</IonText>
+					</Button> */}
 				</form>
 			</IonContent>
 		</IonPage>
