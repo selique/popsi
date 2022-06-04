@@ -28,19 +28,18 @@ import {
 	IonList
 } from '@ionic/react'
 import { format, parseISO } from 'date-fns'
+import { id } from 'date-fns/locale'
 import { calendar } from 'ionicons/icons'
 import * as Yup from 'yup'
 
 import { useAuth } from '../../../contexts/Auth'
 import { supabase } from '../../../utils/supabaseClient'
-import Button from '../../ui/Button'
-import Input from '../../ui/Input'
 import UploadAvatar from '../../UploadAvatar'
 
 const EditProfile = () => {
+	const { user } = useAuth()
 	const [showLoading, hideLoading] = useIonLoading()
 	const [showToast] = useIonToast()
-	const [session] = useState(() => supabase.auth.session())
 	const [profile, setProfile] = useState({
 		avatar_url: '',
 		full_name: '',
@@ -87,17 +86,13 @@ const EditProfile = () => {
 		// })
 	})
 
-	useEffect(() => {
-		getProfile()
-	}, [session])
-
 	const getProfile = async () => {
 		await showLoading()
 		try {
-			const user = supabase.auth.user()
-			console.log(user)
-			let { data, error, status } = await supabase.from('profiles').select(
-				`
+			let { data, error, status } = await supabase
+				.from('profiles')
+				.select(
+					`
 						avatar_url,
 						full_name,
 						bio,
@@ -108,8 +103,10 @@ const EditProfile = () => {
 						cpf,
 						birth_date
 					`
-			)
-			console.log(data)
+				)
+				.eq(id, user?.id)
+				.single()
+
 			if (error && status !== 406) {
 				throw error
 			}
@@ -138,7 +135,7 @@ const EditProfile = () => {
 		getProfile()
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [session])
+	}, [user])
 
 	const updateProfile = async data => {
 		console.log('update ')

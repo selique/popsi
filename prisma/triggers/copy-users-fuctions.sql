@@ -3,10 +3,9 @@
 DROP FUNCTION IF EXISTS handle_new_user cascade;
 -- inserts a row into public.profiles table
 create or replace function public.handle_new_user()
-returns trigger
-	LANGUAGE plpgsql
-	SECURITY DEFINER
-	set search_path = public
+	returns trigger
+	language plpgsql
+	security definer set search_path = public
 as $$
 	begin
 		insert into public.profiles (

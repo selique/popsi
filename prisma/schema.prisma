@@ -25,6 +25,9 @@ model Profile {
    // Relation: Surveys
    surveys Surveys[]
 
+   // Relation: Answer
+   answers Answer[]
+
    // Timestamp
    created_at DateTime  @default(now())
    updated_at DateTime?
@@ -92,6 +95,10 @@ model Answer {
 
    // Answer data
    answer String
+
+   // Relation: Profiles
+   Profile   Profile? @relation(fields: [profileId], references: [id])
+   profileId String   @db.Uuid
 
    // Relation: Question
    question Question @relation(fields: [answerId], references: [id])

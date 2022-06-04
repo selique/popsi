@@ -12,8 +12,8 @@ import ProfessionalProfile from './pages/ProfessionalProfile'
 import Scheduling from './pages/Scheduling'
 import Signinup from './pages/Signinup'
 import SignUp from './pages/SignUp'
-import Tabs from './pages/Tabs'
 import PrivateRoute from './PrivateRoute'
+import Tabs from './Tabs'
 
 const AppShell = () => {
 	const { user } = useAuth()
@@ -58,8 +58,8 @@ const AppShell = () => {
 						component={() => <ProfessionalProfile />}
 						exact={true}
 					/>
-					<Route path="/app" render={() => <Tabs />} />
-					<Route path="/breathing" render={() => <Breathing />} />
+					<PrivateRoute path="/app" render={() => <Tabs />} />
+					<PrivateRoute path="/breathing" render={() => <Breathing />} />
 				</IonRouterOutlet>
 			</IonReactRouter>
 		</IonApp>

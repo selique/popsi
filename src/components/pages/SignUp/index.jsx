@@ -1,7 +1,9 @@
 import * as React from 'react'
 import { useForm, Controller } from 'react-hook-form'
 
+import formatCpf from '@brazilian-utils/format-cpf'
 import { ErrorMessage } from '@hookform/error-message'
+import { yupResolver } from '@hookform/resolvers/yup'
 import {
 	IonPage,
 	IonContent,
@@ -27,49 +29,51 @@ import {
 	IonTitle,
 	IonList
 } from '@ionic/react'
-import { format, parseISO, formatISO } from 'date-fns'
-import { calendar } from 'ionicons/icons'
+import { format, parseISO } from 'date-fns'
 import * as Yup from 'yup'
 
 import { useAuth } from '../../../contexts/Auth'
-import { supabase } from '../../../utils/supabaseClient'
-import Button from '../../ui/Button'
-import Input from '../../ui/Input'
 const SignUp = () => {
 	const { signUp } = useAuth()
-
+	const [cpfField, setCpfField] = React.useState()
 	const [showLoading, hideLoading] = useIonLoading()
 	const [showToast] = useIonToast()
+
+	const schema = Yup.object().shape({
+		full_name: Yup.string().required('O nome é obrigatório'),
+		email: Yup.string()
+			.email('Insira um e-mail válido')
+			.required('O e-mail é obrigatório'),
+		password: Yup.string()
+			.min(6, 'A senha deve ter no mínimo 6 caracteres')
+			.required('A senha é obrigatória'),
+		confirm_password: Yup.string()
+			.oneOf([Yup.ref('password'), null], 'As senhas não conferem')
+			.required('A confirmação da senha é obrigatória'),
+		avatar_url: Yup.string().notRequired(),
+		matrial_status: Yup.string().required('O estado civil é obrigatório'),
+		gender: Yup.string().required('O campo Sexo é obrigatorio'),
+		gender_identity: Yup.string().required(
+			'O campo Indetidade de Gênero é obrigatorio'
+		),
+		cpf: Yup.string()
+			.min(11, 'O CPF deve ter no mínimo 11 caracteres')
+			.required('O CPF é obrigatório'),
+		nickname: Yup.string()
+			.min(3, 'O nickname deve ter no mínimo 3 caracteres')
+			.notRequired(),
+		birth_date: Yup.string().required('A data de nascimento é obrigatória')
+	})
 
 	const {
 		handleSubmit,
 		control,
 		setValue,
 		register,
-		getValues,
 		formState: { errors }
 	} = useForm({
-		mode: 'onChange'
-		// validationSchema: Yup.object().shape({
-		// 	full_name: Yup.string().required('O nome é obrigatório'),
-		// 	email: Yup.string()
-		// 		.email('Insira um e-mail válido')
-		// 		.required('O e-mail é obrigatório'),
-		// 	password: Yup.string()
-		// 		.min(6, 'A senha deve ter no mínimo 6 caracteres')
-		// 		.required('A senha é obrigatória'),
-		// 	confirm_password: Yup.string()
-		// 		.oneOf([Yup.ref('password'), null], 'As senhas não conferem')
-		// 		.required('A confirmação da senha é obrigatória'),
-		// 	avatar_url: Yup.string().notRequired(),
-		// 	cpf: Yup.string()
-		// 		.min(11, 'O CPF deve ter no mínimo 11 caracteres')
-		// 		.required('O CPF é obrigatório'),
-		// 	nickname: Yup.string()
-		// 		.min(3, 'O nickname deve ter no mínimo 3 caracteres')
-		// 		.notRequired(),
-		// 	birth_date: Yup.string().required('A data de nascimento é obrigatória')
-		// })
+		mode: 'onChange',
+		resolver: yupResolver(schema)
 	})
 
 	const registerUser = async data => {
@@ -111,7 +115,8 @@ const SignUp = () => {
 						birth_date: format(parseISO(data.birth_date), 'yyyy-MM-dd'),
 						gender: data.gender,
 						gender_identity: data.gender_identity
-					}
+					},
+					redirectTo: 'http://localhost:3000/login'
 				}
 			)
 
@@ -147,15 +152,10 @@ const SignUp = () => {
 							{/* === ION INPUT === */}
 							<IonLabel position="stacked">E-mail</IonLabel>
 							<IonInput
+								inputmode="email"
 								placeholder="Digite seu e-mail"
 								type="email"
-								{...register('email', {
-									required: 'E-mail é obrigatório',
-									pattern: {
-										value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-										message: 'E-mail inválido'
-									}
-								})}
+								{...register('email')}
 							/>
 							<ErrorMessage
 								errors={errors}
@@ -170,9 +170,7 @@ const SignUp = () => {
 							<IonInput
 								placeholder="Nome completo"
 								type="text"
-								{...register('full_name', {
-									required: 'Nome é obrigatório'
-								})}
+								{...register('full_name')}
 							/>
 							<ErrorMessage
 								errors={errors}
@@ -187,9 +185,7 @@ const SignUp = () => {
 							<IonInput
 								placeholder="Nome Social"
 								type="text"
-								{...register('nickname', {
-									required: 'Nome Social é obrigatório'
-								})}
+								{...register('nickname')}
 							/>
 							<ErrorMessage
 								errors={errors}
@@ -203,10 +199,11 @@ const SignUp = () => {
 							<IonLabel position="stacked">CPF</IonLabel>
 							<IonInput
 								placeholder="000.000.000-00"
+								inputmode="numeric"
 								type="text"
-								{...register('cpf', {
-									required: 'CPF é obrigatório'
-								})}
+								onIonChange={e => setCpfField(e.detail.value || '')}
+								value={formatCpf(cpfField)}
+								{...register('cpf')}
 							/>
 							<ErrorMessage
 								errors={errors}
@@ -235,9 +232,6 @@ const SignUp = () => {
 								)}
 								control={control}
 								name="matrial_status"
-								rules={{
-									required: 'Estado Civil é obrigatório'
-								}}
 							/>
 							<ErrorMessage
 								errors={errors}
@@ -253,9 +247,7 @@ const SignUp = () => {
 								locale="pt-BR"
 								displayFormat="DD/MM/YYYY"
 								placeholder="Selecione a data de nascimento"
-								{...register('birth_date', {
-									required: 'Data de nascimento é obrigatória'
-								})}
+								{...register('birth_date')}
 							/>
 							<ErrorMessage
 								errors={errors}
@@ -284,9 +276,6 @@ const SignUp = () => {
 								)}
 								control={control}
 								name="gender_identity"
-								rules={{
-									required: 'Identidade de Gênero é obrigatório'
-								}}
 							/>
 							<ErrorMessage
 								errors={errors}
@@ -312,7 +301,6 @@ const SignUp = () => {
 								)}
 								control={control}
 								name="gender"
-								rules={{ required: 'Sexo é obrigatório' }}
 							/>
 							<ErrorMessage
 								errors={errors}
@@ -326,9 +314,7 @@ const SignUp = () => {
 							<IonInput
 								type="password"
 								placeholder="Senha"
-								{...register('password', {
-									required: 'Senha é obrigatório'
-								})}
+								{...register('password')}
 							/>
 							<ErrorMessage
 								errors={errors}
@@ -342,9 +328,7 @@ const SignUp = () => {
 							<IonInput
 								type="password"
 								placeholder="Confirmar senha"
-								{...register('confirm_password', {
-									// required: 'Confirmar senha é obrigatório'
-								})}
+								{...register('confirm_password')}
 							/>
 							<ErrorMessage
 								errors={errors}

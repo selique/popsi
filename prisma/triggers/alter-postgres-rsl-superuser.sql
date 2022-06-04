@@ -5,22 +5,17 @@ ALTER table questions enable row level security;
 ALTER table surveys enable row level security;
 ALTER table _prisma_migrations enable row level security;
 
+create policy "Public profiles are viewable by everyone."
+  on profiles for select
+  using ( true );
 
-CREATE POLICY "Enable read access to everyone"
-	ON "public"."profiles"
-	FOR SELECT USING (true);
+create policy "Users can insert their own profile."
+  on profiles for insert
+  with check ( auth.uid() = id );
 
-CREATE POLICY "Enable insert access for authenticated users only"
-	ON "public"."profiles" FOR INSERT TO authenticated WITH CHECK (true);
-
-CREATE POLICY "Enable update access for users based  on their user ID"
-	ON "public"."profiles" FOR UPDATE
-	USING (auth.uid() = id)
-	WITH CHECK (auth.uid() = id);
-
-CREATE POLICY "Enable delete access for users based on their user ID"
-	ON "public"."profiles"
-	FOR DELETE USING (auth.uid() = id);
+create policy "Users can update own profile."
+  on profiles for update
+  using ( auth.uid() = id );
 
 /**
  * REALTIME SUBSCRIPTIONS
@@ -61,16 +56,14 @@ create policy "Anyone can upload an avatar." on storage.objects
 create policy "Anyone can update an avatar." on storage.objects
   for update with check (bucket_id = 'avatars');
 
--- --
--- grant usage on schema public to postgres, anon, authenticated, service_role;
--- ALTER default privileges in schema public grant all on tables to postgres, anon, authenticated, service_role;
--- ALTER default privileges in schema public grant all on functions to postgres, anon, authenticated, service_role;
--- ALTER default privileges in schema public grant all on sequences to postgres, anon, authenticated, service_role;
+grant usage on schema public to postgres, anon, authenticated, service_role;
+alter default privileges in schema public grant all on tables to postgres, anon, authenticated, service_role;
+alter default privileges in schema public grant all on functions to postgres, anon, authenticated, service_role;
+alter default privileges in schema public grant all on sequences to postgres, anon, authenticated, service_role;
 
--- -- These are required so that the users receive grants whenever "supabase_admin" creates tables/function
--- ALTER default privileges for user supabase_admin in schema public grant all
---     on sequences to postgres, anon, authenticated, service_role;
--- ALTER default privileges for user supabase_admin in schema public grant all
---     on tables to postgres, anon, authenticated, service_role;
--- ALTER default privileges for user supabase_admin in schema public grant all
---     on functions to postgres, anon, authenticated, service_role;
+alter default privileges for user supabase_admin in schema public grant all
+    on sequences to postgres, anon, authenticated, service_role;
+alter default privileges for user supabase_admin in schema public grant all
+    on tables to postgres, anon, authenticated, service_role;
+alter default privileges for user supabase_admin in schema public grant all
+    on functions to postgres, anon, authenticated, service_role;

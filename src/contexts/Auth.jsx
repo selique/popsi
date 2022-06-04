@@ -11,15 +11,15 @@ export const AuthProvider = ({ children }) => {
 	const [loading, setLoading] = useState(true)
 
 	useEffect(() => {
-		// get session data if there is an active session
+		// Check active sessions and sets the user
 		const session = supabase.auth.session()
 
 		setUser(session?.user ?? null)
 		setLoading(false)
 
-		// listen for changes to auth
+		// Listen for changes on auth state (logged in, signed out, etc.)
 		const { data: listener } = supabase.auth.onAuthStateChange(
-			(event, session) => {
+			async (event, session) => {
 				setUser(session?.user ?? null)
 				setLoading(false)
 			}

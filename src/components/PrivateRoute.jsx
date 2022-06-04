@@ -4,7 +4,6 @@ import { useAuth } from '../contexts/Auth'
 
 const PrivateRoute = ({ ...props }) => {
 	const { user } = useAuth()
-
 	return user ? <Route {...props} /> : <Redirect to="/signinup" />
 }
 
