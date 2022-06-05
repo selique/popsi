@@ -48,13 +48,17 @@ insert into storage.buckets (id, name)
   values ('avatars', 'avatars');
 
 create policy "Avatar images are publicly accessible." on storage.objects
-  for select using (bucket_id = 'avatars');
+  for select using ((bucket_id = 'avatars'::text) AND (role() = 'authenticated'::text));
 
 create policy "Anyone can upload an avatar." on storage.objects
-  for insert with check (bucket_id = 'avatars');
+  for insert with check ((bucket_id = 'avatars'::text) AND (role() = 'authenticated'::text));
 
 create policy "Anyone can update an avatar." on storage.objects
-  for update with check (bucket_id = 'avatars');
+  for update with check ((bucket_id = 'avatars'::text) AND (role() = 'authenticated'::text));
+
+create policy "Anyone can delete an avatar." on storage.objects
+  for delete using ((bucket_id = 'avatars'::text) AND (role() = 'authenticated'::text));
+
 
 grant usage on schema public to postgres, anon, authenticated, service_role;
 alter default privileges in schema public grant all on tables to postgres, anon, authenticated, service_role;

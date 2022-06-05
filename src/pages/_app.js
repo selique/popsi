@@ -1,3 +1,6 @@
+import * as React from 'react'
+
+import { defineCustomElements } from '@ionic/pwa-elements/loader'
 import Head from 'next/head'
 import 'tailwindcss/tailwind.css'
 import '@ionic/core/css/core.css'
@@ -12,6 +15,11 @@ import '../styles/global.css'
 import '../styles/variables.css'
 
 function MyApp({ Component, pageProps }) {
+	React.useEffect(() => {
+		// window is accessible here.
+		defineCustomElements(window)
+	}, [])
+
 	return (
 		<>
 			<Head>

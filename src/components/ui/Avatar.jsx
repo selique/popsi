@@ -1,24 +1,22 @@
 import styled from 'styled-components'
 
 const AvatarStyled = styled.div`
-	width: ${({ width }) => width || '80px'};
-	height: ${({ height }) => height || '80px'};
-	${({ background }) =>
-		`
-			background: url(${background});
-			background-repeat: no-repeat;
-			background-attachment: fixed;
-			background-position: center;
-			background-size: 100%;
-		`}
-	border-radius: 100%;
-	border: 3px solid #ffffff;
+	width: ${({ width }) => width || '115px'};
+	height: ${({ height }) => height || '115px'};
+	background: ${({ background }) => `url(${background})`};
 	background-color: #ac8fbf;
-	color: '#ffffff';
-	display: flex;
+	background-origin: content-box;
+	background-position: center;
+	background-size: cover;
+	position: relative;
+	border-radius: 50%;
+	border: 20px solid #f4f4f4;
+	display: inline-flex;
+	vertical-align: top;
 	justify-content: center;
 	align-items: center;
-	box-shadow: 0 4px 8px #00000022;
+	overflow: hidden;
+	/* box-shadow: 0 4px 8px #00000022; */
 `
 
 const Avatar = ({ ...props }) => <AvatarStyled {...props} />

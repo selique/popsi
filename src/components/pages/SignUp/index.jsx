@@ -336,29 +336,6 @@ const SignUp = () => {
 								as={<div style={{ color: 'red' }} />}
 							/>
 						</IonItem>
-						{/* === ION RADIO === */}
-						{/* <IonText>
-						<IonLabel position="stacked">Sexo</IonLabel>
-						<IonRadioGroup
-							className="radio-group"
-							{...register('radioGrp', { required: true })}
-							defaultValue={getValues('radioGrp')}
-							onIonChange={e => setValue('radioGrp', e.detail.value)}
-						>
-							<IonItem lines="none">
-								<IonLabel position="fixed">Feminino</IonLabel>
-								<IonRadio slot="end" value="M" />
-							</IonItem>
-
-							<IonItem lines="none">
-								<IonLabel position="fixed">Masculino</IonLabel>
-								<IonRadio slot="end" value="F" />
-							</IonItem>
-						</IonRadioGroup>
-					</IonText>
-					{errors.radioGrp && (
-						<span className="error-msg">This field is required</span>
-					)} */}
 					</IonList>
 					<IonButton
 						color="purple"
@@ -368,66 +345,6 @@ const SignUp = () => {
 					>
 						<IonText className="text-white">Cadastrar</IonText>
 					</IonButton>
-					{/* <Input
-						name="full_name"
-						label="Nome"
-						placeholder="Nome completo"
-						type="text"
-						register={register}
-						error={errors.full_name}
-					/>
-					<Input
-						name="nickname"
-						label="Nome Social"
-						placeholder="Como você gostaria de ser chamado"
-						type="text"
-						register={register}
-						error={errors.nickname}
-					/>
-					<Input
-						name="email"
-						label="E-mail"
-						placeholder="exemplo@email.com"
-						type="email"
-						register={register}
-						error={errors.email}
-					/>
-					<Input
-						name="cpf"
-						label="CPF"
-						placeholder="000.000.000-00"
-						type="string"
-						register={register}
-						error={errors.cpf}
-					/>
-					<Input
-						name="birth_date"
-						label="Data de Nascimento"
-						placeholder="00/00/0000"
-						// pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
-						type="datetime"
-						register={register}
-						error={errors.birth_date}
-					/>
-					<Input
-						name="password"
-						label="Senha"
-						placeholder=""
-						type="password"
-						register={register}
-						error={errors.password}
-					/>
-					<Input
-						name="confirm_password"
-						label="Confirmar Senha"
-						placeholder=""
-						type="password"
-						register={register}
-						error={errors.confirm_password}
-					/>
-					<Button className="bg-purple-100" type="submit">
-						<IonText className="text-white">Cadastrar</IonText>
-					</Button> */}
 				</form>
 			</IonContent>
 		</IonPage>
