@@ -79,7 +79,6 @@ const EditProfile = () => {
 		handleSubmit,
 		control,
 		setValue,
-		getValues,
 		register,
 		formState: { errors }
 	} = useForm({

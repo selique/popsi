@@ -1,16 +1,112 @@
+import * as React from 'react'
 import { Link } from 'react-router-dom'
 
-import { IonPage, IonContent, IonText, IonIcon } from '@ionic/react'
+import {
+	IonPage,
+	IonContent,
+	IonText,
+	IonIcon,
+	useIonToast,
+	useIonLoading,
+	IonImg
+} from '@ionic/react'
 import { shareSocialOutline, documentTextOutline } from 'ionicons/icons'
 import Image from 'next/image'
 
 import Profile from '../../../assets/profile.png'
 import Running from '../../../assets/Running.png'
 import Yoga from '../../../assets/Yoga.png'
+import { useAuth } from '../../../contexts/Auth'
+import { supabase } from '../../../utils/supabaseClient'
+import Avatar from '../../ui/Avatar'
 import Card from '../../ui/Card'
 import ShortcutCard from '../../ui/ShortcutCard'
 
 const HomeClient = () => {
+	const [showLoading, hideLoading] = useIonLoading()
+	const [showToast] = useIonToast()
+	const { user } = useAuth()
+	const [profile, setProfile] = React.useState({
+		full_name: '',
+		avatar_url: '',
+		bio: '',
+		nickname: '',
+		matrial_status: '',
+		gender: '',
+		gender_identity: '',
+		cpf: '',
+		birth_date: ''
+	})
+	const [avatarUrl, setAvatarUrl] = React.useState('')
+
+	const getProfile = async () => {
+		console.log('get', user)
+		await showLoading()
+		try {
+			let { data, error, status } = await supabase
+				.from('profiles')
+				.select(
+					`
+				full_name,
+				avatar_url,
+				bio,
+				nickname,
+				matrial_status,
+				gender,
+				gender_identity,
+				cpf,
+				birth_date
+			`
+				)
+				.eq('id', user?.id)
+				.single()
+
+			if (error && status !== 406) {
+				throw error
+			}
+
+			if (data) {
+				setProfile({
+					full_name: data.full_name,
+					avatar_url: data.avatar_url,
+					bio: data.bio,
+					nickname: data.nickname,
+					matrial_status: data.matrial_status,
+					gender: data.gender,
+					gender_identity: data.gender_identity,
+					cpf: data.cpf,
+					birth_date: data.birth_date
+				})
+			}
+		} catch (error) {
+			showToast({ message: error.message, duration: 5000 })
+		} finally {
+			await hideLoading()
+		}
+	}
+
+	React.useEffect(() => {
+		getProfile()
+		downloadImage(profile.avatar_url)
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [user])
+
+	const downloadImage = async path => {
+		try {
+			const { data, error } = await supabase.storage
+				.from('avatars')
+				.download(path)
+
+			if (error) {
+				throw error
+			}
+			const url = URL.createObjectURL(data)
+			setAvatarUrl(url)
+		} catch (error) {
+			console.log('Error downloading image: ', error.message)
+		}
+	}
+
 	return (
 		<IonPage>
 			<IonContent className="ion-padding">
@@ -20,10 +116,10 @@ const HomeClient = () => {
 							Bem vindo
 						</IonText>
 						<IonText className="text-black-200 text-3xl font-bold">
-							Sabrina
+							{profile.nickname}
 						</IonText>
 					</div>
-					<Image src={Profile} alt="Foto de perfil" />
+					<Avatar background={avatarUrl} />
 				</div>
 				<div className="grid grid-cols-[30%_1fr] gap-4 my-4">
 					<Link to="/breathing">

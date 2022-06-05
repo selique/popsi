@@ -160,13 +160,11 @@ const Quiz = () => {
 						</Link>
 					))}
 				</div>
-				{professional && (
-					<IonFab vertical="bottom" horizontal="end" slot="fixed">
-						<IonFabButton href="/app/form">
-							<IonIcon icon={addOutline} color="#fff" />
-						</IonFabButton>
-					</IonFab>
-				)}
+				<IonFab vertical="bottom" horizontal="end" slot="fixed">
+					<IonFabButton href="/app/form">
+						<IonIcon icon={addOutline} color="#fff" />
+					</IonFabButton>
+				</IonFab>
 			</IonContent>
 		</IonPage>
 	)
