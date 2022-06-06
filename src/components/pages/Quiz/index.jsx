@@ -1,3 +1,4 @@
+import * as React from 'react'
 import { Link } from 'react-router-dom'
 
 import {
@@ -20,52 +21,43 @@ import {
 	addOutline
 } from 'ionicons/icons'
 
+import { useAuth } from '../../../contexts/Auth'
+import { supabase } from '../../../utils/supabaseClient'
 import Avatar from '../../ui/Avatar'
 import Input from '../../ui/Input'
-
-const imageTemp =
-	'https://i0.wp.com/www.kailagarcia.com/wp-content/uploads/2019/05/46846414_205184383758304_7255555943408505199_n.jpg?fit=1080%2C1350&ssl=1'
 
 const imageTemp2 =
 	'https://pm1.narvii.com/6583/13022a93a381cddb0c98d4e0a813635bd1215d89_hq.jpg'
 
 const Quiz = () => {
 	const professional = false
+	const [surveys, setSurveys] = React.useState([])
+	const { user } = useAuth()
 
-	const quiz = [
-		{
-			id: 'ajbdajsbdpijug2398y4',
-			title: 'Questionário 1',
-			description: professional ? '6 pessoas' : '6 páginas',
-			peaples: [
-				{
-					image: imageTemp
-				},
-				{
-					image: imageTemp
-				},
-				{
-					image: imageTemp2
-				}
-			]
-		},
-		{
-			id: 'ajosbdjbockvníopr09324',
-			title: 'Questionário 2',
-			description: professional ? '4 pessoas' : '4 páginas',
-			peaples: [
-				{
-					image: imageTemp
-				},
-				{
-					image: imageTemp2
-				},
-				{
-					image: imageTemp
-				}
-			]
+	React.useEffect(() => {
+		const getSurveys = async () => {
+			const { data: dataSurveys } = await supabase
+				.from('surveys')
+				.select('*')
+				.eq('profileId', user?.id)
+
+			if (dataSurveys) {
+				dataSurveys.map(async survey => {
+					const { data } = await supabase
+						.from('profiles')
+						.select('nickname')
+						.eq('id', survey.profileId)
+						.single()
+
+					if (data) {
+						setSurveys([...surveys, { ...survey, author: data.nickname }])
+					}
+				})
+			}
 		}
-	]
+
+		getSurveys()
+	}, [])
 
 	return (
 		<IonPage>
@@ -88,7 +80,7 @@ const Quiz = () => {
 				/>
 				<div>
 					<IonText>Recentes</IonText>
-					{quiz.map((item, index) => (
+					{surveys.map((item, index) => (
 						<Link to={`/form/${item.id}`} key={index}>
 							<div
 								className={`grid ${
@@ -103,7 +95,7 @@ const Quiz = () => {
 									<div className="bg-purple-opacity-100 text-white flex justify-center items-center text-3xl p-5 rounded-2xl">
 										<IonIcon src={documentOutline} color="white" />
 									</div>
-									{professional && (
+									{/* {professional && (
 										<div className="absolute bottom-0 right-0">
 											<Avatar
 												background={item.peaples[0].image}
@@ -127,7 +119,7 @@ const Quiz = () => {
 												className={`absolute bottom-0 right-4`}
 											/>
 										</div>
-									)}
+									)} */}
 								</div>
 								<div className="flex flex-col">
 									<IonText className="text-black">
@@ -144,7 +136,9 @@ const Quiz = () => {
 												height={'20px'}
 												style={{ border: '1px solid #ffffff' }}
 											/>
-											<IonText className="ml-1">Dr° Adriana</IonText>
+											<IonText className="ml-1 capitalize">
+												{item.author}
+											</IonText>
 										</div>
 									)}
 								</div>

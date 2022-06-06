@@ -25,7 +25,7 @@ import ShortcutCard from '../../ui/ShortcutCard'
 const HomeClient = () => {
 	const [showLoading, hideLoading] = useIonLoading()
 	const [showToast] = useIonToast()
-	const { user } = useAuth()
+	const { user, loading } = useAuth()
 	const [profile, setProfile] = React.useState({
 		full_name: '',
 		avatar_url: '',
@@ -37,10 +37,10 @@ const HomeClient = () => {
 		cpf: '',
 		birth_date: ''
 	})
+	const [surveys, setSurveys] = React.useState([])
 	const [avatarUrl, setAvatarUrl] = React.useState('')
 
 	const getProfile = async () => {
-		console.log('get', user)
 		await showLoading()
 		try {
 			let { data, error, status } = await supabase
@@ -85,11 +85,25 @@ const HomeClient = () => {
 		}
 	}
 
+	const getSurveys = async () => {
+		const { data } = await supabase
+			.from('surveys')
+			.select('*')
+			.eq('profileId', user?.id)
+
+		if (data) {
+			setSurveys(data)
+		}
+	}
+
 	React.useEffect(() => {
-		getProfile()
-		downloadImage(profile.avatar_url)
+		if (user) {
+			getProfile()
+			getSurveys()
+			downloadImage(profile.avatar_url)
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [user])
+	}, [loading])
 
 	const downloadImage = async path => {
 		try {
@@ -111,15 +125,15 @@ const HomeClient = () => {
 		<IonPage>
 			<IonContent className="ion-padding">
 				<div className="flex justify-between mb-5">
-					<div className="flex flex-col">
+					<div className="flex flex-col justify-center">
 						<IonText className="text-sm text-gray-900 mb-1 font-light">
 							Bem vindo
 						</IonText>
-						<IonText className="text-black-200 text-3xl font-bold">
+						<IonText className="text-black-200 text-2xl font-bold capitalize">
 							{profile.nickname}
 						</IonText>
 					</div>
-					<Avatar background={avatarUrl} />
+					<Avatar background={avatarUrl} width="80px" height="80px" />
 				</div>
 				<div className="grid grid-cols-[30%_1fr] gap-4 my-4">
 					<Link to="/breathing">
@@ -161,7 +175,7 @@ const HomeClient = () => {
 					<p className="font-bold text-lg text-black leading-1">
 						Questionários
 					</p>
-					{[1, 2, 3, 4].map((_, index) => (
+					{surveys.map((item, index) => (
 						<div
 							key={index}
 							className="bg-gray-200 p-4 rounded-2xl grid grid-cols-[auto_1fr_auto] gap-4 items-center mb-2"
@@ -174,7 +188,7 @@ const HomeClient = () => {
 							</div>
 							<div>
 								<p className="leading-[1px] font-medium text-black">
-									Questionario 1
+									{item.title}
 								</p>
 								<p className="leading-[1px] text-sm">6 paginas</p>
 							</div>

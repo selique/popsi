@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { useForm, useFieldArray, Controller } from 'react-hook-form'
+import { useParams } from 'react-router-dom'
 
 import {
 	IonPage,
@@ -32,9 +33,11 @@ import {
 	addOutline,
 	closeOutline
 } from 'ionicons/icons'
-import Router from 'next/router'
+import Router, { useRouter } from 'next/router'
 import { uuid } from 'uuidv4'
 
+import { useAuth } from '../../../contexts/Auth'
+import { supabase } from '../../../utils/supabaseClient'
 import Button from '../../ui/Button'
 
 const MultipleChoiceFieldArray = ({ nestIndex, control, register }) => {
@@ -47,10 +50,13 @@ const MultipleChoiceFieldArray = ({ nestIndex, control, register }) => {
 		<div>
 			{fields.map((item, k) => {
 				return (
-					<div key={item.id} className="flex flow-collum">
+					<div
+						key={item.id}
+						className="grid grid-cols-[1fr_auto] items-center"
+					>
 						<IonInput
 							placeholder="Titulo da Pergunta"
-							className="mb-2"
+							className="mb-2 h-max"
 							{...register(
 								`questions[${nestIndex}].multiple_choice[${k}]`
 							)}
@@ -60,6 +66,7 @@ const MultipleChoiceFieldArray = ({ nestIndex, control, register }) => {
 							size="small"
 							color="danger"
 							slot="end"
+							className="p-0"
 						>
 							<IonIcon icon={trashOutline} />
 						</IonButton>
@@ -75,7 +82,8 @@ const MultipleChoiceFieldArray = ({ nestIndex, control, register }) => {
 	)
 }
 
-const FormProfessional = () => {
+const FormProfessional = ({ idForm }) => {
+	const { user } = useAuth()
 	const { register, control, handleSubmit, reset, setValue, watch } = useForm({
 		defaultValues: {
 			questions: [{ title: '', type: 'TEXT', description: '' }]
@@ -87,7 +95,74 @@ const FormProfessional = () => {
 			name: 'questions'
 		})
 
-	const onSubmit = data => console.log('data', data)
+	React.useEffect(() => {
+		if (idForm) {
+			const getQuestions = async () => {
+				const { data } = await supabase
+					.from('questions')
+					.select('*')
+					.eq('surveysId', idForm)
+
+				console.log(data)
+			}
+
+			const getDataForm = async () => {
+				const { data: dataSurvey } = await supabase
+					.from('surveys')
+					.select('title')
+					.eq('id', idForm)
+					.single()
+				if (dataSurvey) {
+					setValue('title', dataSurvey.title)
+					getQuestions()
+				}
+			}
+			getDataForm()
+		}
+	}, [idForm])
+
+	const onSubmit = async data => {
+		const { data: dataSurveys } = await supabase
+			.from('surveys')
+			.insert([
+				{
+					id: uuid(),
+					title: data.title,
+					description: '',
+					profileId: user.id
+				}
+			])
+			.single()
+
+		if (!!data && !!data.questions && dataSurveys) {
+			let dataQuestion = []
+			data.questions.map(question => {
+				const defaultData = {
+					id: uuid(),
+					question: question.title,
+					type: question.type,
+					surveysId: dataSurveys.id
+				}
+
+				if (question.type !== 'MULTIPLE_CHOICE') {
+					dataQuestion.push(defaultData)
+				} else {
+					dataQuestion.push({
+						...defaultData,
+						alternatives: question.multiple_choice
+					})
+				}
+			})
+
+			console.log(dataQuestion)
+
+			const { data: dataQuestions } = await supabase
+				.from('questions')
+				.insert(dataQuestion)
+
+			if (dataQuestions) Router.back()
+		}
+	}
 
 	// if you want to control your fields with watch
 	// const watchResult = watch("test");
@@ -168,15 +243,21 @@ const FormProfessional = () => {
 										value={field.value}
 										className="mb-2"
 										onIonChange={e => {
-											e.detail.value !== 'MULTIPLE_CHOICE'
-												? setValue(
-														`questions.${index}.multiple_choice`,
-														[]
-												  )
-												: setValue(
-														`questions.${index}.type`,
-														e.detail.value
-												  )
+											if (e.detail.value !== 'MULTIPLE_CHOICE') {
+												setValue(
+													`questions.${index}.multiple_choice`,
+													[]
+												)
+												setValue(
+													`questions.${index}.type`,
+													e.detail.value
+												)
+											} else {
+												setValue(
+													`questions.${index}.type`,
+													e.detail.value
+												)
+											}
 										}}
 									>
 										<IonSelectOption value="TEXT">{`Texto`}</IonSelectOption>
@@ -187,14 +268,6 @@ const FormProfessional = () => {
 								)}
 							/>
 
-							{watch(`questions.${index}.type`) === 'TEXT' && (
-								<IonInput
-									placeholder="Pergunta"
-									className="mb-2"
-									{...register(`questions.${index}.title`)}
-								/>
-							)}
-
 							{watch(`questions.${index}.type`) ===
 								'MULTIPLE_CHOICE' && (
 								// add options dinamicly with useFieldArray
@@ -203,12 +276,6 @@ const FormProfessional = () => {
 									{...{ control, register }}
 								/>
 							)}
-
-							<IonTextarea
-								placeholder="descrição da pergunta..."
-								className="mb-2"
-								{...register(`questions.${index}.description`)}
-							/>
 						</div>
 					)
 				})}
@@ -298,7 +365,8 @@ const FormClient = () => {
 }
 
 const Form = () => {
-	const professional = true
+	const professional = false
+	const { id } = useParams()
 
 	return (
 		<IonPage>
@@ -315,7 +383,7 @@ const Form = () => {
 				</IonHeader>
 			)}
 			<IonContent fullscreen>
-				{professional ? <FormProfessional /> : <FormClient />}
+				{professional ? <FormProfessional idForm={id} /> : <FormClient />}
 			</IonContent>
 		</IonPage>
 	)

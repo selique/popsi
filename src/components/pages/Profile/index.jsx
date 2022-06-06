@@ -24,7 +24,7 @@ const Profile = () => {
 
 	const [showLoading, hideLoading] = useIonLoading()
 	const [showToast] = useIonToast()
-	const { user } = useAuth()
+	const { user, loading } = useAuth()
 	const [profile, setProfile] = useState({
 		full_name: '',
 		avatar_url: '',
@@ -37,7 +37,6 @@ const Profile = () => {
 		birth_date: ''
 	})
 	const getProfile = async () => {
-		console.log('get', user)
 		await showLoading()
 		try {
 			let { data, error, status } = await supabase
@@ -83,10 +82,10 @@ const Profile = () => {
 	}
 
 	useEffect(() => {
-		getProfile()
+		if (user) getProfile()
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [user])
+	}, [loading])
 
 	return (
 		<IonPage>
@@ -95,10 +94,10 @@ const Profile = () => {
 					<div className="absolute top-[65%] border-[15px] border-white-100 border-solid bg-gray-900 w-[100px] h-[100px] rounded-full" />
 				</div>
 				<div className="mt-[6vh] ion-padding">
-					<p className="text-center font-bold text-black text-xl">
+					<p className="text-center font-bold text-black text-xl capitalize">
 						{profile.full_name}
 					</p>
-					<p className="text-center font-bold text-black text-lg">
+					<p className="text-center font-bold text-black text-lg capitalize">
 						{profile.nickname}
 					</p>
 					<p className="text-sm text-center">{profile.bio}</p>
@@ -106,7 +105,10 @@ const Profile = () => {
 						<div className="flex items-center">
 							<div className="w-[5px] h-[5px] rounded-full bg-gray-900" />
 							<p className="text-sm ml-2 leading-[1px]">
-								Idade: {profile.birth_date} anos
+								Idade:{' '}
+								{new Date().getFullYear() -
+									profile.birth_date.split('-')[0]}{' '}
+								anos
 							</p>
 						</div>
 						<div className="flex items-center">
@@ -118,7 +120,8 @@ const Profile = () => {
 						<div className="flex items-center">
 							<div className="w-[5px] h-[5px] rounded-full bg-gray-900" />
 							<p className="text-sm ml-2 leading-[1px]">
-								Sexo: {profile.gender}
+								Sexo:{' '}
+								{profile.gender === 'm' ? 'Masculino' : 'Feminino'}
 							</p>
 						</div>
 						<div className="flex items-center">
@@ -131,12 +134,6 @@ const Profile = () => {
 							<div className="w-[5px] h-[5px] rounded-full bg-gray-900" />
 							<p className="text-sm ml-2 leading-[1px]">
 								CPF: {profile.cpf}
-							</p>
-						</div>
-						<div className="flex items-center">
-							<div className="w-[5px] h-[5px] rounded-full bg-gray-900" />
-							<p className="text-sm ml-2 leading-[1px]">
-								role: {profile.role}
 							</p>
 						</div>
 					</div>
