@@ -54,6 +54,7 @@
     "react-router-dom": "^5.2.0",
     "react-virtuoso": "^1.1.1",
     "styled-components": "5.3.3",
+    "uuidv4": "^6.2.13",
     "yup": "^0.32.11"
   },
   "devDependencies": {
