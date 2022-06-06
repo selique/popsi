@@ -26,7 +26,8 @@
     "format": "prettier --ignore-path .gitignore \"src/**/*.+(ts|js|jsx|tsx)\" --write",
     "postinstall": "husky install",
     "commit": "cz",
-    "test": "react-scripts test --transformIgnorePatterns 'node_modules/(?!(@ionic/react|@ionic/react-router|@ionic/core|@stencil/core|ionicons)/)'"
+	 "test": "react-scripts test --transformIgnorePatterns 'node_modules/(?!(@ionic/react|@ionic/react-router|@ionic/core|@stencil/core|ionicons)/)'",
+	 "migrate:dev": "npx prisma migrate dev --skip-generate"
   },
   "dependencies": {
     "@brazilian-utils/format-cpf": "^0.1.8",

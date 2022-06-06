@@ -65,10 +65,12 @@ model Question {
    id String @id @unique @default(uuid()) @db.Uuid
 
    // Question data
-   title       String
-   description String?
-   type        QuestionTypes @default(TEXT)
-   Answer      Answer[]
+   question     String
+   description  String?
+   alternatives String[]
+
+   type   QuestionTypes
+   Answer Answer[]
 
    // Relation: Surveys
    Surveys   Surveys? @relation(fields: [surveysId], references: [id])
@@ -83,9 +85,9 @@ model Question {
 
 enum QuestionTypes {
    TEXT
-   BOOLEAN
    MULTIPLE_CHOICE
-   SCALE
+   SINGLE_CHOICE
+   RATING
 
    @@map("answer_types")
 }
@@ -94,15 +96,15 @@ model Answer {
    id String @id @unique @default(uuid()) @db.Uuid
 
    // Answer data
-   answer String
+   answer String[]
 
    // Relation: Profiles
    Profile   Profile? @relation(fields: [profileId], references: [id])
    profileId String   @db.Uuid
 
    // Relation: Question
-   question Question @relation(fields: [answerId], references: [id])
-   answerId String   @db.Uuid
+   question   Question @relation(fields: [questionId], references: [id])
+   questionId String   @db.Uuid
 
    // Timestamp
    created_at DateTime  @default(now())
