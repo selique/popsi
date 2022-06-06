@@ -87,9 +87,9 @@ http://ionicframework.com/docs/theming/ */
 	--ion-color-purple-tint: #383a3e;
 
 	/** blue **/
-	--ion-color-blue: #87C6EB;
+	--ion-color-blue: #87c6eb;
 	--ion-color-blue-rgb: 135, 198, 235;
-	--ion-color-blue-contrast: #6EBDEB;
+	--ion-color-blue-contrast: #6ebdeb;
 	--ion-color-blue-contrast-rgb: 110, 189, 235;
 	--ion-color-blue-shade: #1e2023;
 	--ion-color-blue-tint: #383a3e;
@@ -172,9 +172,9 @@ http://ionicframework.com/docs/theming/ */
 		--ion-color-purple-shade: #1e2023;
 		--ion-color-purple-tint: #383a3e;
 
-		--ion-color-blue: #87C6EB;
+		--ion-color-blue: #87c6eb;
 		--ion-color-blue-rgb: 135, 198, 235;
-		--ion-color-blue-contrast: #6EBDEB;
+		--ion-color-blue-contrast: #6ebdeb;
 		--ion-color-blue-contrast-rgb: 110, 189, 235;
 		--ion-color-blue-shade: #1e2023;
 		--ion-color-blue-tint: #383a3e;
@@ -284,7 +284,7 @@ http://ionicframework.com/docs/theming/ */
 ion-button {
 	--border-radius: 0.75rem;
 	@apply text-sm !important;
-	@apply py-6 !important;
+	@apply pb-6 !important;
 	@apply px-3 !important;
 }
 
