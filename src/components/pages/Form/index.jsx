@@ -82,6 +82,48 @@ const MultipleChoiceFieldArray = ({ nestIndex, control, register }) => {
 	)
 }
 
+const SingleChoiceFieldArray = ({ nestIndex, control, register }) => {
+	const { fields, remove, append } = useFieldArray({
+		control,
+		name: `questions[${nestIndex}].single_choice`
+	})
+
+	return (
+		<div>
+			{fields.map((item, k) => {
+				return (
+					<div
+						key={item.id}
+						className="grid grid-cols-[1fr_auto] items-center"
+					>
+						<IonInput
+							placeholder="Titulo da Pergunta"
+							className="mb-2 h-max"
+							{...register(
+								`questions[${nestIndex}].single_choice[${k}]`
+							)}
+						/>
+						<IonButton
+							onClick={() => remove(k)}
+							size="small"
+							color="danger"
+							slot="end"
+							className="p-0"
+						>
+							<IonIcon icon={trashOutline} />
+						</IonButton>
+					</div>
+				)
+			})}
+			<IonButton color="blue" onClick={() => append()}>
+				<IonText className="text-white font-medium">
+					Adicionar Pergunta
+				</IonText>
+			</IonButton>
+		</div>
+	)
+}
+
 const FormProfessional = ({ idForm }) => {
 	const { user } = useAuth()
 	const { register, control, handleSubmit, reset, setValue, watch } = useForm({
@@ -243,9 +285,12 @@ const FormProfessional = ({ idForm }) => {
 										value={field.value}
 										className="mb-2"
 										onIonChange={e => {
-											if (e.detail.value !== 'MULTIPLE_CHOICE') {
+											if (
+												e.detail.value !== 'MULTIPLE_CHOICE' ||
+												e.detail.value !== 'SINGLE_CHOICE'
+											) {
 												setValue(
-													`questions.${index}.multiple_choice`,
+													`questions.${index}.${e.detail.value.toLowerCase()}`,
 													[]
 												)
 												setValue(
@@ -261,8 +306,8 @@ const FormProfessional = ({ idForm }) => {
 										}}
 									>
 										<IonSelectOption value="TEXT">{`Texto`}</IonSelectOption>
-										<IonSelectOption value="BOOLEAN">{`Verdadeiro ou Falso`}</IonSelectOption>
 										<IonSelectOption value="MULTIPLE_CHOICE">{`Multipla escolha`}</IonSelectOption>
+										<IonSelectOption value="SINGLE_CHOICE">{`Escolha Única`}</IonSelectOption>
 										<IonSelectOption value="SCALE">{`Escala`}</IonSelectOption>
 									</IonSelect>
 								)}
@@ -276,6 +321,18 @@ const FormProfessional = ({ idForm }) => {
 									{...{ control, register }}
 								/>
 							)}
+							{watch(`questions.${index}.type`) === 'SINGLE_CHOICE' && (
+								// add options dinamicly with useFieldArray
+								<SingleChoiceFieldArray
+									nestIndex={index}
+									{...{ control, register }}
+								/>
+							)}
+							<IonTextarea
+								placeholder="descrição da pergunta..."
+								className="mb-2"
+								{...register(`questions.${index}.description`)}
+							/>
 						</div>
 					)
 				})}
@@ -365,7 +422,7 @@ const FormClient = () => {
 }
 
 const Form = () => {
-	const professional = false
+	const professional = true
 	const { id } = useParams()
 
 	return (
