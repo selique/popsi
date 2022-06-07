@@ -145,7 +145,7 @@ const SignUp = () => {
 				</IonToolbar>
 			</IonHeader>
 
-			<IonContent>
+			<IonContent className="ion-padding">
 				<form onSubmit={handleSubmit(registerUser)}>
 					<IonList>
 						<IonItem lines="none">

@@ -373,7 +373,7 @@ const Form = () => {
 					</IonTitle>
 				</IonToolbar>
 			</IonHeader>
-			<IonContent fullscreen>
+			<IonContent className="ion-padding" fullscreen>
 				<FormProfessional idForm={id} />
 			</IonContent>
 		</IonPage>

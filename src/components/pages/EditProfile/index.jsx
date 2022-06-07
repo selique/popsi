@@ -188,9 +188,11 @@ const EditProfile = () => {
 
 	return (
 		<IonPage>
-			<IonContent className="mt-[6vh]">
-				<div className="relative flex justify-center w-full h-[20vh] bg-gradient-to-r from-[#8abce8] to-[#a676cc] rounded-b-3xl" />
+			<IonHeader className="ion-no-border header-profile">
+				<div className="relative flex justify-center w-screen h-[20vh] bg-gradient-to-r from-[#8abce8] to-[#a676cc] rounded-b-3xl" />
 				<UploadAvatar disabledUpload />
+			</IonHeader>
+			<IonContent className="ion-padding mt-[6vh]">
 				<form onSubmit={handleSubmit(updateProfile)}>
 					<IonList>
 						<IonItem lines="none">
