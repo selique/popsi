@@ -7,6 +7,7 @@ import { useAuth } from '../contexts/Auth'
 import Apresentation from './pages/Apresentation'
 import Breathing from './pages/Breathing'
 import Form from './pages/Form'
+import FormAnswers from './pages/FormAnswers'
 import Login from './pages/Login'
 import ProfessionalProfile from './pages/ProfessionalProfile'
 import Scheduling from './pages/Scheduling'
@@ -51,6 +52,11 @@ const AppShell = () => {
 					<PrivateRoute
 						path="/form/:id"
 						component={() => <Form />}
+						exact={true}
+					/>
+					<PrivateRoute
+						path="/form/answers/:id"
+						component={() => <FormAnswers />}
 						exact={true}
 					/>
 					<PrivateRoute

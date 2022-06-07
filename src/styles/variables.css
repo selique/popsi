@@ -394,7 +394,7 @@ ion-picker .picker-wrapper {
 	@apply bg-gray-100 !important;
 }
 
-ion-radio-group {
+/* ion-radio-group {
 	@apply flex !important;
 	@apply w-full !important;
 	@apply justify-between !important;
@@ -413,7 +413,7 @@ ion-radio-group > ion-item {
 ion-radio-group > ion-item > ion-label {
 	@apply p-0 !important;
 	@apply text-sm !important;
-}
+} */
 
 /* .radio-group > ion-item::part(item-inner) {
 	outline: yellow solid 1px;

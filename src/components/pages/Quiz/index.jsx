@@ -81,7 +81,7 @@ const Quiz = () => {
 				<div>
 					<IonText>Recentes</IonText>
 					{surveys.map((item, index) => (
-						<Link to={`/form/${item.id}`} key={index}>
+						<Link to={`/form/answers/${item.id}`} key={index}>
 							<div
 								className={`grid ${
 									professional

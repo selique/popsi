@@ -32,7 +32,7 @@ const Signinup = () => {
 								Entrar
 							</Button>
 						</Link>
-						<Link to="#">
+						<Link to="/sign-up">
 							<Button className="bg-blue-100 w-full">Cadastrar</Button>
 						</Link>
 					</div>

@@ -358,89 +358,23 @@ const FormProfessional = ({ idForm }) => {
 	)
 }
 
-const FormClient = () => {
-	const [idQuiz, setIdQuiz] = React.useState(0)
-
-	const quiz = [
-		{
-			ask: 'Pergunta 1'
-		},
-		{
-			ask: 'Pergunta 2'
-		},
-		{
-			ask: 'Pergunta 3'
-		}
-	]
-
-	return (
-		<>
-			<div className="h-[75vh] p-4">
-				<div className="bg-white shadow-lg p-4 rounded-2xl flex flex-col">
-					<IonText>
-						{idQuiz + 1}/{quiz.length}
-					</IonText>
-					<IonText className="text-3xl mt-5">{quiz[idQuiz].ask}</IonText>
-					<IonList className="my-10">
-						<IonRadioGroup>
-							<IonItem>
-								<IonLabel>Alternative 1</IonLabel>
-								<IonRadio slot="start" value="alternativa 1" />
-							</IonItem>
-							<IonItem>
-								<IonLabel>Alternative 2</IonLabel>
-								<IonRadio slot="start" value="alternativa 2" />
-							</IonItem>
-							<IonItem>
-								<IonLabel>Alternative 3</IonLabel>
-								<IonRadio slot="start" value="alternativa 3" />
-							</IonItem>
-							<IonItem>
-								<IonLabel>Alternative 4</IonLabel>
-								<IonRadio slot="start" value="alternativa 4" />
-							</IonItem>
-						</IonRadioGroup>
-					</IonList>
-					<Button
-						onClick={() => {
-							if (idQuiz + 1 < quiz.length) {
-								setIdQuiz(idQuiz + 1)
-							} else {
-								Router.back()
-							}
-						}}
-						className="bg-purple-100"
-					>
-						<IonText className="text-xl text-white">
-							{quiz.length === idQuiz + 1 ? 'Acabou' : 'Próximo'}
-						</IonText>
-					</Button>
-				</div>
-			</div>
-		</>
-	)
-}
-
 const Form = () => {
-	const professional = true
 	const { id } = useParams()
 
 	return (
 		<IonPage>
-			{!professional && (
-				<IonHeader>
-					<IonToolbar>
-						<IonButtons slot="start">
-							<IonBackButton defaultHref="/app/homeclient" />
-						</IonButtons>
-						<IonTitle className="text-lg font-semibold">
-							Questionários
-						</IonTitle>
-					</IonToolbar>
-				</IonHeader>
-			)}
+			<IonHeader>
+				<IonToolbar>
+					<IonButtons slot="start">
+						<IonBackButton defaultHref="/app/homeclient" />
+					</IonButtons>
+					<IonTitle className="text-lg font-semibold">
+						Questionários
+					</IonTitle>
+				</IonToolbar>
+			</IonHeader>
 			<IonContent fullscreen>
-				{professional ? <FormProfessional idForm={id} /> : <FormClient />}
+				<FormProfessional idForm={id} />
 			</IonContent>
 		</IonPage>
 	)

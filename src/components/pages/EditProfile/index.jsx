@@ -55,12 +55,11 @@ const EditProfile = () => {
 		email: Yup.string()
 			.email('Insira um e-mail válido')
 			.required('O e-mail é obrigatório'),
-		password: Yup.string()
-			.min(6, 'A senha deve ter no mínimo 6 caracteres')
-			.required('A senha é obrigatória'),
-		confirm_password: Yup.string()
-			.oneOf([Yup.ref('password'), null], 'As senhas não conferem')
-			.required('A confirmação da senha é obrigatória'),
+		password: Yup.string().min(6, 'A senha deve ter no mínimo 6 caracteres'),
+		confirm_password: Yup.string().oneOf(
+			[Yup.ref('password'), null],
+			'As senhas não conferem'
+		),
 		matrial_status: Yup.string().required('O estado civil é obrigatório'),
 		gender: Yup.string().required('O campo Sexo é obrigatorio'),
 		gender_identity: Yup.string().required(
@@ -389,7 +388,7 @@ const EditProfile = () => {
 						shape="round"
 						type="submit"
 					>
-						<IonText className="text-white">Cadastrar</IonText>
+						<IonText className="text-white">Salvar</IonText>
 					</IonButton>
 				</form>
 			</IonContent>
