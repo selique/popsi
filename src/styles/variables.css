@@ -284,8 +284,9 @@ http://ionicframework.com/docs/theming/ */
 ion-button {
 	--border-radius: 0.75rem;
 	@apply text-sm !important;
-	@apply pb-6 !important;
-	@apply px-3 !important;
+	@apply py-4 !important;
+	@apply mb-4 !important;
+	@apply w-full !important;
 }
 
 ion-button::part(native) {
@@ -307,9 +308,6 @@ ion-fab-button {
 	--background: #ac8fbf;
 }
 
-ion-item {
-	background: #f4f4f4;
-}
 
 ion-checkbox {
 	--background: #ffffff;
@@ -328,21 +326,17 @@ ion-content {
 	--background: #f4f4f4;
 }
 
-ion-item {
-	--background: #fff;
-	--border-width: 0;
-}
-
 ion-radio-group {
 	--background: #f4f4f4;
 }
 
 ion-list {
+	@apply bg-white-100 !important;
 	@apply p-0 !important;
 	--background: #f4f4f4;
 }
-/* Targeting the native input element inside the ion-item. */
-form ion-item::part(native) {
+
+ion-item::part(native) {
 	--background: #f4f4f4;
 }
 

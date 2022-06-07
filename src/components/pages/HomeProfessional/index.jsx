@@ -71,7 +71,7 @@ const dayOfMonths = [
 	}
 ]
 
-const Home = () => {
+const HomeProfessional = () => {
 	const [modalOpen, setModalOpen] = React.useState(false)
 
 	const slideOpts = {
@@ -249,4 +249,4 @@ const Home = () => {
 	)
 }
 
-export default Home
+export default HomeProfessional

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import * as React from 'react'
 import { Redirect, Route } from 'react-router-dom'
 
 import {
@@ -12,7 +12,7 @@ import {
 	useIonToast
 } from '@ionic/react'
 import {
-	flash,
+	home,
 	list,
 	personOutline,
 	notificationsOutline,
@@ -22,15 +22,16 @@ import {
 import { useAuth } from '../contexts/Auth'
 import EditProfile from './pages/EditProfile'
 import Form from './pages/Form'
-import Home from './pages/Home'
 import HomeClient from './pages/HomeClient'
+import HomeProfessional from './pages/HomeProfessional'
 import Notification from './pages/Notification'
 import Patients from './pages/Patients'
+import ProfessionalProfile from './pages/ProfessionalProfile'
 import Profile from './pages/Profile'
 import Quiz from './pages/Quiz'
 
 const Tabs = () => {
-	const [professional, setProfessional] = useState(false)
+	const [professional, setProfessional] = React.useState(false)
 	const { user } = useAuth()
 	const [showLoading, hideLoading] = useIonLoading()
 	const [showToast] = useIonToast()
@@ -57,7 +58,8 @@ const Tabs = () => {
 			await hideLoading()
 		}
 	}
-	useEffect(() => {
+
+	React.useEffect(() => {
 		getRole()
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user])
@@ -65,7 +67,16 @@ const Tabs = () => {
 	return (
 		<IonTabs>
 			<IonRouterOutlet>
-				<Route path="/app/home" component={Home} exact={true} />
+				<Route
+					path="/app"
+					render={() => <Redirect to="/app/home" />}
+					exact={true}
+				/>
+				<Route
+					path="/app/home"
+					component={professional ? HomeProfessional : HomeClient}
+					exact={true}
+				/>
 				<Route path="/app/patients" component={Patients} exact={true} />
 				<Route path="/app/quiz" component={Quiz} exact={true} />
 				<Route
@@ -73,21 +84,17 @@ const Tabs = () => {
 					component={Notification}
 					exact={true}
 				/>
-				<Route path="/app/profile" component={Profile} exact={true} />
-				<Route path="/app/form" component={Form} exact={true} />
 				<Route
-					path="/app"
-					render={() => <Redirect to="/app/homeclient" />}
+					path="/app/profile"
+					component={professional ? ProfessionalProfile : Profile}
 					exact={true}
 				/>
+				<Route path="/app/form" component={Form} exact={true} />
 				<Route path="/app/edit" component={EditProfile} exact={true} />
-				{/* Routes do clientes */}
-				<Route path="/app/homeclient" component={HomeClient} exact={true} />
-				<Route path="/app/profile" component={Profile} exact={true} />
 			</IonRouterOutlet>
 			<IonTabBar slot="bottom">
-				<IonTabButton tab="tab1" href="/app/homeclient">
-					<IonIcon icon={flash} />
+				<IonTabButton tab="tab1" href="/app/home">
+					<IonIcon icon={home} />
 					<IonLabel>Home</IonLabel>
 				</IonTabButton>
 				{professional && (
@@ -104,10 +111,7 @@ const Tabs = () => {
 					<IonIcon icon={notificationsOutline} />
 					<IonLabel>Notificações</IonLabel>
 				</IonTabButton>
-				<IonTabButton
-					tab="tab5"
-					href={professional ? '/app/profileclient' : '/app/profile'}
-				>
+				<IonTabButton tab="tab5" href={'/app/profile'}>
 					<IonIcon icon={personOutline} />
 					<IonLabel>Perfil</IonLabel>
 				</IonTabButton>

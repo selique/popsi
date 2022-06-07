@@ -53,7 +53,7 @@ const Login = () => {
 		await showLoading()
 		try {
 			await signIn(data)
-			return user?.id && router.push('/app/homeclient')
+			return user?.id && router.push('/app/home')
 		} catch (e) {
 			await showToast({
 				message: e.error_description || e.message,
@@ -66,7 +66,7 @@ const Login = () => {
 
 	return (
 		<IonPage>
-			<IonContent className="ion-padding" fullscreen>
+			<IonContent className="ion-padding">
 				<div className="relative w-full h-full flex flex-col justify-between overflow-hidden">
 					<Lines className="absolute top-0 right-[28%] rotate-[100deg] z-[-1] w-full" />
 					<div />
@@ -109,15 +109,17 @@ const Login = () => {
 									as={<div style={{ color: 'red' }} />}
 								/>
 							</IonItem>
+							<IonItem lines="none">
+								<IonButton
+									color="purple"
+									expand="full"
+									shape="round"
+									type="submit"
+								>
+									<IonText className="text-white">Entrar</IonText>
+								</IonButton>
+							</IonItem>
 						</IonList>
-						<IonButton
-							color="purple"
-							expand="full"
-							shape="round"
-							type="submit"
-						>
-							<IonText className="text-white">Entrar</IonText>
-						</IonButton>
 					</form>
 					<div className="flex justify-center items-center">
 						<div className="w-full h-[1px] bg-black mr-2" />

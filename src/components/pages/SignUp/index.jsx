@@ -336,15 +336,17 @@ const SignUp = () => {
 								as={<div style={{ color: 'red' }} />}
 							/>
 						</IonItem>
+						<IonItem lines="none">
+							<IonButton
+								color="purple"
+								expand="full"
+								shape="round"
+								type="submit"
+							>
+								<IonText className="text-white">Cadastrar</IonText>
+							</IonButton>
+						</IonItem>
 					</IonList>
-					<IonButton
-						color="purple"
-						expand="full"
-						shape="round"
-						type="submit"
-					>
-						<IonText className="text-white">Cadastrar</IonText>
-					</IonButton>
 				</form>
 			</IonContent>
 		</IonPage>

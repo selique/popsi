@@ -9,7 +9,6 @@ import Breathing from './pages/Breathing'
 import Form from './pages/Form'
 import FormAnswers from './pages/FormAnswers'
 import Login from './pages/Login'
-import ProfessionalProfile from './pages/ProfessionalProfile'
 import Scheduling from './pages/Scheduling'
 import Signinup from './pages/Signinup'
 import SignUp from './pages/SignUp'
@@ -26,7 +25,7 @@ const AppShell = () => {
 						path="/"
 						render={() => {
 							return user ? (
-								<Redirect to="/app/homeclient" />
+								<Redirect to="/app/home" />
 							) : (
 								<Apresentation />
 							)
@@ -57,11 +56,6 @@ const AppShell = () => {
 					<PrivateRoute
 						path="/form/answers/:id"
 						component={() => <FormAnswers />}
-						exact={true}
-					/>
-					<PrivateRoute
-						path="/professional"
-						component={() => <ProfessionalProfile />}
 						exact={true}
 					/>
 					<PrivateRoute path="/app" render={() => <Tabs />} />

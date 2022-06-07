@@ -12,7 +12,9 @@ import {
 	IonToolbar,
 	IonTitle,
 	IonBackButton,
-	IonButtons
+	IonButtons,
+	useIonLoading,
+	useIonToast
 } from '@ionic/react'
 import {
 	searchOutline,
@@ -30,15 +32,52 @@ const imageTemp2 =
 	'https://pm1.narvii.com/6583/13022a93a381cddb0c98d4e0a813635bd1215d89_hq.jpg'
 
 const Quiz = () => {
-	const professional = false
 	const [surveys, setSurveys] = React.useState([])
+	const [professional, setProfessional] = React.useState(false)
 	const { user } = useAuth()
+	const [showLoading, hideLoading] = useIonLoading()
+	const [showToast] = useIonToast()
+
+	const getRole = async () => {
+		await showLoading()
+		try {
+			let { data, error, status } = await supabase
+				.from('profiles')
+				.select(`role`)
+				.eq('id', user?.id)
+				.single()
+
+			if (error && status !== 406) {
+				throw error
+			}
+
+			if (data) {
+				setProfessional(data.role === 'MEDIC')
+			}
+		} catch (error) {
+			showToast({ message: error.message, duration: 1000 })
+		} finally {
+			await hideLoading()
+		}
+	}
+
+	React.useEffect(() => {
+		getRole()
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [user])
 
 	React.useEffect(() => {
 		const getSurveys = async () => {
 			const { data: dataSurveys } = await supabase
 				.from('surveys')
-				.select('*')
+				.select(
+					`
+					title
+					description
+					author
+					professional
+				`
+				)
 				.eq('profileId', user?.id)
 
 			if (dataSurveys) {
@@ -57,21 +96,21 @@ const Quiz = () => {
 		}
 
 		getSurveys()
-	}, [])
+	}, [surveys, user?.id])
 
 	return (
 		<IonPage>
 			<IonHeader>
 				<IonToolbar>
 					<IonButtons slot="start">
-						<IonBackButton defaultHref="/app/homeclient" />
+						<IonBackButton defaultHref="/app/home" />
 					</IonButtons>
 					<IonTitle className="text-lg font-semibold">
 						Questionários
 					</IonTitle>
 				</IonToolbar>
 			</IonHeader>
-			<IonContent className="ion-padding">
+			<IonContent className="ion-padding" fullscreen>
 				<Input
 					icon={<IonIcon src={searchOutline} />}
 					placeholder="Pesquisar"
@@ -154,11 +193,13 @@ const Quiz = () => {
 						</Link>
 					))}
 				</div>
-				<IonFab vertical="bottom" horizontal="end" slot="fixed">
-					<IonFabButton href="/app/form">
-						<IonIcon icon={addOutline} color="#fff" />
-					</IonFabButton>
-				</IonFab>
+				{professional && (
+					<IonFab vertical="bottom" horizontal="end" slot="fixed">
+						<IonFabButton href="/app/form">
+							<IonIcon icon={addOutline} color="#fff" />
+						</IonFabButton>
+					</IonFab>
+				)}
 			</IonContent>
 		</IonPage>
 	)
