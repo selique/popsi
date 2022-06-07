@@ -38,8 +38,8 @@ CREATE TABLE "surveys" (
 -- CreateTable
 CREATE TABLE "questions" (
     "id" UUID NOT NULL,
-    "title" TEXT NOT NULL,
-    "description" TEXT,
+    "question" TEXT NOT NULL,
+    "alternatives" TEXT[],
     "type" "answer_types" NOT NULL DEFAULT E'TEXT',
     "surveysId" UUID NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -51,8 +51,9 @@ CREATE TABLE "questions" (
 -- CreateTable
 CREATE TABLE "answers" (
     "id" UUID NOT NULL,
-    "answer" TEXT NOT NULL,
-    "answerId" UUID NOT NULL,
+    "answer" TEXT[],
+    "profileId" UUID NOT NULL,
+    "questionId" UUID NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3),
 
@@ -78,4 +79,7 @@ ALTER TABLE "surveys" ADD CONSTRAINT "surveys_profileId_fkey" FOREIGN KEY ("prof
 ALTER TABLE "questions" ADD CONSTRAINT "questions_surveysId_fkey" FOREIGN KEY ("surveysId") REFERENCES "surveys"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "answers" ADD CONSTRAINT "answers_answerId_fkey" FOREIGN KEY ("answerId") REFERENCES "questions"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "answers" ADD CONSTRAINT "answers_profileId_fkey" FOREIGN KEY ("profileId") REFERENCES "profiles"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "answers" ADD CONSTRAINT "answers_questionId_fkey" FOREIGN KEY ("questionId") REFERENCES "questions"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
