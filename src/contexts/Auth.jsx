@@ -10,6 +10,26 @@ export const AuthProvider = ({ children }) => {
 	const [user, setUser] = useState()
 	const [loading, setLoading] = useState(true)
 
+	const getRole = async () => {
+		try {
+			let { data, error, status } = await supabase
+				.from('profiles')
+				.select(`role`)
+				.eq('id', user?.id)
+				.single()
+
+			if (error && status !== 406) {
+				throw error
+			}
+
+			if (data) {
+				setUser({ ...user, professional: data.role === 'MEDIC' })
+			}
+		} catch (error) {
+			console.log(error)
+		}
+	}
+
 	useEffect(() => {
 		// Check active sessions and sets the user
 		const session = supabase.auth.session()
@@ -24,6 +44,8 @@ export const AuthProvider = ({ children }) => {
 				setLoading(false)
 			}
 		)
+
+		if (user !== null) getRole()
 
 		// cleanup the useEffect hook
 		return () => {
