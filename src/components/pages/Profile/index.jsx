@@ -7,7 +7,8 @@ import {
 	IonSlide,
 	IonSlides,
 	useIonLoading,
-	useIonToast
+	useIonToast,
+	IonText
 } from '@ionic/react'
 
 import { useAuth } from '../../../contexts/Auth'
@@ -97,46 +98,56 @@ const Profile = () => {
 					<p className="text-center font-bold text-black text-xl capitalize">
 						{profile.full_name}
 					</p>
-					<p className="text-center font-bold text-black text-lg capitalize">
-						{profile.nickname}
-					</p>
+					{user.professeional ? (
+						<p className="text-center text-gray-900 text-lg capitalize">
+							Especialidades
+						</p>
+					) : (
+						<p className="text-center text-gray-900 text-sm capitalize">
+							But I must explain to you how all this mistaken idea of
+							denouncing pleasure and praising pain was born this
+							mistaken idea of denouncing pleasure
+						</p>
+					)}
 					<p className="text-sm text-center">{profile.bio}</p>
-					<div>
-						<div className="flex items-center">
-							<div className="w-[5px] h-[5px] rounded-full bg-gray-900" />
-							<p className="text-sm ml-2 leading-[1px]">
-								Idade:{' '}
-								{new Date().getFullYear() -
-									profile.birth_date.split('-')[0]}{' '}
-								anos
-							</p>
+					{user.professional ? (
+						<div className="grid grid-cols-3 gap-3 justify-items-center text-center items-center text-sm">
+							<IonText>Depressão</IonText>
+							<IonText>Auto conhecimento</IonText>
+							<IonText>Ansiedade</IonText>
 						</div>
-						<div className="flex items-center">
-							<div className="w-[5px] h-[5px] rounded-full bg-gray-900" />
-							<p className="text-sm ml-2 leading-[1px]">
-								Estado Civil: {profile.matrial_status}
-							</p>
+					) : (
+						<div>
+							<div className="flex items-center">
+								<div className="w-[5px] h-[5px] rounded-full bg-gray-900" />
+								<p className="text-sm ml-2 leading-[1px]">
+									Idade:{' '}
+									{new Date().getFullYear() -
+										profile.birth_date.split('-')[0]}{' '}
+									anos
+								</p>
+							</div>
+							<div className="flex items-center">
+								<div className="w-[5px] h-[5px] rounded-full bg-gray-900" />
+								<p className="text-sm ml-2 leading-[1px]">
+									Estado Civil: {profile.matrial_status}
+								</p>
+							</div>
+							<div className="flex items-center">
+								<div className="w-[5px] h-[5px] rounded-full bg-gray-900" />
+								<p className="text-sm ml-2 leading-[1px]">
+									Sexo:{' '}
+									{profile.gender === 'm' ? 'Masculino' : 'Feminino'}
+								</p>
+							</div>
+							<div className="flex items-center">
+								<div className="w-[5px] h-[5px] rounded-full bg-gray-900" />
+								<p className="text-sm ml-2 leading-[1px]">
+									Se identifica: {profile.gender_identity}
+								</p>
+							</div>
 						</div>
-						<div className="flex items-center">
-							<div className="w-[5px] h-[5px] rounded-full bg-gray-900" />
-							<p className="text-sm ml-2 leading-[1px]">
-								Sexo:{' '}
-								{profile.gender === 'm' ? 'Masculino' : 'Feminino'}
-							</p>
-						</div>
-						<div className="flex items-center">
-							<div className="w-[5px] h-[5px] rounded-full bg-gray-900" />
-							<p className="text-sm ml-2 leading-[1px]">
-								Se identifica: {profile.gender_identity}
-							</p>
-						</div>
-						<div className="flex items-center">
-							<div className="w-[5px] h-[5px] rounded-full bg-gray-900" />
-							<p className="text-sm ml-2 leading-[1px]">
-								CPF: {profile.cpf}
-							</p>
-						</div>
-					</div>
+					)}
 					<Link to="/app/edit">
 						<Button className="bg-blue-200 py-1 mt-8">
 							<p className="text-white font-medium text-sm">
@@ -144,32 +155,34 @@ const Profile = () => {
 							</p>
 						</Button>
 					</Link>
-					<div>
-						<p className="font-bold text-black text-lg">Conquistas</p>
-						<IonSlides options={slideOpts} className="w-full">
-							<IonSlide>
-								<div className="w-full flex flex-col justify-center items-center px-4 bg-white rounded-2xl shadow">
-									<p className="text-xsm">lv 01</p>
-									<div className="bg-gray-900 w-[70px] h-[70px] rounded-full" />
-									<p className="text-sm">Eletrizante!</p>
-								</div>
-							</IonSlide>
-							<IonSlide>
-								<div className="w-full flex flex-col justify-center items-center px-4 bg-white rounded-2xl shadow">
-									<p className="text-xsm">lv 01</p>
-									<div className="bg-gray-900 w-[70px] h-[70px] rounded-full" />
-									<p className="text-sm">Eletrizante!</p>
-								</div>
-							</IonSlide>
-							<IonSlide>
-								<div className="w-full flex flex-col justify-center items-center px-4 bg-white rounded-2xl shadow">
-									<p className="text-xsm">lv 01</p>
-									<div className="bg-gray-900 w-[70px] h-[70px] rounded-full" />
-									<p className="text-sm">Eletrizante!</p>
-								</div>
-							</IonSlide>
-						</IonSlides>
-					</div>
+					{!user.professional && (
+						<div>
+							<p className="font-bold text-black text-lg">Conquistas</p>
+							<IonSlides options={slideOpts} className="w-full">
+								<IonSlide>
+									<div className="w-full flex flex-col justify-center items-center px-4 bg-white rounded-2xl shadow">
+										<p className="text-xsm">lv 01</p>
+										<div className="bg-gray-900 w-[70px] h-[70px] rounded-full" />
+										<p className="text-sm">Eletrizante!</p>
+									</div>
+								</IonSlide>
+								<IonSlide>
+									<div className="w-full flex flex-col justify-center items-center px-4 bg-white rounded-2xl shadow">
+										<p className="text-xsm">lv 01</p>
+										<div className="bg-gray-900 w-[70px] h-[70px] rounded-full" />
+										<p className="text-sm">Eletrizante!</p>
+									</div>
+								</IonSlide>
+								<IonSlide>
+									<div className="w-full flex flex-col justify-center items-center px-4 bg-white rounded-2xl shadow">
+										<p className="text-xsm">lv 01</p>
+										<div className="bg-gray-900 w-[70px] h-[70px] rounded-full" />
+										<p className="text-sm">Eletrizante!</p>
+									</div>
+								</IonSlide>
+							</IonSlides>
+						</div>
+					)}
 				</div>
 			</IonContent>
 		</IonPage>

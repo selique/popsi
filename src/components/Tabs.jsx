@@ -31,38 +31,7 @@ import Profile from './pages/Profile'
 import Quiz from './pages/Quiz'
 
 const Tabs = () => {
-	const [professional, setProfessional] = React.useState(false)
 	const { user } = useAuth()
-	const [showLoading, hideLoading] = useIonLoading()
-	const [showToast] = useIonToast()
-
-	const getRole = async () => {
-		await showLoading()
-		try {
-			let { data, error, status } = await supabase
-				.from('profiles')
-				.select(`role`)
-				.eq('id', user?.id)
-				.single()
-
-			if (error && status !== 406) {
-				throw error
-			}
-
-			if (data) {
-				setProfessional(data.role === 'MEDIC')
-			}
-		} catch (error) {
-			showToast({ message: error.message, duration: 1000 })
-		} finally {
-			await hideLoading()
-		}
-	}
-
-	React.useEffect(() => {
-		getRole()
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [user])
 
 	return (
 		<IonTabs>
@@ -74,7 +43,7 @@ const Tabs = () => {
 				/>
 				<Route
 					path="/app/home"
-					component={professional ? HomeProfessional : HomeClient}
+					component={user.professional ? HomeProfessional : HomeClient}
 					exact={true}
 				/>
 				<Route path="/app/patients" component={Patients} exact={true} />
@@ -86,7 +55,7 @@ const Tabs = () => {
 				/>
 				<Route
 					path="/app/profile"
-					component={professional ? ProfessionalProfile : Profile}
+					component={user.professional ? ProfessionalProfile : Profile}
 					exact={true}
 				/>
 				<Route path="/app/form" component={Form} exact={true} />
@@ -97,7 +66,7 @@ const Tabs = () => {
 					<IonIcon icon={home} />
 					<IonLabel>Home</IonLabel>
 				</IonTabButton>
-				{professional && (
+				{user.professional && (
 					<IonTabButton tab="tab2" href="/app/patients">
 						<IonIcon icon={list} />
 						<IonLabel>Pacients</IonLabel>
