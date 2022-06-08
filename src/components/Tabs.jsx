@@ -26,7 +26,6 @@ import HomeClient from './pages/HomeClient'
 import HomeProfessional from './pages/HomeProfessional'
 import Notification from './pages/Notification'
 import Patients from './pages/Patients'
-import ProfessionalProfile from './pages/ProfessionalProfile'
 import Profile from './pages/Profile'
 import Quiz from './pages/Quiz'
 
@@ -53,11 +52,7 @@ const Tabs = () => {
 					component={Notification}
 					exact={true}
 				/>
-				<Route
-					path="/app/profile"
-					component={user.professional ? ProfessionalProfile : Profile}
-					exact={true}
-				/>
+				<Route path="/app/profile" component={Profile} exact={true} />
 				<Route path="/app/form" component={Form} exact={true} />
 				<Route path="/app/edit" component={EditProfile} exact={true} />
 			</IonRouterOutlet>
