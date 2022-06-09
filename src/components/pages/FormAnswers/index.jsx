@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useForm, useFieldArray, Controller } from 'react-hook-form'
-import { Router, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 import {
 	IonText,
@@ -15,28 +15,24 @@ import {
 	IonButtons,
 	IonBackButton,
 	IonTitle,
-	IonContent,
-	IonListHeader,
 	IonCheckbox,
 	IonInput
 } from '@ionic/react'
+import { data } from 'autoprefixer'
+import Router from 'next/router'
+import { uuid } from 'uuidv4'
 
+import { useAuth } from '../../../contexts/Auth'
 import { supabase } from '../../../utils/supabaseClient'
 import Button from '../../ui/Button'
 
 const FormAnswers = () => {
 	const [idQuiz, setIdQuiz] = React.useState(0)
 	const [questions, setQuestions] = React.useState([])
+	const [answers, setAnswers] = React.useState([])
 	const { id } = useParams()
-	const {
-		register,
-		control,
-		handleSubmit,
-		reset,
-		setValue,
-		watch,
-		unregister
-	} = useForm()
+	const { user } = useAuth()
+	const { register, control, handleSubmit, setValue } = useForm()
 
 	React.useEffect(() => {
 		const getAnswers = async () => {
@@ -53,11 +49,42 @@ const FormAnswers = () => {
 		getAnswers()
 	}, [])
 
-	const onSubmit = async data => {
-		if (data && idQuiz + 1 < questions.length) {
+	const onSubmit = async dataForm => {
+		let data = []
+
+		if (dataForm) {
+			if (Array.isArray(dataForm[`answers${idQuiz}`])) {
+				let array = []
+				dataForm[`answers${idQuiz}`].map(item => !!item && array.push(item))
+
+				data.push({
+					id: uuid(),
+					answer: array,
+					profileId: user.id,
+					questionId: questions[idQuiz].id
+				})
+			} else {
+				data.push({
+					id: uuid(),
+					answer: [dataForm[`answers${idQuiz}`]],
+					profileId: user.id,
+					questionId: questions[idQuiz].id
+				})
+			}
+
+			if (data.length > 0) {
+				setAnswers([...answers, ...data])
+			}
+		}
+
+		if (answers.length + 1 === questions.length) {
+			const { data: dataAnswer } = await supabase
+				.from('answers')
+				.insert([...answers, ...data])
+
+			if (dataAnswer) Router.back()
+		} else if (dataForm && idQuiz + 1 < questions.length) {
 			setIdQuiz(idQuiz + 1)
-		} else {
-			console.log(data)
 		}
 	}
 
@@ -87,7 +114,7 @@ const FormAnswers = () => {
 		)
 	}
 
-	const SingleChoice = () => {
+	const SingleChoice = ({ alternatives }) => {
 		return (
 			<Controller
 				key={idQuiz}
@@ -100,22 +127,12 @@ const FormAnswers = () => {
 							setValue(`answers${idQuiz}`, e.target.value)
 						}}
 					>
-						<IonItem>
-							<IonLabel>Alternative 1</IonLabel>
-							<IonRadio slot="start" value="alternativa 1" />
-						</IonItem>
-						<IonItem>
-							<IonLabel>Alternative 2</IonLabel>
-							<IonRadio slot="start" value="alternativa 2" />
-						</IonItem>
-						<IonItem>
-							<IonLabel>Alternative 3</IonLabel>
-							<IonRadio slot="start" value="alternativa 3" />
-						</IonItem>
-						<IonItem>
-							<IonLabel>Alternative 4</IonLabel>
-							<IonRadio slot="start" value="alternativa 4" />
-						</IonItem>
+						{alternatives.map((alternative, index) => (
+							<IonItem key={index}>
+								<IonLabel>{alternative}</IonLabel>
+								<IonRadio slot="start" value={alternative} />
+							</IonItem>
+						))}
 					</IonRadioGroup>
 				)}
 			/>
