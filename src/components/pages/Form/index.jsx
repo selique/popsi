@@ -164,6 +164,7 @@ const FormProfessional = ({ idForm }) => {
 	}, [idForm])
 
 	const onSubmit = async data => {
+		console.log(data)
 		const { data: dataSurveys } = await supabase
 			.from('surveys')
 			.insert([
@@ -186,17 +187,21 @@ const FormProfessional = ({ idForm }) => {
 					surveysId: dataSurveys.id
 				}
 
-				if (question.type !== 'MULTIPLE_CHOICE') {
+				if (
+					question.type !== 'MULTIPLE_CHOICE' &&
+					question.type !== 'SINGLE_CHOICE'
+				) {
 					dataQuestion.push(defaultData)
 				} else {
 					dataQuestion.push({
 						...defaultData,
-						alternatives: question.multiple_choice
+						alternatives:
+							question.type === 'MULTIPLE_CHOICE'
+								? question.multiple_choice
+								: question.single_choice
 					})
 				}
 			})
-
-			console.log(dataQuestion)
 
 			const { data: dataQuestions } = await supabase
 				.from('questions')

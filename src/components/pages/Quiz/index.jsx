@@ -33,38 +33,7 @@ const imageTemp2 =
 
 const Quiz = () => {
 	const [surveys, setSurveys] = React.useState([])
-	const [professional, setProfessional] = React.useState(false)
 	const { user } = useAuth()
-	const [showLoading, hideLoading] = useIonLoading()
-	const [showToast] = useIonToast()
-
-	const getRole = async () => {
-		await showLoading()
-		try {
-			let { data, error, status } = await supabase
-				.from('profiles')
-				.select(`role`)
-				.eq('id', user?.id)
-				.single()
-
-			if (error && status !== 406) {
-				throw error
-			}
-
-			if (data) {
-				setProfessional(data.role === 'MEDIC')
-			}
-		} catch (error) {
-			showToast({ message: error.message, duration: 1000 })
-		} finally {
-			await hideLoading()
-		}
-	}
-
-	React.useEffect(() => {
-		getRole()
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [user])
 
 	React.useEffect(() => {
 		const getSurveys = async () => {
@@ -72,13 +41,13 @@ const Quiz = () => {
 				.from('surveys')
 				.select(
 					`
-					title
+					id,
+					profileId,
+					title,
 					description
-					author
-					professional
 				`
 				)
-				.eq('profileId', user?.id)
+				.eq('profileId', user.id)
 
 			if (dataSurveys) {
 				dataSurveys.map(async survey => {
@@ -96,7 +65,7 @@ const Quiz = () => {
 		}
 
 		getSurveys()
-	}, [surveys, user?.id])
+	}, [])
 
 	return (
 		<IonPage>
@@ -123,18 +92,18 @@ const Quiz = () => {
 						<Link to={`/form/answers/${item.id}`} key={index}>
 							<div
 								className={`grid ${
-									professional
+									user.professional
 										? 'grid-cols-[auto_1fr_auto]'
 										: 'grid-cols-[auto_1fr]'
 								} mt-5 items-center gap-4 ${
-									!professional && 'bg-gray-200 p-3 rounded-2xl'
+									!user.professional && 'bg-gray-200 p-3 rounded-2xl'
 								}`}
 							>
 								<div className="relative">
 									<div className="bg-purple-opacity-100 text-white flex justify-center items-center text-3xl p-5 rounded-2xl">
 										<IonIcon src={documentOutline} color="white" />
 									</div>
-									{/* {professional && (
+									{/* {user.professional && (
 										<div className="absolute bottom-0 right-0">
 											<Avatar
 												background={item.peaples[0].image}
@@ -167,7 +136,7 @@ const Quiz = () => {
 									<IonText className="text-gray-900 text-xsm">
 										{item.description}
 									</IonText>
-									{!professional && (
+									{!user.professional && (
 										<div className="flex items-center mt-3">
 											<Avatar
 												background={imageTemp2}
@@ -181,7 +150,7 @@ const Quiz = () => {
 										</div>
 									)}
 								</div>
-								{professional && (
+								{user.professional && (
 									<div className="text-purple-100 text-2xl">
 										<IonIcon
 											src={shareSocialOutline}
@@ -193,7 +162,7 @@ const Quiz = () => {
 						</Link>
 					))}
 				</div>
-				{professional && (
+				{user.professional && (
 					<IonFab vertical="bottom" horizontal="end" slot="fixed">
 						<IonFabButton href="/app/form">
 							<IonIcon icon={addOutline} color="#fff" />

@@ -45,7 +45,7 @@ export const AuthProvider = ({ children }) => {
 			}
 		)
 
-		if (user !== null) getRole()
+		if (!!user) getRole()
 
 		// cleanup the useEffect hook
 		return () => {
