@@ -11,9 +11,10 @@ import {
 	IonToolbar,
 	IonTitle,
 	useIonLoading,
-	useIonToast
+	useIonToast,
+	IonSearchbar
 } from '@ionic/react'
-import { search, filterOutline, addOutline } from 'ionicons/icons'
+import { filterOutline, addOutline } from 'ionicons/icons'
 
 import { useAuth } from '../../../contexts/Auth'
 import { supabase } from '../../../utils/supabaseClient'
@@ -88,30 +89,40 @@ const Patients = () => {
 				</IonToolbar>
 			</IonHeader>
 			<IonContent className="ion-padding bg-black" fullscreen>
-				<Input
-					placeholder="Pesquisar"
-					icon={<IonIcon src={search} />}
-					background="bg-white"
-					classContent="my-5"
-				/>
-				<div className="flex items-center justify-between">
+				<IonSearchbar placeholder="Pesquisar" />
+				<div className="flex items-center justify-between mb-5">
 					<IonText className="text-black">Lista personlizada</IonText>
 					<IonIcon src={filterOutline} />
 				</div>
 				<IonSlides
 					options={{
-						slidesPerView: 4.5
+						slidesPerView: 4.5,
+						spaceBetween: 5,
+						speed: 400,
+						autoHeight: true
 					}}
-					className="mt-3 mb-5	"
 				>
-					<IonSlide className="py-3">
-						<Avatar>
-							<IonIcon src={addOutline} size="large" color="#ffffff" />
-						</Avatar>
+					<IonSlide>
+						<div className="w-[80px] h-[80px]">
+							<Avatar width="100%" height="100%" hasBorder={false}>
+								<IonIcon
+									src={addOutline}
+									size="large"
+									color="#ffffff"
+								/>
+							</Avatar>
+						</div>
 					</IonSlide>
 					{[...Array(10)].map((_, index) => (
-						<IonSlide className="py-3" key={index}>
-							<Avatar background={imageTemp} />
+						<IonSlide key={index}>
+							<div className="w-[80px] h-[80px]">
+								<Avatar
+									width="100%"
+									height="100%"
+									background={imageTemp}
+									hasBorder={false}
+								/>
+							</div>
 						</IonSlide>
 					))}
 				</IonSlides>
@@ -119,11 +130,25 @@ const Patients = () => {
 					{patient.map(({ full_name, avatar_url }, index) => (
 						<div
 							key={index}
-							className="my-8 grid grid-cols-3 items-center"
+							className="my-8 grid grid-cols-[80px_1fr_auto] gap-4 items-center"
 						>
-							<Avatar background={avatar_url} />
+							<div className="w-[80px] h-[80px]">
+								<Avatar
+									width="100%"
+									height="100%"
+									background={avatar_url}
+									hasBorder={false}
+								/>
+							</div>
 							<div className="flex flex-col">
 								<IonText className="font-semibold">{full_name}</IonText>
+								<IonText className="font-light text-sm">
+									Guarulhos, São Paulo
+								</IonText>
+							</div>
+							<div className="flex flex-col text-light text-xsm">
+								<IonText>Ultimo Acesso</IonText>
+								<IonText>Hoje as 10:30</IonText>
 							</div>
 						</div>
 					))}
