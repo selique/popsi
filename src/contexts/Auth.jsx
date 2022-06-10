@@ -9,6 +9,7 @@ export const AuthProvider = ({ children }) => {
 	// create state values for user data and loading
 	const [user, setUser] = useState()
 	const [loading, setLoading] = useState(true)
+	const [professional, setProfessional] = useState(false)
 
 	const getRole = async () => {
 		try {
@@ -23,10 +24,12 @@ export const AuthProvider = ({ children }) => {
 			}
 
 			if (data) {
-				setUser({ ...user, professional: data.role === 'MEDIC' })
+				setProfessional(data.role === 'MEDIC')
 			}
 		} catch (error) {
 			console.log(error)
+		} finally {
+			setLoading(false)
 		}
 	}
 
@@ -39,19 +42,24 @@ export const AuthProvider = ({ children }) => {
 
 		// Listen for changes on auth state (logged in, signed out, etc.)
 		const { data: listener } = supabase.auth.onAuthStateChange(
-			async (event, session) => {
+			async (_, session) => {
 				setUser(session?.user ?? null)
-				setLoading(false)
 			}
 		)
-
-		if (!!user) getRole()
 
 		// cleanup the useEffect hook
 		return () => {
 			listener?.unsubscribe()
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
+
+	useEffect(() => {
+		if (!!user) {
+			getRole()
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [user])
 
 	// create signUp, signIn, signOut functions
 	const value = {
@@ -59,6 +67,7 @@ export const AuthProvider = ({ children }) => {
 		signIn: (data, options) => supabase.auth.signIn(data, options),
 		signOut: () => supabase.auth.signOut(),
 		loading,
+		professional,
 		user
 	}
 
