@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { useForm, Controller } from 'react-hook-form'
+import { useLocation } from 'react-router-dom'
 
 import formatCpf from '@brazilian-utils/format-cpf'
 import { ErrorMessage } from '@hookform/error-message'
@@ -13,11 +14,6 @@ import {
 	IonDatetime,
 	IonLabel,
 	IonInput,
-	// IonRadioGroup,
-	// IonRadio,
-	// IonToggle,
-	// IonRange,
-	// IonCheckbox,
 	IonItem,
 	IonSelect,
 	IonSelectOption,
@@ -38,6 +34,14 @@ const SignUp = () => {
 	const [cpfField, setCpfField] = React.useState()
 	const [showLoading, hideLoading] = useIonLoading()
 	const [showToast] = useIonToast()
+
+	const location = useLocation()
+	const [medicIdQuery, setMedicIdQuery] = React.useState('')
+
+	React.useEffect(() => {
+		const params = new URLSearchParams(location.search)
+		setMedicIdQuery(params.get('medic') || null)
+	}, [])
 
 	const schema = Yup.object().shape({
 		full_name: Yup.string().required('O nome é obrigatório'),
@@ -80,25 +84,26 @@ const SignUp = () => {
 		await showLoading()
 
 		try {
-			console.log(
-				'creating a new user account with: ',
-				{
-					email: data.email,
-					password: data.password
-				},
-				{
-					data: {
-						full_name: data.full_name,
-						avatar_url: data.avatar_url,
-						nickname: data.nickname,
-						cpf: data.cpf,
-						matrial_status: data.matrial_status,
-						birth_date: format(parseISO(data.birth_date), 'yyyy-MM-dd'),
-						gender: data.gender,
-						gender_identity: data.gender_identity
-					}
-				}
-			)
+			// console.log(
+			// 	'creating a new user account with: ',
+			// 	{
+			// 		email: data.email,
+			// 		password: data.password
+			// 	},
+			// 	{
+			// 		data: {
+			// 			full_name: data.full_name,
+			// 			avatar_url: 'teste',
+			// 			nickname: data.nickname,
+			// 			cpf: data.cpf,
+			// 			matrial_status: data.matrial_status,
+			// 			birth_date: format(parseISO(data.birth_date), 'yyyy-MM-dd'),
+			// 			gender: data.gender,
+			// 			gender_identity: data.gender_identity,
+			// 			medic_id: medicIdQuery
+			// 		}
+			// 	}
+			// )
 
 			await signUp(
 				{
@@ -114,7 +119,8 @@ const SignUp = () => {
 						matrial_status: data.matrial_status,
 						birth_date: format(parseISO(data.birth_date), 'yyyy-MM-dd'),
 						gender: data.gender,
-						gender_identity: data.gender_identity
+						gender_identity: data.gender_identity,
+						medic_id: medicIdQuery
 					},
 					redirectTo: 'http://localhost:3000/login'
 				}
@@ -354,3 +360,4 @@ const SignUp = () => {
 }
 
 export default SignUp
+null

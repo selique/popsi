@@ -28,6 +28,11 @@ model Profile {
    // Relation: Answer
    answers Answer[]
 
+   // Relation Self: Medic
+   medic_id      String?  @unique @db.Uuid
+   medic         Profile? @relation("medic", fields: [medic_id], references: [id])
+   medicRelation Profile? @relation("medic")
+
    // Timestamp
    created_at DateTime  @default(now())
    updated_at DateTime?

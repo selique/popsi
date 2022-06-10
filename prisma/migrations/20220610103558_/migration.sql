@@ -2,7 +2,7 @@
 CREATE TYPE "roles" AS ENUM ('PATIENT', 'MEDIC');
 
 -- CreateEnum
-CREATE TYPE "answer_types" AS ENUM ('TEXT', 'BOOLEAN', 'MULTIPLE_CHOICE', 'SCALE');
+CREATE TYPE "answer_types" AS ENUM ('TEXT', 'MULTIPLE_CHOICE', 'SINGLE_CHOICE', 'RATING');
 
 -- CreateTable
 CREATE TABLE "profiles" (
@@ -17,6 +17,7 @@ CREATE TABLE "profiles" (
     "cpf" TEXT,
     "birth_date" DATE,
     "role" "roles" DEFAULT E'PATIENT',
+    "medic_id" UUID,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3),
 
@@ -39,8 +40,9 @@ CREATE TABLE "surveys" (
 CREATE TABLE "questions" (
     "id" UUID NOT NULL,
     "question" TEXT NOT NULL,
+    "description" TEXT,
     "alternatives" TEXT[],
-    "type" "answer_types" NOT NULL DEFAULT E'TEXT',
+    "type" "answer_types" NOT NULL,
     "surveysId" UUID NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3),
@@ -64,6 +66,9 @@ CREATE TABLE "answers" (
 CREATE UNIQUE INDEX "profiles_id_key" ON "profiles"("id");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "profiles_medic_id_key" ON "profiles"("medic_id");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "surveys_id_key" ON "surveys"("id");
 
 -- CreateIndex
@@ -71,6 +76,9 @@ CREATE UNIQUE INDEX "questions_id_key" ON "questions"("id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "answers_id_key" ON "answers"("id");
+
+-- AddForeignKey
+ALTER TABLE "profiles" ADD CONSTRAINT "profiles_medic_id_fkey" FOREIGN KEY ("medic_id") REFERENCES "profiles"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "surveys" ADD CONSTRAINT "surveys_profileId_fkey" FOREIGN KEY ("profileId") REFERENCES "profiles"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

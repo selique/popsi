@@ -34,7 +34,6 @@ const imageTemp2 =
 const Quiz = () => {
 	const [surveys, setSurveys] = React.useState([])
 	const { user } = useAuth()
-
 	React.useEffect(() => {
 		const getSurveys = async () => {
 			const { data: dataSurveys } = await supabase

@@ -10,6 +10,9 @@ const nextConfig = {
 }
 
 module.exports = {
+	env: {
+		SITE_URL: process.env.SITE_URL
+	},
 	webpack: config => {
 		config.plugins.push(
 			new CopyPlugin({

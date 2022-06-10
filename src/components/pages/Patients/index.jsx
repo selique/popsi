@@ -1,3 +1,5 @@
+import * as React from 'react'
+
 import {
 	IonContent,
 	IonIcon,
@@ -7,10 +9,14 @@ import {
 	IonText,
 	IonHeader,
 	IonToolbar,
-	IonTitle
+	IonTitle,
+	useIonLoading,
+	useIonToast
 } from '@ionic/react'
 import { search, filterOutline, addOutline } from 'ionicons/icons'
 
+import { useAuth } from '../../../contexts/Auth'
+import { supabase } from '../../../utils/supabaseClient'
 import Avatar from '../../ui/Avatar'
 import Input from '../../ui/Input'
 
@@ -18,6 +24,62 @@ const imageTemp =
 	'https://i0.wp.com/www.kailagarcia.com/wp-content/uploads/2019/05/46846414_205184383758304_7255555943408505199_n.jpg?fit=1080%2C1350&ssl=1'
 
 const Patients = () => {
+	const [showLoading, hideLoading] = useIonLoading()
+	const [showToast] = useIonToast()
+	const { user, loading } = useAuth()
+	const [patient, setPatient] = React.useState([])
+	const getPatients = async () => {
+		await showLoading()
+		try {
+			let { data, error, status } = await supabase
+				.from('profiles')
+				.select(
+					`
+					full_name,
+					avatar_url
+				`
+				)
+				.eq('medic_id', user?.id)
+
+			if (error && status !== 406) {
+				throw error
+			}
+
+			if (data) {
+				setPatient(data)
+			}
+		} catch (error) {
+			showToast({ message: error.message, duration: 5000 })
+		} finally {
+			await hideLoading()
+		}
+	}
+
+	const downloadImage = async path => {
+		try {
+			const { data, error } = await supabase.storage
+				.from('avatars')
+				.download(path)
+
+			if (error) {
+				throw error
+			}
+			const url = URL.createObjectURL(data)
+			return url
+		} catch (error) {
+			console.log('Error downloading image: ', error.message)
+			return imageTemp
+		}
+	}
+
+	React.useEffect(() => {
+		if (user) {
+			getPatients()
+		}
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [loading])
+
 	return (
 		<IonPage>
 			<IonHeader>
@@ -54,27 +116,14 @@ const Patients = () => {
 					))}
 				</IonSlides>
 				<div>
-					{[...Array(10)].map((_, index) => (
+					{patient.map(({ full_name, avatar_url }, index) => (
 						<div
 							key={index}
 							className="my-8 grid grid-cols-3 items-center"
 						>
-							<Avatar background={imageTemp} />
+							<Avatar background={avatar_url} />
 							<div className="flex flex-col">
-								<IonText className="font-semibold">
-									Cintia S. Amaro
-								</IonText>
-								<IonText className="font-light text-xsm">
-									Guarulhos, São Paulo
-								</IonText>
-							</div>
-							<div className="flex flex-col items-end">
-								<IonText className="font-light text-xsm">
-									Ultimo acesso
-								</IonText>
-								<IonText className="font-light text-xsm">
-									Hoje as 10:13am
-								</IonText>
+								<IonText className="font-semibold">{full_name}</IonText>
 							</div>
 						</div>
 					))}

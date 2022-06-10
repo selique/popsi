@@ -1,0 +1,7 @@
+{
+  "name": "popsi",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "custom"
+}

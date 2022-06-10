@@ -127,34 +127,6 @@ const EditProfile = () => {
 		}
 	}
 
-	// const updatePhotoProfile = async avatar_url => {
-	// 	await showLoading()
-	// 	try {
-	// 		let { data, error, status } = await supabase
-	// 			.from('profiles')
-	// 			.update({
-	// 				avatar_url: avatar_url
-	// 			})
-	// 			.eq('id', user?.id)
-	// 			.single()
-
-	// 		if (error && status !== 406) {
-	// 			throw error
-	// 		}
-
-	// 		if (data) {
-	// 			showToast({
-	// 				message: 'Foto atualizada com sucesso',
-	// 				duration: 5000
-	// 			})
-	// 		}
-	// 	} catch (error) {
-	// 		showToast({ message: error.message, duration: 5000 })
-	// 	} finally {
-	// 		await hideLoading()
-	// 	}
-	// }
-
 	const updateProfile = async data => {
 		await showLoading()
 

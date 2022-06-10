@@ -1,19 +1,27 @@
 import * as React from 'react'
 
+import { SocialSharing } from '@awesome-cordova-plugins/social-sharing'
+import { isPlatform } from '@ionic/react'
 import {
 	IonPage,
 	IonContent,
 	IonText,
 	IonSlides,
 	IonSlide,
-	IonModal
+	IonModal,
+	IonItem,
+	IonLabel,
+	IonTextarea,
+	IonIcon
 } from '@ionic/react'
+import { close } from 'ionicons/icons'
 import Image from 'next/image'
 import styled from 'styled-components'
 
 import Letter from '../../../assets/icons/Letter'
 import Lines from '../../../assets/Lines'
 import Profile from '../../../assets/profile.png'
+import { useAuth } from '../../../contexts/Auth'
 import Button from '../../ui/Button'
 import Card from '../../ui/Card'
 import ShortcutCard from '../../ui/ShortcutCard'
@@ -72,13 +80,28 @@ const dayOfMonths = [
 ]
 
 const HomeProfessional = () => {
-	const [modalOpen, setModalOpen] = React.useState(false)
+	const [modalAgendaOpen, setModalAgendaOpen] = React.useState(false)
+	const [modalInviteUserOpen, setModalInviteUserOpen] = React.useState(false)
+	const { user } = useAuth()
 
 	const slideOpts = {
 		slidesPerView: 2.6,
 		spaceBetween: 5,
 		speed: 400,
 		autoHeight: true
+	}
+
+	const handleShareUrl = async () => {
+		try {
+			return await SocialSharing.share(
+				'Complete seu cadastro na Popsicle e aproveite os benefícios',
+				'Seu Psicologo te convidou para Popsi',
+				'',
+				`${process.env.SITE_URL}/sign-up?medic=${user.id}`
+			)
+		} catch (error) {
+			console.log(error)
+		}
 	}
 
 	return (
@@ -97,7 +120,11 @@ const HomeProfessional = () => {
 				</div>
 				<Slide options={slideOpts} className="mt-4 mb-3">
 					<IonSlide className="h-full">
-						<ShortcutCard background="bg-purple-100">
+						<ShortcutCard
+							type="button"
+							onClick={() => setModalInviteUserOpen(true)}
+							background="bg-purple-100"
+						>
 							<Letter />
 							<IonText className="text-white font-bold mt-4 mb-2">
 								Convite
@@ -170,7 +197,7 @@ const HomeProfessional = () => {
 					</div>
 					<Button
 						className="bg-blue-200"
-						onClick={() => setModalOpen(true)}
+						onClick={() => setModalAgendaOpen(true)}
 					>
 						<IonText className="text-white font-semibold">
 							Ver agenda completa
@@ -178,8 +205,83 @@ const HomeProfessional = () => {
 					</Button>
 				</Card>
 				<IonModal
-					isOpen={modalOpen}
-					onDidDismiss={() => setModalOpen(false)}
+					isOpen={modalInviteUserOpen}
+					onDidDismiss={() => setModalInviteUserOpen(false)}
+					breakpoints={[0, 0.2, 0.5, 1]}
+					initialBreakpoint={0.5}
+					backdropBreakpoint={0.2}
+				>
+					<IonContent className="ion-padding">
+						{isPlatform !== 'ios' || isPlatform !== 'android' ? (
+							<>
+								<IonItem lines="none">
+									<IonLabel>
+										<IonText className="text-xl font-semibold">
+											Convite web
+										</IonText>
+									</IonLabel>
+									<IonIcon
+										slot="end"
+										icon={close}
+										onClick={() => setModalInviteUserOpen(false)}
+									/>
+								</IonItem>
+								<IonItem lines="none">
+									<IonText className="text-sm text-gray-600">
+										clique para copiar e envie o link abaixo para
+										convidar
+									</IonText>
+								</IonItem>
+								<IonItem lines="none">
+									<IonTextarea
+										onClick={() =>
+											navigator.clipboard.writeText(
+												`${process.env.SITE_URL}/sign-up?medic=${user.id}`
+											)
+										}
+										value={`${process.env.SITE_URL}/sign-up?medic=${user.id}`}
+										readonly
+										className="text-sm"
+									/>
+								</IonItem>
+							</>
+						) : (
+							<IonItem lines="none">
+								<IonLabel>
+									<IonText className="text-xl font-semibold">
+										Convite mobile
+									</IonText>
+								</IonLabel>
+								<IonIcon
+									slot="end"
+									icon={close}
+									onClick={() => setModalInviteUserOpen(false)}
+								/>
+								<div className="flex justify-center my-4">
+									<IonText className="text-black font-semibold text-center">
+										Convidar paciente
+									</IonText>
+								</div>
+								<div className="bg-gray-300 flex justify-center my-4">
+									<IonText className="text-gray-900 text-center">
+										{`${process.env.SITE_URL}/sign-up?medic=${user.id}`}
+									</IonText>
+								</div>
+								<Button
+									className="bg-purple-200"
+									onClick={() => handleShareUrl()}
+								>
+									<IonText className="text-black text-semibold">
+										Compartilhar
+									</IonText>
+								</Button>
+							</IonItem>
+						)}
+					</IonContent>
+				</IonModal>
+				<IonModal
+					isOpen={modalAgendaOpen}
+					onDidDismiss={() => setModalAgendaOpen(false)}
 					breakpoints={[0, 0.8, 1]}
 					initialBreakpoint={0.8}
 					backdropBreakpoint={0.2}
