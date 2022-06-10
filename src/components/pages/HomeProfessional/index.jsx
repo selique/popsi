@@ -24,12 +24,18 @@ import Profile from '../../../assets/profile.png'
 import { useAuth } from '../../../contexts/Auth'
 import Button from '../../ui/Button'
 import Card from '../../ui/Card'
+import Chart from '../../ui/Chart'
+import Modal from '../../ui/Modal'
 import ShortcutCard from '../../ui/ShortcutCard'
 
 const Slide = styled(IonSlides)`
 	ion-slide {
 		height: 100% !important;
 		padding: 30px 0;
+
+		& > div {
+			height: -webkit-fill-available !important;
+		}
 	}
 `
 
@@ -102,6 +108,26 @@ const HomeProfessional = () => {
 		} catch (error) {
 			console.log(error)
 		}
+	}
+
+	const areaChartData = {
+		labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+		datasets: [
+			{
+				label: 'Quantidade de pacientes',
+				backgroundColor: '#AC8FBF',
+				borderColor: '#AC8FBF',
+				borderWidth: 3,
+				hoverBackgroundColor: '#AC8FBF',
+				hoverBorderColor: '#AC8FBF',
+				data: [65, 59, 80, 81, 56, 55, 40],
+				tension: 0.4,
+				segment: {
+					borderColor: '#AC8FBF',
+					backgroundColor: '#AC8FBF'
+				}
+			}
+		]
 	}
 
 	return (
@@ -204,6 +230,20 @@ const HomeProfessional = () => {
 						</IonText>
 					</Button>
 				</Card>
+				<Card className="mt-4">
+					<div className="flex flex-col mb-4">
+						<IonText className="text-xsm">Resumo semanal</IonText>
+						<IonText className="font-semibold text-sm">
+							Hoje, 02 de maio
+						</IonText>
+					</div>
+					<Chart
+						data={areaChartData}
+						options={{
+							maintainAspectRatio: true
+						}}
+					/>
+				</Card>
 				<IonModal
 					isOpen={modalInviteUserOpen}
 					onDidDismiss={() => setModalInviteUserOpen(false)}
@@ -279,12 +319,10 @@ const HomeProfessional = () => {
 						)}
 					</IonContent>
 				</IonModal>
-				<IonModal
+				<Modal
 					isOpen={modalAgendaOpen}
 					onDidDismiss={() => setModalAgendaOpen(false)}
-					breakpoints={[0, 0.8, 1]}
-					initialBreakpoint={0.8}
-					backdropBreakpoint={0.2}
+					height={80}
 				>
 					<IonContent className="ion-padding">
 						<div className="flex justify-center my-4">
@@ -298,40 +336,44 @@ const HomeProfessional = () => {
 								className="w-full absolute top-0 left-[-5%]"
 							/>
 							<div className="p-4">
-								<IonSlides>
-									{months.map(item => (
-										<IonSlide key={item}>
-											<IonText className="text-white font-semibold">
-												{item}
-											</IonText>
-										</IonSlide>
-									))}
-								</IonSlides>
-								<IonSlides
-									options={{
-										slidesPerView: 5,
-										spaceBetween: 5
-									}}
-									className="my-10"
-								>
-									{dayOfMonths.map(item => (
-										<IonSlide key={item.day}>
-											<div
-												className="rounded-lg p-3"
-												style={{ border: '1px solid white' }}
-											>
-												<div className="flex flex-col">
-													<IonText className="text-white font-light text-xsm">
-														{item.dayWeek}
-													</IonText>
-													<IonText className="text-white text-xl mt-2">
-														{item.day}
-													</IonText>
+								<div className="my-2">
+									<IonSlides>
+										{months.map(item => (
+											<IonSlide key={item}>
+												<IonText className="text-white font-semibold">
+													{item}
+												</IonText>
+											</IonSlide>
+										))}
+									</IonSlides>
+								</div>
+								<div className="mb-4">
+									<IonSlides
+										options={{
+											slidesPerView: 5,
+											spaceBetween: 5
+										}}
+										className="my-10"
+									>
+										{dayOfMonths.map(item => (
+											<IonSlide key={item.day}>
+												<div
+													className="rounded-lg p-3"
+													style={{ border: '1px solid white' }}
+												>
+													<div className="flex flex-col">
+														<IonText className="text-white font-light text-xsm">
+															{item.dayWeek}
+														</IonText>
+														<IonText className="text-white text-xl mt-2">
+															{item.day}
+														</IonText>
+													</div>
 												</div>
-											</div>
-										</IonSlide>
-									))}
-								</IonSlides>
+											</IonSlide>
+										))}
+									</IonSlides>
+								</div>
 								<Button onClick={() => console.log('Clickou')}>
 									<IonText className="text-black text-semibold">
 										Novo agendamento
@@ -345,7 +387,7 @@ const HomeProfessional = () => {
 							</IonText>
 						</div>
 					</IonContent>
-				</IonModal>
+				</Modal>
 			</IonContent>
 		</IonPage>
 	)

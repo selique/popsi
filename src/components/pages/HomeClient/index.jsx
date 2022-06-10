@@ -171,34 +171,36 @@ const HomeClient = () => {
 						</div>
 					</div>
 				</Card>
-				<div className="mt-4">
-					<p className="font-bold text-lg text-black leading-1">
-						Questionários
-					</p>
-					{surveys.map((item, index) => (
-						<div
-							key={index}
-							className="bg-gray-200 p-4 rounded-2xl grid grid-cols-[auto_1fr_auto] gap-4 items-center mb-2"
-						>
-							<div className="bg-purple-200 p-3 rounded-xl">
+				{surveys.lenght > 0 && (
+					<div className="mt-4">
+						<p className="font-bold text-lg text-black leading-1">
+							Questionários
+						</p>
+						{surveys.map((item, index) => (
+							<div
+								key={index}
+								className="bg-gray-200 p-4 rounded-2xl grid grid-cols-[auto_1fr_auto] gap-4 items-center mb-2"
+							>
+								<div className="bg-purple-200 p-3 rounded-xl">
+									<IonIcon
+										src={documentTextOutline}
+										className="w-[30px] h-[30px] text-white"
+									/>
+								</div>
+								<div>
+									<p className="leading-[1px] font-medium text-black">
+										{item.title}
+									</p>
+									<p className="leading-[1px] text-sm">6 paginas</p>
+								</div>
 								<IonIcon
-									src={documentTextOutline}
-									className="w-[30px] h-[30px] text-white"
+									src={shareSocialOutline}
+									className="w-[25px] h-[25px]"
 								/>
 							</div>
-							<div>
-								<p className="leading-[1px] font-medium text-black">
-									{item.title}
-								</p>
-								<p className="leading-[1px] text-sm">6 paginas</p>
-							</div>
-							<IonIcon
-								src={shareSocialOutline}
-								className="w-[25px] h-[25px]"
-							/>
-						</div>
-					))}
-				</div>
+						))}
+					</div>
+				)}
 			</IonContent>
 		</IonPage>
 	)
