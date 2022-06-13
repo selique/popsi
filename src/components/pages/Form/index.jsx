@@ -161,6 +161,7 @@ const FormProfessional = ({ idForm }) => {
 			}
 			getDataForm()
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [idForm])
 
 	const onSubmit = async data => {
@@ -368,17 +369,7 @@ const Form = () => {
 
 	return (
 		<IonPage>
-			<IonHeader>
-				<IonToolbar>
-					<IonButtons slot="start">
-						<IonBackButton defaultHref="/app/home" />
-					</IonButtons>
-					<IonTitle className="text-lg font-semibold">
-						Questionários
-					</IonTitle>
-				</IonToolbar>
-			</IonHeader>
-			<IonContent className="ion-padding" fullscreen>
+			<IonContent fullscreen>
 				<FormProfessional idForm={id} />
 			</IonContent>
 		</IonPage>
