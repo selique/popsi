@@ -1,10 +1,9 @@
 import * as React from 'react'
-import { useForm, useFieldArray, Controller } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import { useParams } from 'react-router-dom'
 
 import {
 	IonText,
-	IonList,
 	IonRadioGroup,
 	IonItem,
 	IonLabel,
@@ -16,33 +15,49 @@ import {
 	IonBackButton,
 	IonTitle,
 	IonCheckbox,
-	IonInput
+	IonInput,
+	useIonLoading,
+	useIonToast,
+	IonButton
 } from '@ionic/react'
-import { data } from 'autoprefixer'
 import Router from 'next/router'
 import { uuid } from 'uuidv4'
 
 import { useAuth } from '../../../contexts/Auth'
 import { supabase } from '../../../utils/supabaseClient'
-import Button from '../../ui/Button'
 
 const FormAnswers = () => {
 	const [idQuiz, setIdQuiz] = React.useState(0)
 	const [questions, setQuestions] = React.useState([])
 	const [answers, setAnswers] = React.useState([])
+	const [showLoading, hideLoading] = useIonLoading()
+	const [showToast] = useIonToast()
 	const { id } = useParams()
 	const { user } = useAuth()
-	const { register, control, handleSubmit, setValue } = useForm()
+	const { register, control, handleSubmit, setValue, getValues } = useForm({
+		mode: 'onChange'
+	})
 
 	React.useEffect(() => {
 		const getAnswers = async () => {
-			const { data } = await supabase
-				.from('questions')
-				.select('*')
-				.eq('surveysId', id)
+			await showLoading()
+			try {
+				const { data, error, status } = await supabase
+					.from('questions')
+					.select('*')
+					.eq('surveysId', id)
 
-			if (data) {
-				setQuestions(data)
+				if (error && status !== 406) {
+					throw error
+				}
+
+				if (data) {
+					setQuestions(data)
+				}
+			} catch (error) {
+				showToast({ message: error.message, duration: 5000 })
+			} finally {
+				await hideLoading()
 			}
 		}
 
@@ -51,7 +66,6 @@ const FormAnswers = () => {
 
 	const onSubmit = async dataForm => {
 		let data = []
-
 		if (dataForm) {
 			if (Array.isArray(dataForm[`answers${idQuiz}`])) {
 				let array = []
@@ -78,6 +92,7 @@ const FormAnswers = () => {
 		}
 
 		if (answers.length + 1 === questions.length) {
+			console.log([...answers, ...data])
 			const { data: dataAnswer } = await supabase
 				.from('answers')
 				.insert([...answers, ...data])
@@ -89,29 +104,26 @@ const FormAnswers = () => {
 	}
 
 	const MultipleChoice = ({ alternatives }) => {
-		return (
-			<>
-				{alternatives.map((alternative, index) => {
-					return (
-						<IonItem key={index}>
-							<IonLabel>{alternative}</IonLabel>
+		return alternatives.map((alternative, index) => {
+			return (
+				<IonItem key={index} lines="none">
+					<IonLabel>{alternative}</IonLabel>
+					<Controller
+						control={control}
+						name={`answers${idQuiz}.${index}`}
+						render={({ field: { value, onChange } }) => (
 							<IonCheckbox
 								slot="start"
-								color="primary"
-								onIonChange={e => {
-									if (e.detail.checked) {
-										setValue(`answers${idQuiz}.${index}`, alternative)
-									} else {
-										setValue(`answers${idQuiz}.${index}`, null)
-									}
-								}}
-								{...register(`answers${idQuiz}.${index}`)}
+								value={value}
+								onIonChange={({ detail: { checked } }) =>
+									onChange(alternative)
+								}
 							/>
-						</IonItem>
-					)
-				})}
-			</>
-		)
+						)}
+					/>
+				</IonItem>
+			)
+		})
 	}
 
 	const SingleChoice = ({ alternatives }) => {
@@ -120,6 +132,7 @@ const FormAnswers = () => {
 				key={idQuiz}
 				name={`answers${idQuiz}`}
 				control={control}
+				rules={{ required: true }}
 				render={({ field }) => (
 					<IonRadioGroup
 						value={field.value}
@@ -128,7 +141,7 @@ const FormAnswers = () => {
 						}}
 					>
 						{alternatives.map((alternative, index) => (
-							<IonItem key={index}>
+							<IonItem key={index} lines="none">
 								<IonLabel>{alternative}</IonLabel>
 								<IonRadio slot="start" value={alternative} />
 							</IonItem>
@@ -141,15 +154,19 @@ const FormAnswers = () => {
 
 	const TextInput = () => {
 		return (
-			<IonItem>
-				<IonInput {...register(`answers${idQuiz}`)} />
+			<IonItem lines="none">
+				<IonInput
+					{...register(`answers${idQuiz}`, {
+						required: true
+					})}
+				/>
 			</IonItem>
 		)
 	}
 
-	if (questions.length === 0) return <div>Carregando</div>
-
-	return (
+	return questions.length === 0 ? (
+		<div>Carregando</div>
+	) : (
 		<IonPage>
 			<IonHeader>
 				<IonToolbar>
@@ -181,7 +198,9 @@ const FormAnswers = () => {
 							/>
 						)}
 						{questions[idQuiz].type === 'TEXT' && <TextInput />}
-						<Button
+						<IonButton
+							color="purple"
+							type="submit"
 							// onClick={e => {
 							// 	e.preventDefault()
 							// 	if (idQuiz + 1 < questions.length) {
@@ -190,13 +209,13 @@ const FormAnswers = () => {
 							// 		Router.back()
 							// 	}
 							// }}
-							className="bg-purple-100 mt-6"
-							type="submit"
 						>
 							<IonText className="text-xl text-white">
-								{questions.length === idQuiz + 1 ? 'Acabou' : 'Próximo'}
+								{questions.length === idQuiz + 1
+									? 'Finalizar'
+									: 'Próximo'}
 							</IonText>
-						</Button>
+						</IonButton>
 					</form>
 				</div>
 			</div>
