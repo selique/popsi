@@ -21,7 +21,7 @@ import {
 
 import { useAuth } from '../contexts/Auth'
 import EditProfile from './pages/EditProfile'
-import Form from './pages/Form'
+import FormSurvey from './pages/FormSurvey'
 import HomeClient from './pages/HomeClient'
 import HomeProfessional from './pages/HomeProfessional'
 import Notification from './pages/Notification'
@@ -53,7 +53,7 @@ const Tabs = () => {
 					exact={true}
 				/>
 				<Route path="/app/profile" component={Profile} exact={true} />
-				<Route path="/app/form" component={Form} exact={true} />
+				<Route path="/app/form" component={FormSurvey} exact={true} />
 				<Route path="/app/edit" component={EditProfile} exact={true} />
 			</IonRouterOutlet>
 			<IonTabBar slot="bottom">

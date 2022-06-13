@@ -1,24 +1,15 @@
 import * as React from 'react'
 import { useForm, useFieldArray, Controller } from 'react-hook-form'
 import { useParams } from 'react-router-dom'
+import { Router } from 'react-router-dom'
 
 import {
 	IonPage,
 	IonContent,
 	IonBackButton,
 	IonIcon,
-	IonCheckbox,
 	IonText,
-	IonHeader,
-	IonToolbar,
-	IonButtons,
 	IonButton,
-	IonTitle,
-	IonList,
-	IonRadioGroup,
-	IonItem,
-	IonLabel,
-	IonRadio,
 	IonInput,
 	IonSelect,
 	IonSelectOption,
@@ -26,19 +17,11 @@ import {
 	IonReorder,
 	IonTextarea
 } from '@ionic/react'
-import {
-	shareSocialOutline,
-	settingsOutline,
-	trashOutline,
-	addOutline,
-	closeOutline
-} from 'ionicons/icons'
-import Router, { useRouter } from 'next/router'
+import { shareSocialOutline, settingsOutline } from 'ionicons/icons'
 import { uuid } from 'uuidv4'
 
 import { useAuth } from '../../../contexts/Auth'
 import { supabase } from '../../../utils/supabaseClient'
-import Button from '../../ui/Button'
 
 const MultipleChoiceFieldArray = ({ nestIndex, control, register }) => {
 	const { fields, remove, append } = useFieldArray({
@@ -364,7 +347,7 @@ const FormProfessional = ({ idForm }) => {
 	)
 }
 
-const Form = () => {
+const FormSurvey = () => {
 	const { id } = useParams()
 
 	return (
@@ -376,4 +359,4 @@ const Form = () => {
 	)
 }
 
-export default Form
+export default FormSurvey
