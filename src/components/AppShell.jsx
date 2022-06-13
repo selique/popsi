@@ -6,8 +6,8 @@ import { IonReactRouter } from '@ionic/react-router'
 import { useAuth } from '../contexts/Auth'
 import Apresentation from './pages/Apresentation'
 import Breathing from './pages/Breathing'
-import Form from './pages/Form'
 import FormAnswers from './pages/FormAnswers'
+import FormSurvey from './pages/FormSurvey'
 import Login from './pages/Login'
 import Scheduling from './pages/Scheduling'
 import Signinup from './pages/Signinup'
@@ -50,7 +50,7 @@ const AppShell = () => {
 					/>
 					<PrivateRoute
 						path="/form/:id"
-						component={() => <Form />}
+						component={() => <FormSurvey />}
 						exact={true}
 					/>
 					<PrivateRoute
