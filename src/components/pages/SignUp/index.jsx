@@ -93,7 +93,7 @@ const SignUp = () => {
 			// 	{
 			// 		data: {
 			// 			full_name: data.full_name,
-			// 			avatar_url: 'teste',
+			// 			avatar_url: '',
 			// 			nickname: data.nickname,
 			// 			cpf: data.cpf,
 			// 			matrial_status: data.matrial_status,
@@ -113,7 +113,7 @@ const SignUp = () => {
 				{
 					data: {
 						full_name: data.full_name,
-						avatar_url: 'teste',
+						avatar_url: '',
 						nickname: data.nickname,
 						cpf: data.cpf,
 						matrial_status: data.matrial_status,
