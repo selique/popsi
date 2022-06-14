@@ -28,6 +28,10 @@ model Profile {
    // Relation: Answer
    answers Answer[]
 
+   // Relation: Notifications
+   MedicNotifications   SurveysNotifications[] @relation("medic_surveys_notifications")
+   PatientNotifications SurveysNotifications[] @relation("patient_surveys_notifications")
+
    // Relation Self: Medic
    medic_id      String?  @unique @db.Uuid
    medic         Profile? @relation("medic", fields: [medic_id], references: [id])
@@ -36,6 +40,7 @@ model Profile {
    // Timestamp
    created_at DateTime  @default(now())
    updated_at DateTime?
+
    @@map("profiles")
 }
 
@@ -62,6 +67,7 @@ model Surveys {
    created_at DateTime  @default(now())
    updated_at DateTime?
 
+   SurveysNotifications SurveysNotifications[]
 
    @@map("surveys")
 }
@@ -116,4 +122,35 @@ model Answer {
    updated_at DateTime?
 
    @@map("answers")
+}
+
+model SurveysNotifications {
+   id String @id @unique @default(uuid()) @db.Uuid
+
+   content String
+
+   status SurveysNotificationsStatus @default(CREATED)
+
+   // Relation: Profiles
+   Medic    Profile? @relation("medic_surveys_notifications", fields: [medic_id], references: [id])
+   medic_id String?  @db.Uuid
+
+   Patient    Profile? @relation("patient_surveys_notifications", fields: [patient_id], references: [id])
+   patient_id String?  @db.Uuid
+
+   // Relation: Surveys
+   Surveys    Surveys? @relation(fields: [surveys_id], references: [id])
+   surveys_id String   @db.Uuid
+
+   // Timestamp
+   created_at DateTime  @default(now())
+   updated_at DateTime?
+   @@map("surveys_notifications")
+}
+
+enum SurveysNotificationsStatus {
+   CREATED
+   READED
+
+   @@map("surveys_notifications_status")
 }
