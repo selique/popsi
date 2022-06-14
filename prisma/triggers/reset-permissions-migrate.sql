@@ -21,3 +21,9 @@ GRANT ALL ON TABLE public.answers TO authenticated;
 GRANT ALL ON TABLE public.answers TO postgres;
 GRANT ALL ON TABLE public.answers TO anon;
 GRANT ALL ON TABLE public.answers TO service_role;
+
+ALTER TABLE IF EXISTS public.surveys_notifications OWNER to postgres;
+GRANT ALL ON TABLE public.surveys_notifications TO authenticated;
+GRANT ALL ON TABLE public.surveys_notifications TO postgres;
+GRANT ALL ON TABLE public.surveys_notifications TO anon;
+GRANT ALL ON TABLE public.surveys_notifications TO service_role;
