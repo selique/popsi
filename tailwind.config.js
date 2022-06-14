@@ -45,6 +45,9 @@ module.exports = {
 					opacity: {
 						100: '#7B61FF4D'
 					}
+				},
+				glossyGrape: {
+					DEFAULT: '#AC8FBF'
 				}
 			}
 		}

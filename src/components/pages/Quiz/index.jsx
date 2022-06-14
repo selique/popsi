@@ -33,7 +33,7 @@ const imageTemp2 =
 
 const Quiz = () => {
 	const [surveys, setSurveys] = React.useState([])
-	const { user } = useAuth()
+	const { user, professional } = useAuth()
 	React.useEffect(() => {
 		const getSurveys = async () => {
 			const { data: dataSurveys } = await supabase
@@ -91,18 +91,18 @@ const Quiz = () => {
 						<Link to={`/form/answers/${item.id}`} key={index}>
 							<div
 								className={`grid ${
-									user.professional
+									professional
 										? 'grid-cols-[auto_1fr_auto]'
 										: 'grid-cols-[auto_1fr]'
 								} mt-5 items-center gap-4 ${
-									!user.professional && 'bg-gray-200 p-3 rounded-2xl'
+									!professional && 'bg-gray-200 p-3 rounded-2xl'
 								}`}
 							>
 								<div className="relative">
 									<div className="bg-purple-opacity-100 text-white flex justify-center items-center text-3xl p-5 rounded-2xl">
 										<IonIcon src={documentOutline} color="white" />
 									</div>
-									{/* {user.professional && (
+									{/* {professional && (
 										<div className="absolute bottom-0 right-0">
 											<Avatar
 												background={item.peaples[0].image}
@@ -135,7 +135,7 @@ const Quiz = () => {
 									<IonText className="text-gray-900 text-xsm">
 										{item.description}
 									</IonText>
-									{!user.professional && (
+									{!professional && (
 										<div className="flex items-center mt-3">
 											<Avatar
 												background={imageTemp2}
@@ -149,7 +149,7 @@ const Quiz = () => {
 										</div>
 									)}
 								</div>
-								{user.professional && (
+								{professional && (
 									<div className="text-purple-100 text-2xl">
 										<IonIcon
 											src={shareSocialOutline}
@@ -161,7 +161,7 @@ const Quiz = () => {
 						</Link>
 					))}
 				</div>
-				{user.professional && (
+				{professional && (
 					<IonFab vertical="bottom" horizontal="end" slot="fixed">
 						<IonFabButton href="/app/form">
 							<IonIcon icon={addOutline} color="#fff" />

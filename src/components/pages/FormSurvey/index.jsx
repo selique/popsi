@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { useForm, useFieldArray, Controller } from 'react-hook-form'
 import { useParams } from 'react-router-dom'
-import { Router } from 'react-router-dom'
 
 import {
 	IonPage,
@@ -18,6 +17,7 @@ import {
 	IonTextarea
 } from '@ionic/react'
 import { shareSocialOutline, settingsOutline } from 'ionicons/icons'
+import Router from 'next/router'
 import { uuid } from 'uuidv4'
 
 import { useAuth } from '../../../contexts/Auth'
