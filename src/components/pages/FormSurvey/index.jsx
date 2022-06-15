@@ -16,7 +16,11 @@ import {
 	IonReorder,
 	IonTextarea
 } from '@ionic/react'
-import { shareSocialOutline, settingsOutline } from 'ionicons/icons'
+import {
+	shareSocialOutline,
+	settingsOutline,
+	trashOutline
+} from 'ionicons/icons'
 import Router from 'next/router'
 import { uuid } from 'uuidv4'
 

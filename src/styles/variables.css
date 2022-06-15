@@ -308,7 +308,6 @@ ion-fab-button {
 	--background: #ac8fbf;
 }
 
-
 ion-checkbox {
 	--background: #ffffff;
 	--border-radius: 5px;
@@ -402,6 +401,9 @@ ion-header.header-profile {
 	@apply bg-white-100 !important;
 }
 
+ion-checkbox {
+	--border-color: #848383;
+}
 
 /* ion-radio-group {
 	@apply flex !important;
@@ -451,5 +453,3 @@ ion-radio ion-label {
 	@apply bg-orange-900 !important;
 }
 */
-
-
