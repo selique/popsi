@@ -1,3 +1,5 @@
+import * as React from 'react'
+
 import {
 	IonPage,
 	IonContent,
@@ -31,9 +33,9 @@ const Notification = () => {
 			</IonHeader>
 			<IonContent>
 				<div>
-					<div className="grid grid-cols-[auto_1fr] items-center gap-3 px-4">
-						<Avatar background={imageTemp} width="80px" height="80px" />
-						<div className="flex flex-col my-10">
+					<div className="flex items-center px-4">
+						<Avatar background={imageTemp} width="70px" height="70px" />
+						<div className="flex flex-col my-10 w-3/5">
 							<IonText className="text-black font-light mb-1 text-sm">
 								Seu paciênte,{' '}
 								<IonText className="font-semibold text-black">
@@ -43,6 +45,7 @@ const Notification = () => {
 							</IonText>
 							<IonText className="font-extralight text-xsm">7m</IonText>
 						</div>
+						<div className="w-4 h-4 bg-glossyGrape rounded-full" />
 					</div>
 					<Line />
 				</div>
