@@ -13,7 +13,7 @@ import {
 import { shareSocialOutline, documentTextOutline } from 'ionicons/icons'
 import Image from 'next/image'
 
-import Profile from '../../../assets/profile.png'
+import Profile from '../../../assets/Profile.png'
 import Running from '../../../assets/Running.png'
 import Yoga from '../../../assets/Yoga.png'
 import { useAuth } from '../../../contexts/Auth'
