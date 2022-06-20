@@ -27,3 +27,9 @@ GRANT ALL ON TABLE public.surveys_notifications TO authenticated;
 GRANT ALL ON TABLE public.surveys_notifications TO postgres;
 GRANT ALL ON TABLE public.surveys_notifications TO anon;
 GRANT ALL ON TABLE public.surveys_notifications TO service_role;
+
+ALTER TABLE IF EXISTS public._survey_invited OWNER to postgres;
+GRANT ALL ON TABLE public._survey_invited TO authenticated;
+GRANT ALL ON TABLE public._survey_invited TO postgres;
+GRANT ALL ON TABLE public._survey_invited TO anon;
+GRANT ALL ON TABLE public._survey_invited TO service_role;

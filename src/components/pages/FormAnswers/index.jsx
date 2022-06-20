@@ -21,7 +21,6 @@ import {
 	IonButton
 } from '@ionic/react'
 import Router from 'next/router'
-import { uuid } from 'uuidv4'
 
 import { useAuth } from '../../../contexts/Auth'
 import { supabase } from '../../../utils/supabaseClient'
@@ -72,14 +71,12 @@ const FormAnswers = () => {
 				dataForm[`answers${idQuiz}`].map(item => !!item && array.push(item))
 
 				data.push({
-					id: uuid(),
 					answer: array,
 					profileId: user.id,
 					questionId: questions[idQuiz].id
 				})
 			} else {
 				data.push({
-					id: uuid(),
 					answer: [dataForm[`answers${idQuiz}`]],
 					profileId: user.id,
 					questionId: questions[idQuiz].id

@@ -37,99 +37,93 @@ const imageTemp2 =
 	'https://pm1.narvii.com/6583/13022a93a381cddb0c98d4e0a813635bd1215d89_hq.jpg'
 
 const Quiz = () => {
-	const [surveys, setSurveys] = React.useState([])
-	const [modalInviteUserOpen, setModalInviteUserOpen] = React.useState(false)
 	const { user, professional } = useAuth()
 	const { register, control, handleSubmit, setValue, getValues, reset } =
 		useForm({
 			mode: 'onChange'
 		})
 
+	const [surveys, setSurveys] = React.useState(null)
+	const [invitedPatients, setInvitedPatients] = React.useState(null)
+	const [surveySelectedToInvite, setSurveySelectedToInvite] =
+		React.useState(null)
+	const [isInvitedLoading, setIsInvitedLoading] = React.useState(false)
+
+	React.useEffect(() => {
+		const getInvitedPatients = async () => {
+			const { data } = await supabase
+				.from('profiles')
+				.select(
+					`
+					id,
+					nickname,
+					avatar_url
+				`
+				)
+				.eq('medic_id', user.id)
+
+			console.log('invited', data)
+			if (data) setInvitedPatients(data)
+		}
+
+		getInvitedPatients()
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
+
 	React.useEffect(() => {
 		const getSurveys = async () => {
-			const { data: dataSurveys } = await supabase
+			const { data } = await supabase
 				.from('surveys')
 				.select(
 					`
 					id,
-					owner_id,
+					profiles:owner_id (nickname),
 					title,
-					description
+					description,
+					_survey_invited ( profiles ( * ) )
 				`
 				)
 				.eq('owner_id', user.id)
 
-			if (dataSurveys) {
-				dataSurveys.map(async survey => {
-					const { data } = await supabase
-						.from('profiles')
-						.select('nickname')
-						.eq('id', survey.owner_id)
-						.single()
-
-					if (data) {
-						setSurveys([...surveys, { ...survey, author: data.nickname }])
-					}
-				})
+			if (data) {
+				console.log('surveys', data)
+				setSurveys(data)
 			}
 		}
 
 		getSurveys()
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
-	const handleInvited = dataForm => {
+	const handleInvited = async dataForm => {
+		setIsInvitedLoading(true)
 		let usersInvited = []
-		Object.values(dataForm).map(value => {
-			if (value) {
-				usersInvited.push(value)
+		Object.values(dataForm).map(patient => {
+			if (patient) {
+				usersInvited.push({
+					A: patient,
+					B: surveySelectedToInvite
+				})
 			}
 		})
 
-		console.log(usersInvited)
-	}
+		console.log('users Invited', usersInvited)
 
-	const users = [
-		{
-			id: 1,
-			name: 'John Doe',
-			avatar: imageTemp2
-		},
-		{
-			id: 2,
-			name: 'John Doe',
-			avatar: imageTemp2
-		},
-		{
-			id: 3,
-			name: 'John Doe',
-			avatar: imageTemp2
-		},
-		{
-			id: 4,
-			name: 'John Doe',
-			avatar: imageTemp2
-		},
-		{
-			id: 5,
-			name: 'John Doe',
-			avatar: imageTemp2
-		},
-		{
-			id: 6,
-			name: 'John Doe',
-			avatar: imageTemp2
-		},
-		{
-			id: 7,
-			name: 'John Doe',
-			avatar: imageTemp2
-		},
-		{
-			id: 8,
-			name: 'John Doe',
-			avatar: imageTemp2
+		const { data, error } = await supabase
+			.from('_survey_invited')
+			.insert(usersInvited)
+
+		if (data) {
+			setIsInvitedLoading(false)
+			setSurveySelectedToInvite(null)
+			reset()
 		}
-	]
+
+		if (error) {
+			console.log(error)
+			setIsInvitedLoading(false)
+		}
+	}
 
 	return (
 		<IonPage>
@@ -152,22 +146,28 @@ const Quiz = () => {
 				/>
 				<div>
 					<IonText>Recentes</IonText>
-					{surveys.map((item, index) => (
-						<Link to={`/form/answers/${item.id}`} key={index}>
-							<div
-								className={`grid ${
-									professional
-										? 'grid-cols-[auto_1fr_auto]'
-										: 'grid-cols-[auto_1fr]'
-								} mt-5 items-center gap-4 ${
-									!professional && 'bg-gray-200 p-3 rounded-2xl'
-								}`}
-							>
-								<div className="relative">
-									<div className="bg-purple-opacity-100 text-white flex justify-center items-center text-3xl p-5 rounded-2xl">
-										<IonIcon src={documentOutline} color="white" />
-									</div>
-									{/* {professional && (
+					{!surveys ? (
+						<>
+							<br />
+							<IonText>Nenhum questionário encontrado.</IonText>
+						</>
+					) : (
+						surveys.map((item, index) => (
+							<Link to={`/form/answers/${item.id}`} key={index}>
+								<div
+									className={`grid ${
+										professional
+											? 'grid-cols-[auto_1fr_auto]'
+											: 'grid-cols-[auto_1fr]'
+									} mt-5 items-center gap-4 ${
+										!professional && 'bg-gray-200 p-3 rounded-2xl'
+									}`}
+								>
+									<div className="relative">
+										<div className="bg-purple-opacity-100 text-white flex justify-center items-center text-3xl p-5 rounded-2xl">
+											<IonIcon src={documentOutline} color="white" />
+										</div>
+										{/* {professional && (
 										<div className="absolute bottom-0 right-0">
 											<Avatar
 												background={item.peaples[0].image}
@@ -192,45 +192,46 @@ const Quiz = () => {
 											/>
 										</div>
 									)} */}
-								</div>
-								<div className="flex flex-col">
-									<IonText className="text-black">
-										{item.title}
-									</IonText>
-									<IonText className="text-gray-900 text-xsm">
-										{item.description}
-									</IonText>
-									{!professional && (
-										<div className="flex items-center mt-3">
-											<Avatar
-												background={imageTemp2}
-												width={'20px'}
-												height={'20px'}
-												style={{ border: '1px solid #ffffff' }}
+									</div>
+									<div className="flex flex-col">
+										<IonText className="text-black">
+											{item.title}
+										</IonText>
+										<IonText className="text-gray-900 text-xsm">
+											{item.description}
+										</IonText>
+										{!professional && (
+											<div className="flex items-center mt-3">
+												<Avatar
+													background={imageTemp2}
+													width={'20px'}
+													height={'20px'}
+													style={{ border: '1px solid #ffffff' }}
+												/>
+												<IonText className="ml-1 capitalize">
+													{item.profiles.nickname}
+												</IonText>
+											</div>
+										)}
+									</div>
+									{professional && (
+										<div
+											className="text-purple-100 text-2xl"
+											onClick={e => {
+												e.preventDefault()
+												setSurveySelectedToInvite(item.id)
+											}}
+										>
+											<IonIcon
+												src={shareSocialOutline}
+												color="#AC8FBF"
 											/>
-											<IonText className="ml-1 capitalize">
-												{item.author}
-											</IonText>
 										</div>
 									)}
 								</div>
-								{professional && (
-									<div
-										className="text-purple-100 text-2xl"
-										onClick={e => {
-											e.preventDefault()
-											setModalInviteUserOpen(true)
-										}}
-									>
-										<IonIcon
-											src={shareSocialOutline}
-											color="#AC8FBF"
-										/>
-									</div>
-								)}
-							</div>
-						</Link>
-					))}
+							</Link>
+						))
+					)}
 				</div>
 				{professional && (
 					<IonFab vertical="bottom" horizontal="end" slot="fixed">
@@ -240,10 +241,12 @@ const Quiz = () => {
 					</IonFab>
 				)}
 				<Modal
-					isOpen={modalInviteUserOpen}
+					isOpen={!!surveySelectedToInvite}
 					onDidDismiss={() => {
-						reset()
-						setModalInviteUserOpen(false)
+						if (!isInvitedLoading) {
+							reset()
+							setSurveySelectedToInvite(null)
+						}
 					}}
 					height={80}
 					title="Enviar para"
@@ -252,7 +255,7 @@ const Quiz = () => {
 					<form onSubmit={handleSubmit(handleInvited)}>
 						<IonSearchbar className="mb-4" />
 						<div>
-							<IonText className="font-bold">Ultimos envios</IonText>
+							{/* <IonText className="font-bold">Ultimos envios</IonText>
 							<IonSlides
 								options={{
 									slidesPerView: 5.2,
@@ -261,51 +264,100 @@ const Quiz = () => {
 									autoHeight: true
 								}}
 							>
-								{[1, 2, 3, 4, 5, 6, 7, 8].map((item, index) => (
-									<IonSlide key={index}>
-										<Avatar
-											background={imageTemp2}
-											hasBorder={false}
-											width="70px"
-											height="70px"
-										/>
-									</IonSlide>
-								))}
-							</IonSlides>
+								{surveys &&
+								surveySelectedToInvite &&
+								surveys.filter(
+									survey => survey.id === surveySelectedToInvite
+								) ? (
+									surveys
+										.filter(
+											survey => survey.id === surveySelectedToInvite
+										)[0]
+										._survey_invited.map(({ profiles }, index) => (
+											<IonSlide key={index}>
+												<Avatar
+													background={
+														profiles.avatar_url ?? imageTemp2
+													}
+													hasBorder={false}
+													width="70px"
+													height="70px"
+												/>
+											</IonSlide>
+										))
+								) : (
+									<IonText className="font-bold">
+										Nenhum paciente encontrado.
+									</IonText>
+								)}
+							</IonSlides> */}
 						</div>
 						<div className="mt-7">
 							<IonText className="font-bold">Lista de Pacientes</IonText>
 							<div className="overflow-scroll h-[32vh]">
-								{users.map((item, index) => (
-									<div
-										key={index}
-										className="grid grid-cols-[auto_1fr_auto] gap-4 items-center mt-4"
-									>
-										<Avatar
-											background={item.avatar}
-											hasBorder={false}
-											width="70px"
-											height="70px"
-										/>
-										<IonText className="font-bold">
-											{item.name}
-										</IonText>
-										<Controller
-											control={control}
-											name={`envited${index}`}
-											render={({ field: { onChange } }) => (
-												<IonCheckbox
-													value={item.id}
-													onIonChange={() => onChange(item.id)}
+								{invitedPatients ? (
+									invitedPatients.map((item, index) => {
+										// const validating = surveys
+										// 	.filter(
+										// 		survey =>
+										// 			survey.id === surveySelectedToInvite
+										// 	)[0]
+										// 	?._survey_invited?.find(
+										// 		patient => patient.id === item.id
+										// 	)
+
+										// console.log(item.id)
+										// console.log(!!validating)
+										return (
+											<div
+												key={index}
+												className="grid grid-cols-[auto_1fr_auto] gap-4 items-center mt-4"
+											>
+												<Avatar
+													background={
+														item.avatar_url ?? imageTemp2
+													}
+													hasBorder={false}
+													width="70px"
+													height="70px"
 												/>
-											)}
-										/>
-									</div>
-								))}
+												<IonText className="font-bold">
+													{item.nickname}
+												</IonText>
+												<Controller
+													control={control}
+													name={`envited${index}`}
+													render={({ field: { onChange } }) => (
+														<IonCheckbox
+															value={item.id}
+															disabled={isInvitedLoading}
+															onIonChange={() =>
+																!isInvitedLoading &&
+																onChange(item.id)
+															}
+														/>
+													)}
+												/>
+											</div>
+										)
+									})
+								) : (
+									<IonText className="font-bold">
+										Nenhum paciente encontrado.
+									</IonText>
+								)}
 							</div>
 						</div>
-						<Button className="bg-purple-100 mt-2 py-4" type="submit">
-							<IonText className="text-white text-lg">Enviar</IonText>
+						<Button
+							className={`${
+								isInvitedLoading ? 'bg-gray-400' : 'bg-purple-100'
+							} mt-2 py-4`}
+							type="submit"
+							disabled={isInvitedLoading}
+						>
+							<IonText className="text-white text-lg">
+								{isInvitedLoading ? 'Eviando...' : 'Enviar'}
+							</IonText>
 						</Button>
 					</form>
 				</Modal>
