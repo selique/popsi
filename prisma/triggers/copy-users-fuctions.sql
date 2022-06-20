@@ -18,7 +18,6 @@ as $$
 			gender_identity,
 			cpf,
 			birth_date,
-			medic_id,
 			created_at
 	) values (
 		new.id,
@@ -30,15 +29,8 @@ as $$
 		new.raw_user_meta_data->>'gender_identity',
 		new.raw_user_meta_data->>'cpf',
 		to_date(new.raw_user_meta_data->>'birth_date', 'YYYY-MM-DD'),
-		(new.raw_user_meta_data->>'medic_id')::uuid,
 		current_timestamp
 		);
 		return new;
 	end;
 $$;
-
-
-
-
-
-

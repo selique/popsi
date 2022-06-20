@@ -23,14 +23,15 @@ model Profile {
    role            Role?     @default(PATIENT)
 
    // Relation: Surveys
-   surveys Surveys[]
+   owner_survey  Surveys[]       @relation("owner_id")
+   SurveyInvited SurveyInvited[]
 
    // Relation: Answer
    answers Answer[]
 
    // Relation: Notifications
-   MedicNotifications   SurveysNotifications[] @relation("medic_surveys_notifications")
-   PatientNotifications SurveysNotifications[] @relation("patient_surveys_notifications")
+   medic_notifications   SurveysNotifications[] @relation("medic_surveys_notifications")
+   patient_notifications SurveysNotifications[] @relation("patient_surveys_notifications")
 
    // Relation Self: Medic
    medic_id      String?  @unique @db.Uuid
@@ -38,10 +39,22 @@ model Profile {
    medicRelation Profile? @relation("medic")
 
    // Timestamp
-   created_at DateTime  @default(now())
-   updated_at DateTime?
+   created_at DateTime  @default(now()) @db.Timestamptz()
+   updated_at DateTime? @db.Timestamptz()
 
    @@map("profiles")
+}
+
+model SurveyInvited {
+   id String @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+   profile_id Profile @relation(fields: [A], references: [id])
+   A          String  @db.Uuid
+
+   survey_id Surveys @relation(fields: [B], references: [id])
+   B         String  @db.Uuid
+
+   @@map("_survey_invited")
 }
 
 enum Role {
@@ -52,20 +65,23 @@ enum Role {
 }
 
 model Surveys {
-   id String @id @unique @default(uuid()) @db.Uuid
+   id String @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
    // Survey data
    title       String
    description String
    question    Question[]
 
-   // Relation: Profiles
-   Profile   Profile? @relation(fields: [profileId], references: [id])
-   profileId String   @db.Uuid
+   // Relation: Medic
+   Owner    Profile @relation("owner_id", fields: [owner_id], references: [id])
+   owner_id String  @db.Uuid
+
+   // Relation: Patients
+   SurveyInvited SurveyInvited[]
 
    // Timestamp
-   created_at DateTime  @default(now())
-   updated_at DateTime?
+   created_at DateTime  @default(now()) @db.Timestamptz()
+   updated_at DateTime? @db.Timestamptz()
 
    SurveysNotifications SurveysNotifications[]
 
@@ -73,7 +89,7 @@ model Surveys {
 }
 
 model Question {
-   id String @id @unique @default(uuid()) @db.Uuid
+   id String @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
    // Question data
    question     String
@@ -88,8 +104,8 @@ model Question {
    surveysId String   @db.Uuid
 
    // Timestamp
-   created_at DateTime  @default(now())
-   updated_at DateTime?
+   created_at DateTime  @default(now()) @db.Timestamptz()
+   updated_at DateTime? @db.Timestamptz()
 
    @@map("questions")
 }
@@ -104,7 +120,7 @@ enum QuestionTypes {
 }
 
 model Answer {
-   id String @id @unique @default(uuid()) @db.Uuid
+   id String @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
    // Answer data
    answer String[]
@@ -114,22 +130,23 @@ model Answer {
    profileId String   @db.Uuid
 
    // Relation: Question
-   question   Question @relation(fields: [questionId], references: [id])
+   Question   Question @relation(fields: [questionId], references: [id])
    questionId String   @db.Uuid
 
    // Timestamp
-   created_at DateTime  @default(now())
-   updated_at DateTime?
+   created_at DateTime  @default(now()) @db.Timestamptz()
+   updated_at DateTime? @db.Timestamptz()
 
    @@map("answers")
 }
 
 model SurveysNotifications {
-   id String @id @unique @default(uuid()) @db.Uuid
+   id String @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
-   content String
+   content String?
 
-   status SurveysNotificationsStatus @default(CREATED)
+   status SurveysNotificationsStatus @default(SENT)
+   for    SurveysNotificationFor     @default(PATIENT)
 
    // Relation: Profiles
    Medic    Profile? @relation("medic_surveys_notifications", fields: [medic_id], references: [id])
@@ -143,14 +160,20 @@ model SurveysNotifications {
    surveys_id String   @db.Uuid
 
    // Timestamp
-   created_at DateTime  @default(now())
-   updated_at DateTime?
+   created_at DateTime @default(now()) @db.Timestamptz()
    @@map("surveys_notifications")
 }
 
 enum SurveysNotificationsStatus {
-   CREATED
+   SENT
    READED
 
    @@map("surveys_notifications_status")
+}
+
+enum SurveysNotificationFor {
+   MEDIC
+   PATIENT
+
+   @@map("surveys_notifications_for")
 }

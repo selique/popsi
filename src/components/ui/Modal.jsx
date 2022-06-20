@@ -16,7 +16,7 @@ const Modal = ({
 	children,
 	height = 100,
 	title,
-	swipeToClose
+	swipeToClose = true
 }) => {
 	const heightBackdrop = 100 - height
 
@@ -32,7 +32,7 @@ const Modal = ({
 		<CustomModal
 			isOpen={isOpen}
 			onDidDismiss={onDidDismiss}
-			swipeToClose={swipeToClose ?? true}
+			swipeToClose={swipeToClose}
 			backdropDismiss={true}
 		>
 			<div className="h-[100vh]">

@@ -22,7 +22,6 @@ import {
 	trashOutline
 } from 'ionicons/icons'
 import Router from 'next/router'
-import { uuid } from 'uuidv4'
 
 import { useAuth } from '../../../contexts/Auth'
 import { supabase } from '../../../utils/supabaseClient'
@@ -157,10 +156,9 @@ const FormProfessional = ({ idForm }) => {
 			.from('surveys')
 			.insert([
 				{
-					id: uuid(),
 					title: data.title,
 					description: '',
-					profileId: user.id
+					owner_id: user.id
 				}
 			])
 			.single()
@@ -169,7 +167,6 @@ const FormProfessional = ({ idForm }) => {
 			let dataQuestion = []
 			data.questions.map(question => {
 				const defaultData = {
-					id: uuid(),
 					question: question.title,
 					type: question.type,
 					surveysId: dataSurveys.id
