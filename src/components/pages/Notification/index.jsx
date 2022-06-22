@@ -58,9 +58,7 @@ const Notification = () => {
 				.from('surveys_notifications')
 				.select(
 					`
-					content,
-					surveys_id,
-					status,
+					*,
 					profiles:medic_id ( nickname, nickname ),
 					surveys:surveys_id ( title )
 				`
