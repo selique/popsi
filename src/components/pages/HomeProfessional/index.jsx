@@ -136,10 +136,10 @@ const HomeProfessional = () => {
 				<div className="flex justify-between">
 					<div className="flex flex-col">
 						<IonText className="text-sm text-gray-900 mb-1 font-light">
-							Bem vinda
+							Bem vindo{'(a)'}
 						</IonText>
 						<IonText className="text-black-200 text-3xl font-bold">
-							Drª Adriana
+							{user.user_metadata.nickname}
 						</IonText>
 					</div>
 					<Image src={Profile} alt="Foto de perfil" />

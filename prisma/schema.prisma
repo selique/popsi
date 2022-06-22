@@ -166,7 +166,9 @@ model SurveysNotifications {
 
 enum SurveysNotificationsStatus {
    SENT
+   IN_PROGRESS
    READED
+   FINISHED
 
    @@map("surveys_notifications_status")
 }
