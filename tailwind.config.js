@@ -48,6 +48,12 @@ module.exports = {
 				},
 				glossyGrape: {
 					DEFAULT: '#AC8FBF'
+				},
+				texasRose: {
+					DEFAULT: '#FFA951'
+				},
+				deYork: {
+					DEFAULT: '#90C387'
 				}
 			}
 		}

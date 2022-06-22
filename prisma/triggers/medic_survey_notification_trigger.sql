@@ -1,38 +1,4 @@
-create or replace function handle_patient_survey_notification() returns trigger as $$
-  declare
-    m_id uuid;
-    medic_name text;
-    survey_name text;
-  begin
-    select owner_id
-    from surveys
-    where id = new."B" into m_id;
-
-    select nickname
-    from profiles
-    where id = m_id into medic_name;
-
-    select title
-    from surveys
-    where id = new."B" into survey_name;
-
-    insert into public.surveys_notifications(
-      id,
-      "for",
-      medic_id,
-      patient_id,
-      surveys_id,
-      created_at
-    )
-    values (
-      uuid_generate_v1(),
-      'PATIENT',
-      m_id,
-      NEW."A",
-      NEW."B",
-      current_timestamp
-    );
-
-    return new;
-  end;
-$$ language plpgsql;
+DROP TRIGGER IF EXISTS medic_survey_notification on public.surveys;
+CREATE TRIGGER medic_survey_notification
+AFTER INSERT ON public.answers
+FOR EACH ROW EXECUTE PROCEDURE public.handle_medic_survey_notification();

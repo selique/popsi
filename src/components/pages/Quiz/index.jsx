@@ -66,28 +66,45 @@ const Quiz = () => {
 			if (data) setInvitedPatients(data)
 		}
 
-		getInvitedPatients()
+		if (professional) getInvitedPatients()
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
 	React.useEffect(() => {
 		const getSurveys = async () => {
-			const { data } = await supabase
-				.from('surveys')
-				.select(
+			if (professional) {
+				const { data } = await supabase
+					.from('surveys')
+					.select(
+						`
+						id,
+						profiles:owner_id (nickname),
+						title,
+						description,
+						_survey_invited ( profiles ( * ) )
 					`
-					id,
-					profiles:owner_id (nickname),
-					title,
-					description,
-					_survey_invited ( profiles ( * ) )
-				`
-				)
-				.eq('owner_id', user.id)
+					)
+					.eq('owner_id', user.id)
 
-			if (data) {
-				console.log('surveys', data)
-				setSurveys(data)
+				if (data) {
+					console.log('surveys', data)
+					setSurveys(data)
+				}
+			} else {
+				const { data } = await supabase
+					.from('_survey_invited')
+					.select(
+						`
+						id,
+						surveys ( * )
+					`
+					)
+					.eq('A', user.id)
+
+				if (data && data.surveys) {
+					console.log('surveys_invited', data.surveys)
+					setSurveys(data.surveys)
+				}
 			}
 		}
 

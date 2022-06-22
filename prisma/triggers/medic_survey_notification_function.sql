@@ -4,36 +4,33 @@ create or replace function handle_medic_survey_notification() returns trigger as
     m_id uuid;
   begin
     select "surveysId"
-    from question
+    from questions
     where id = new."questionId" into s_id;
 
-    select id
-    from surveys_notifications
-    where patient_id = new."profileId" and surveys_id = s_id and status = 'SENT';
-
-    if not found then
+    if not exists (select from surveys_notifications where patient_id = new."profileId" and surveys_id = s_id and status = 'SENT') then
       select owner_id
       from surveys
       where id = s_id into m_id;
 
+      update public.surveys_notifications
+      set status = 'FINISHED'
+      where "for" = 'PATIENT' and medic_id = m_id and patient_id = new."profileId" and surveys_id = s_id;
+
       insert into public.surveys_notifications(
-        id,
         "for",
         medic_id,
         patient_id,
-        survey_id,
+        surveys_id,
         created_at
       )
       values (
-        uuid_generate_v1(),
         'MEDIC',
         m_id,
         new."profileId",
         s_id,
         current_timestamp
       );
-
-      return new;
     end if;
+    return new;
   end;
 $$ language plpgsql;

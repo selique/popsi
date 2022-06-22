@@ -26,64 +26,8 @@ const HomeClient = () => {
 	const [showLoading, hideLoading] = useIonLoading()
 	const [showToast] = useIonToast()
 	const { user, loading } = useAuth()
-	const [profile, setProfile] = React.useState({
-		full_name: '',
-		avatar_url: '',
-		bio: '',
-		nickname: '',
-		matrial_status: '',
-		gender: '',
-		gender_identity: '',
-		cpf: '',
-		birth_date: ''
-	})
 	const [surveys, setSurveys] = React.useState([])
 	const [avatarUrl, setAvatarUrl] = React.useState('')
-
-	const getProfile = async () => {
-		await showLoading()
-		try {
-			let { data, error, status } = await supabase
-				.from('profiles')
-				.select(
-					`
-				full_name,
-				avatar_url,
-				bio,
-				nickname,
-				matrial_status,
-				gender,
-				gender_identity,
-				cpf,
-				birth_date
-			`
-				)
-				.eq('id', user?.id)
-				.single()
-
-			if (error && status !== 406) {
-				throw error
-			}
-
-			if (data) {
-				setProfile({
-					full_name: data.full_name,
-					avatar_url: data.avatar_url,
-					bio: data.bio,
-					nickname: data.nickname,
-					matrial_status: data.matrial_status,
-					gender: data.gender,
-					gender_identity: data.gender_identity,
-					cpf: data.cpf,
-					birth_date: data.birth_date
-				})
-			}
-		} catch (error) {
-			showToast({ message: error.message, duration: 5000 })
-		} finally {
-			await hideLoading()
-		}
-	}
 
 	const getSurveys = async () => {
 		const { data } = await supabase
@@ -98,9 +42,9 @@ const HomeClient = () => {
 
 	React.useEffect(() => {
 		if (user) {
-			getProfile()
 			getSurveys()
-			downloadImage(profile.avatar_url)
+			user.user_metadata.avatar_url &&
+				downloadImage(user.user_metadata.avatar_url)
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [loading])
@@ -127,10 +71,10 @@ const HomeClient = () => {
 				<div className="flex justify-between mb-5">
 					<div className="flex flex-col justify-center">
 						<IonText className="text-sm text-gray-900 mb-1 font-light">
-							Bem vindo
+							Bem vindo{'(a)'}
 						</IonText>
 						<IonText className="text-black-200 text-2xl font-bold capitalize">
-							{profile.nickname}
+							{user.user_metadata.nickname}
 						</IonText>
 					</div>
 					<Avatar background={avatarUrl} width="80px" height="80px" />
