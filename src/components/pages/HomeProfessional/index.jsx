@@ -13,8 +13,7 @@ import {
 	IonItem,
 	IonLabel,
 	IonTextarea,
-	IonIcon,
-	IonChip
+	IonIcon
 } from '@ionic/react'
 import { notificationsOutline } from 'ionicons/icons'
 import { close } from 'ionicons/icons'
@@ -27,7 +26,7 @@ import Profile from '../../../assets/Profile.png'
 import { useAuth } from '../../../contexts/Auth'
 import Button from '../../ui/Button'
 import Card from '../../ui/Card'
-import Modal from '../../ui/Modal'
+import ModalSheet from '../../ui/Modal/SheetBottom'
 import ShortcutCard from '../../ui/ShortcutCard'
 
 const Slide = styled(IonSlides)`
@@ -110,26 +109,6 @@ const HomeProfessional = () => {
 		} catch (error) {
 			console.log(error)
 		}
-	}
-
-	const areaChartData = {
-		labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-		datasets: [
-			{
-				label: 'Quantidade de pacientes',
-				backgroundColor: '#AC8FBF',
-				borderColor: '#AC8FBF',
-				borderWidth: 3,
-				hoverBackgroundColor: '#AC8FBF',
-				hoverBorderColor: '#AC8FBF',
-				data: [65, 59, 80, 81, 56, 55, 40],
-				tension: 0.4,
-				segment: {
-					borderColor: '#AC8FBF',
-					backgroundColor: '#AC8FBF'
-				}
-			}
-		]
 	}
 
 	return (
@@ -297,7 +276,7 @@ const HomeProfessional = () => {
 						)}
 					</IonContent>
 				</IonModal>
-				<Modal
+				<ModalSheet
 					isOpen={modalAgendaOpen}
 					onDidDismiss={() => setModalAgendaOpen(false)}
 					height={80}
@@ -365,7 +344,7 @@ const HomeProfessional = () => {
 							</IonText>
 						</div>
 					</IonContent>
-				</Modal>
+				</ModalSheet>
 			</IonContent>
 		</IonPage>
 	)

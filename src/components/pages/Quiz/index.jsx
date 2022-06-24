@@ -15,8 +15,6 @@ import {
 	IonBackButton,
 	IonButtons,
 	IonSearchbar,
-	IonSlides,
-	IonSlide,
 	IonCheckbox
 } from '@ionic/react'
 import {
@@ -31,7 +29,7 @@ import { supabase } from '../../../utils/supabaseClient'
 import Avatar from '../../ui/Avatar'
 import Button from '../../ui/Button'
 import Input from '../../ui/Input'
-import Modal from '../../ui/Modal'
+import Modal from '../../ui/Modal/SheetBottom'
 
 const imageTemp2 =
 	'https://pm1.narvii.com/6583/13022a93a381cddb0c98d4e0a813635bd1215d89_hq.jpg'
