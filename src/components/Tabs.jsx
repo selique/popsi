@@ -42,7 +42,7 @@ const Tabs = () => {
 				/>
 				<Route
 					path="/app/home"
-					component={professional ? HomeProfessional : HomeClient}
+					component={!professional ? HomeProfessional : HomeClient}
 					exact={true}
 				/>
 				<Route path="/app/patients" component={Patients} exact={true} />

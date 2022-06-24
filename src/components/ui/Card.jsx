@@ -1,7 +1,9 @@
-const Card = ({ children, className, ...props }) => (
-	<div className={`w-full ${className}`} {...props}>
-		<div className="bg-white shadow-md rounded-xl p-4">{children}</div>
-	</div>
+import { IonCard, IonCardContent } from '@ionic/react'
+
+const Card = ({ children, className, classContainer, ...props }) => (
+	<IonCard className={`rounded-2xl shadow ${classContainer}`}>
+		<IonCardContent className={`${className}`}>{children}</IonCardContent>
+	</IonCard>
 )
 
 export default Card

@@ -1,7 +1,8 @@
 import * as React from 'react'
+import { Link } from 'react-router-dom'
 
 import { SocialSharing } from '@awesome-cordova-plugins/social-sharing'
-import { isPlatform } from '@ionic/react'
+import { IonAvatar, IonList, IonNote, isPlatform } from '@ionic/react'
 import {
 	IonPage,
 	IonContent,
@@ -14,6 +15,7 @@ import {
 	IonTextarea,
 	IonIcon
 } from '@ionic/react'
+import { notificationsOutline } from 'ionicons/icons'
 import { close } from 'ionicons/icons'
 import Image from 'next/image'
 import styled from 'styled-components'
@@ -24,8 +26,7 @@ import Profile from '../../../assets/Profile.png'
 import { useAuth } from '../../../contexts/Auth'
 import Button from '../../ui/Button'
 import Card from '../../ui/Card'
-import Chart from '../../ui/Chart'
-import Modal from '../../ui/Modal'
+import ModalSheet from '../../ui/Modal/SheetBottom'
 import ShortcutCard from '../../ui/ShortcutCard'
 
 const Slide = styled(IonSlides)`
@@ -110,26 +111,6 @@ const HomeProfessional = () => {
 		}
 	}
 
-	const areaChartData = {
-		labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-		datasets: [
-			{
-				label: 'Quantidade de pacientes',
-				backgroundColor: '#AC8FBF',
-				borderColor: '#AC8FBF',
-				borderWidth: 3,
-				hoverBackgroundColor: '#AC8FBF',
-				hoverBorderColor: '#AC8FBF',
-				data: [65, 59, 80, 81, 56, 55, 40],
-				tension: 0.4,
-				segment: {
-					borderColor: '#AC8FBF',
-					backgroundColor: '#AC8FBF'
-				}
-			}
-		]
-	}
-
 	return (
 		<IonPage>
 			<IonContent className="ion-padding bg-white-100" fullscreen>
@@ -138,13 +119,25 @@ const HomeProfessional = () => {
 						<IonText className="text-sm text-gray-900 mb-1 font-light">
 							Bem vindo{'(a)'}
 						</IonText>
-						<IonText className="text-black-200 text-3xl font-bold">
+						<IonText className="text-black-200 text-2xl font-bold">
 							{user.user_metadata.nickname}
 						</IonText>
 					</div>
-					<Image src={Profile} alt="Foto de perfil" />
+					<div className="flex items-center">
+						<Link to="/app/notification">
+							<Button className="mr-2 rounded-full w-max px-3">
+								<IonIcon
+									icon={notificationsOutline}
+									className="text-xl"
+								/>
+							</Button>
+						</Link>
+						<IonAvatar className="flex items-center w-[50px] h-max">
+							<Image src={Profile} alt="Foto de perfil" />
+						</IonAvatar>
+					</div>
 				</div>
-				<Slide options={slideOpts} className="mt-4 mb-3">
+				<Slide options={slideOpts} className="mt-2 mb-3">
 					<IonSlide className="h-full">
 						<ShortcutCard
 							type="button"
@@ -184,65 +177,29 @@ const HomeProfessional = () => {
 					</IonSlide>
 				</Slide>
 				<Card>
-					<div className="flex flex-col">
-						<IonText className="font-semibold text-black-200">
-							Hoje, 27 de Abril
-						</IonText>
-						<IonText className="font-semibold text-gray-900 text-xsm">
-							Suas consultas mais recentes
-						</IonText>
-					</div>
+					<IonText className="font-semibold text-gray-900 text-xl leading-5">
+						Questionários respondidos recentemente
+					</IonText>
 					<div className="my-4">
-						<div className="flex items-center">
-							<Image src={Profile} alt="Foto de perfil" />
-							<div className="flex flex-col ml-3">
-								<IonText>Ana Lisa</IonText>
-								<IonText className="font-light text-sm">
-									14:30 pm
-								</IonText>
-							</div>
-						</div>
-						<div className="flex items-center my-3">
-							<Image src={Profile} alt="Foto de perfil" />
-							<div className="flex flex-col ml-3">
-								<IonText>Ana Lisa</IonText>
-								<IonText className="font-light text-sm">
-									11:00 am
-								</IonText>
-							</div>
-						</div>
-						<div className="flex items-center">
-							<Image src={Profile} alt="Foto de perfil" />
-							<div className="flex flex-col ml-3">
-								<IonText>Ana Lisa</IonText>
-								<IonText className="font-light text-sm">
-									08:25 am
-								</IonText>
-							</div>
-						</div>
+						{[...Array(6)].map((_, index) => (
+							<IonList key={index}>
+								<IonItem>
+									<IonAvatar slot="start">
+										<Image src={Profile} alt="Foto de perfil" />
+									</IonAvatar>
+									<div className="flex flex-col">
+										<IonText className="font-semibold">
+											Ana Lisa
+										</IonText>
+										<IonText className="text-gray-900">
+											Questionario 1
+										</IonText>
+									</div>
+									<IonNote slot="end">10:30 am</IonNote>
+								</IonItem>
+							</IonList>
+						))}
 					</div>
-					<Button
-						className="bg-blue-200"
-						onClick={() => setModalAgendaOpen(true)}
-					>
-						<IonText className="text-white font-semibold">
-							Ver agenda completa
-						</IonText>
-					</Button>
-				</Card>
-				<Card className="mt-4">
-					<div className="flex flex-col mb-4">
-						<IonText className="text-xsm">Resumo semanal</IonText>
-						<IonText className="font-semibold text-sm">
-							Hoje, 02 de maio
-						</IonText>
-					</div>
-					<Chart
-						data={areaChartData}
-						options={{
-							maintainAspectRatio: true
-						}}
-					/>
 				</Card>
 				<IonModal
 					isOpen={modalInviteUserOpen}
@@ -319,7 +276,7 @@ const HomeProfessional = () => {
 						)}
 					</IonContent>
 				</IonModal>
-				<Modal
+				<ModalSheet
 					isOpen={modalAgendaOpen}
 					onDidDismiss={() => setModalAgendaOpen(false)}
 					height={80}
@@ -387,7 +344,7 @@ const HomeProfessional = () => {
 							</IonText>
 						</div>
 					</IonContent>
-				</Modal>
+				</ModalSheet>
 			</IonContent>
 		</IonPage>
 	)
