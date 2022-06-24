@@ -61,7 +61,7 @@ const Tabs = () => {
 					<IonIcon icon={home} />
 					<IonLabel>Home</IonLabel>
 				</IonTabButton>
-				{professional && (
+				{!professional && (
 					<IonTabButton tab="tab2" href="/app/patients">
 						<IonIcon icon={list} />
 						<IonLabel>Pacients</IonLabel>

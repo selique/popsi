@@ -19,7 +19,7 @@ import { filterOutline, addOutline } from 'ionicons/icons'
 import { useAuth } from '../../../contexts/Auth'
 import { supabase } from '../../../utils/supabaseClient'
 import Avatar from '../../ui/Avatar'
-import Input from '../../ui/Input'
+import Card from '../../ui/Card'
 
 const imageTemp =
 	'https://i0.wp.com/www.kailagarcia.com/wp-content/uploads/2019/05/46846414_205184383758304_7255555943408505199_n.jpg?fit=1080%2C1350&ssl=1'
@@ -50,6 +50,32 @@ const Patients = () => {
 				setPatient(data)
 			}
 		} catch (error) {
+			setPatient([
+				{
+					full_name: 'Cintia S. Amaro',
+					avatar_url: imageTemp
+				},
+				{
+					full_name: 'Cintia S. Amaro',
+					avatar_url: imageTemp
+				},
+				{
+					full_name: 'Cintia S. Amaro',
+					avatar_url: imageTemp
+				},
+				{
+					full_name: 'Cintia S. Amaro',
+					avatar_url: imageTemp
+				},
+				{
+					full_name: 'Cintia S. Amaro',
+					avatar_url: imageTemp
+				},
+				{
+					full_name: 'Cintia S. Amaro',
+					avatar_url: imageTemp
+				}
+			])
 			showToast({ message: error.message, duration: 5000 })
 		} finally {
 			await hideLoading()
@@ -85,73 +111,81 @@ const Patients = () => {
 		<IonPage>
 			<IonHeader>
 				<IonToolbar>
-					<IonTitle className="text-lg font-semibold">Pacientes</IonTitle>
+					<IonTitle className="text-lg font-semibold text-center">
+						Pacientes
+					</IonTitle>
 				</IonToolbar>
 			</IonHeader>
-			<IonContent className="ion-padding bg-black" fullscreen>
-				<IonSearchbar placeholder="Pesquisar" />
-				<div className="flex items-center justify-between mb-5">
-					<IonText className="text-black">Lista personlizada</IonText>
-					<IonIcon src={filterOutline} />
-				</div>
-				<IonSlides
-					options={{
-						slidesPerView: 4.5,
-						spaceBetween: 5,
-						speed: 400,
-						autoHeight: true
-					}}
-				>
-					<IonSlide>
-						<div className="w-[80px] h-[80px]">
-							<Avatar width="100%" height="100%" hasBorder={false}>
-								<IonIcon
-									src={addOutline}
-									size="large"
-									color="#ffffff"
-								/>
-							</Avatar>
-						</div>
-					</IonSlide>
-					{[...Array(10)].map((_, index) => (
-						<IonSlide key={index}>
-							<div className="w-[80px] h-[80px]">
-								<Avatar
-									width="100%"
-									height="100%"
-									background={imageTemp}
-									hasBorder={false}
-								/>
+			<IonContent className="ion-padding" fullscreen>
+				<div className="bg-white-100">
+					<IonSearchbar
+						placeholder="Pesquisar"
+						className="mb-4 bg-white"
+					/>
+					<div className="flex items-center justify-between mb-5">
+						<IonText className="text-black font-medium">
+							Favoritos
+						</IonText>
+						<IonIcon src={filterOutline} />
+					</div>
+					<IonSlides
+						options={{
+							slidesPerView: 4.2,
+							spaceBetween: 5,
+							speed: 400,
+							autoHeight: true
+						}}
+					>
+						<IonSlide>
+							<div className="w-[80px] h-[80px] border-2 border-white border-solid rounded-full">
+								<Avatar width="100%" height="100%" hasBorder={false}>
+									<IonIcon
+										src={addOutline}
+										size="large"
+										className="text-white"
+									/>
+								</Avatar>
 							</div>
 						</IonSlide>
-					))}
-				</IonSlides>
-				<div>
-					{patient.map(({ full_name, avatar_url }, index) => (
-						<div
-							key={index}
-							className="my-8 grid grid-cols-[80px_1fr_auto] gap-4 items-center"
-						>
-							<div className="w-[80px] h-[80px]">
-								<Avatar
-									width="100%"
-									height="100%"
-									background={avatar_url}
-									hasBorder={false}
-								/>
-							</div>
-							<div className="flex flex-col">
-								<IonText className="font-semibold">{full_name}</IonText>
-								<IonText className="font-light text-sm">
-									Guarulhos, São Paulo
+						{[...Array(10)].map((_, index) => (
+							<IonSlide key={index}>
+								<div>
+									<div className="w-[80px] h-[80px] border-2 border-white border-solid rounded-full">
+										<Avatar
+											width="100%"
+											height="100%"
+											background={imageTemp}
+											hasBorder={false}
+										/>
+									</div>
+									<IonText className="text-sm">
+										Nome {index + 1}
+									</IonText>
+								</div>
+							</IonSlide>
+						))}
+					</IonSlides>
+					<div className="mt-5">
+						{patient.map(({ full_name, avatar_url }, index) => (
+							<Card
+								key={index}
+								classContainer="mb-3"
+								className="flex items-center"
+							>
+								<div className="w-[50px] h-[50px]">
+									<Avatar
+										width="100%"
+										height="100%"
+										background={avatar_url}
+										hasBorder={false}
+									/>
+								</div>
+								<IonText className="font-semibold ml-3 text-xl">
+									{full_name}
 								</IonText>
-							</div>
-							<div className="flex flex-col text-light text-xsm">
-								<IonText>Ultimo Acesso</IonText>
-								<IonText>Hoje as 10:30</IonText>
-							</div>
-						</div>
-					))}
+							</Card>
+						))}
+					</div>
 				</div>
 			</IonContent>
 		</IonPage>

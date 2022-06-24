@@ -371,6 +371,10 @@ ion-input input {
 	@apply px-3 !important;
 }
 
+ion-searchbar {
+	padding: 0 !important;
+}
+
 ion-select {
 	@apply w-auto !important;
 	@apply rounded-xl !important;
@@ -396,13 +400,24 @@ ion-picker .picker-wrapper {
 	@apply bg-gray-100 !important;
 }
 
-/* EditProfile */
-ion-header.header-profile {
-	@apply bg-white-100 !important;
+ion-header {
+	@apply bg-white !important;
+	height: 10vh;
+}
+
+ion-header > ion-toolbar {
+	height: 100%;
+	display: flex;
+	align-items: center;
 }
 
 ion-checkbox {
 	--border-color: #848383;
+}
+
+ion-card {
+	margin: 0;
+	@apply bg-white !important;
 }
 
 /* ion-radio-group {
