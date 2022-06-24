@@ -50,32 +50,6 @@ const Patients = () => {
 				setPatient(data)
 			}
 		} catch (error) {
-			setPatient([
-				{
-					full_name: 'Cintia S. Amaro',
-					avatar_url: imageTemp
-				},
-				{
-					full_name: 'Cintia S. Amaro',
-					avatar_url: imageTemp
-				},
-				{
-					full_name: 'Cintia S. Amaro',
-					avatar_url: imageTemp
-				},
-				{
-					full_name: 'Cintia S. Amaro',
-					avatar_url: imageTemp
-				},
-				{
-					full_name: 'Cintia S. Amaro',
-					avatar_url: imageTemp
-				},
-				{
-					full_name: 'Cintia S. Amaro',
-					avatar_url: imageTemp
-				}
-			])
 			showToast({ message: error.message, duration: 5000 })
 		} finally {
 			await hideLoading()

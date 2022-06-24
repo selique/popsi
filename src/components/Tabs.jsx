@@ -42,7 +42,7 @@ const Tabs = () => {
 				/>
 				<Route
 					path="/app/home"
-					component={professional ? HomeProfessional : HomeClient}
+					component={!professional ? HomeProfessional : HomeClient}
 					exact={true}
 				/>
 				<Route path="/app/patients" component={Patients} exact={true} />
@@ -61,7 +61,7 @@ const Tabs = () => {
 					<IonIcon icon={home} />
 					<IonLabel>Home</IonLabel>
 				</IonTabButton>
-				{!professional && (
+				{professional && (
 					<IonTabButton tab="tab2" href="/app/patients">
 						<IonIcon icon={list} />
 						<IonLabel>Pacients</IonLabel>
