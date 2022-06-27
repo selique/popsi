@@ -145,7 +145,7 @@ model SurveysNotifications {
 
    content String?
 
-   status SurveysNotificationsStatus @default(SENT)
+   status SurveysNotificationsStatus @default(RECEIVED)
    for    SurveysNotificationFor     @default(PATIENT)
 
    // Relation: Profiles
@@ -160,12 +160,15 @@ model SurveysNotifications {
    surveys_id String   @db.Uuid
 
    // Timestamp
-   created_at DateTime @default(now()) @db.Timestamptz()
+   updated_at DateTime? @db.Timestamptz()
+   created_at DateTime  @default(now()) @db.Timestamptz()
+
    @@map("surveys_notifications")
 }
 
 enum SurveysNotificationsStatus {
    SENT
+   RECEIVED
    IN_PROGRESS
    READED
    FINISHED

@@ -9,11 +9,18 @@ import {
 	IonHeader,
 	IonToolbar,
 	IonButtons,
+	IonIcon,
 	IonTitle,
 	useIonRouter
 } from '@ionic/react'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import {
+	arrowForward,
+	checkmarkCircleOutline,
+	arrowBack,
+	alertCircleOutline
+} from 'ionicons/icons'
 import styled from 'styled-components'
 
 import Avatar from '../../ui/Avatar'
@@ -42,8 +49,7 @@ const Notification = () => {
 				.from('surveys_notifications')
 				.select(
 					`
-					content,
-					surveys_id,
+					*,
 					profiles:patient_id ( nickname, nickname ),
 					surveys:surveys_id ( title )
 				`
@@ -117,13 +123,30 @@ const Notification = () => {
 	const notificationColor = status => {
 		switch (status) {
 			case 'SENT':
-				return 'bg-glossyGrape'
+				return 'bg-deYork'
+			case 'RECEIVED':
+				return 'bg-glossyGreen'
 			case 'IN_PROGRESS':
 				return 'bg-texasRose'
 			case 'FINISHED':
 				return 'bg-deYork'
 			default:
 				return 'bg-glossyGrape'
+		}
+	}
+
+	const notificationIcon = status => {
+		switch (status) {
+			case 'SENT':
+				return arrowForward
+			case 'RECEIVED':
+				return arrowBack
+			case 'IN_PROGRESS':
+				return alertCircleOutline
+			case 'FINISHED':
+				return checkmarkCircleOutline
+			default:
+				return arrowForward
 		}
 	}
 
@@ -181,7 +204,10 @@ const Notification = () => {
 											</Button>
 										)}
 										<IonText className="font-extralight text-xsm">
-											{dayjs(notification.created_at).fromNow(true)}
+											{dayjs(
+												notification.updated_at ??
+													notification.created_at
+											).fromNow(true)}
 										</IonText>
 									</div>
 									<div
@@ -190,7 +216,11 @@ const Notification = () => {
 										)} rounded-full ${
 											notification.status === 'READED' && 'hidden'
 										}`}
-									/>
+									>
+										<IonIcon
+											icon={notificationIcon(notification.status)}
+										/>
+									</div>
 								</div>
 								<Line />
 							</React.Fragment>
