@@ -38,6 +38,10 @@ model Profile {
    medic         Profile? @relation("medic", fields: [medic_id], references: [id])
    medicRelation Profile? @relation("medic")
 
+   // Relation: medics and patients messages
+   MedicMessages   Messages[] @relation("medic_messages")
+   PatientMessages Messages[] @relation("patient_messages")
+
    // Timestamp
    created_at DateTime  @default(now()) @db.Timestamptz()
    updated_at DateTime? @db.Timestamptz()
@@ -181,4 +185,37 @@ enum SurveysNotificationFor {
    PATIENT
 
    @@map("surveys_notifications_for")
+}
+
+model Messages {
+   id String @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+   // Message data
+   message String?
+   image   String?
+   video   String?
+   audio   String?
+
+   status MessagesStatus @default(RECEIVED)
+
+   // Relation: Profiles
+   Medic    Profile? @relation("medic_messages", fields: [medic_id], references: [id])
+   medic_id String?  @db.Uuid
+
+   Patient    Profile? @relation("patient_messages", fields: [patient_id], references: [id])
+   patient_id String?  @db.Uuid
+
+   // Timestamp
+   updated_at DateTime? @db.Timestamptz()
+   created_at DateTime  @default(now()) @db.Timestamptz()
+
+   @@map("messages")
+}
+
+enum MessagesStatus {
+   SENT
+   RECEIVED
+   PENDING
+
+   @@map("messages_status")
 }

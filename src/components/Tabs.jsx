@@ -16,10 +16,13 @@ import {
 	list,
 	personOutline,
 	notificationsOutline,
-	fileTrayOutline
+	fileTrayOutline,
+	chatboxEllipsesOutline
 } from 'ionicons/icons'
 
 import { useAuth } from '../contexts/Auth'
+import AllChats from './pages/AllChats'
+import Chat from './pages/Chat'
 import EditProfile from './pages/EditProfile'
 import FormSurvey from './pages/FormSurvey'
 import HomeClient from './pages/HomeClient'
@@ -28,7 +31,6 @@ import Notification from './pages/Notification'
 import Patients from './pages/Patients'
 import Profile from './pages/Profile'
 import Quiz from './pages/Quiz'
-
 const Tabs = () => {
 	const { professional } = useAuth()
 
@@ -42,11 +44,13 @@ const Tabs = () => {
 				/>
 				<Route
 					path="/app/home"
-					component={!professional ? HomeProfessional : HomeClient}
+					component={professional ? HomeProfessional : HomeClient}
 					exact={true}
 				/>
 				<Route path="/app/patients" component={Patients} exact={true} />
 				<Route path="/app/quiz" component={Quiz} exact={true} />
+				<Route path="/app/chat" component={Chat} exact={true} />
+				<Route path="/app/all-chats" component={AllChats} exact={true} />
 				<Route
 					path="/app/notification"
 					component={Notification}
@@ -71,14 +75,21 @@ const Tabs = () => {
 					<IonIcon icon={fileTrayOutline} />
 					<IonLabel>Questionário</IonLabel>
 				</IonTabButton>
-				<IonTabButton tab="tab4" href="/app/notification">
+				<IonTabButton
+					tab="tab4"
+					href={professional ? '/app/all-chats' : '/app/chat'}
+				>
+					<IonIcon icon={chatboxEllipsesOutline} />
+					<IonLabel>{professional ? 'chats' : 'chat'}</IonLabel>
+				</IonTabButton>
+				<IonTabButton tab="tab5" href="/app/notification">
 					<IonIcon icon={notificationsOutline} />
 					<IonLabel>Notificações</IonLabel>
 				</IonTabButton>
-				<IonTabButton tab="tab5" href={'/app/profile'}>
+				{/* <IonTabButton tab="tab6" href={'/app/profile'}>
 					<IonIcon icon={personOutline} />
 					<IonLabel>Perfil</IonLabel>
-				</IonTabButton>
+				</IonTabButton> */}
 			</IonTabBar>
 		</IonTabs>
 	)
