@@ -116,10 +116,9 @@ const SignUp = () => {
 						avatar_url: '',
 						nickname: data.nickname,
 						cpf: data.cpf,
-						matrial_status: data.matrial_status,
-						birth_date: format(parseISO(data.birth_date), 'yyyy-MM-dd'),
-						gender: data.gender,
 						gender_identity: data.gender_identity,
+						birth_date: format(parseISO(data.birth_date), 'yyyy-MM-dd'),
+						pronoun: data.pronoun,
 						medic_id: medicIdQuery
 					},
 					redirectTo: 'http://localhost:3000/login'
@@ -145,31 +144,15 @@ const SignUp = () => {
 			<IonHeader>
 				<IonToolbar>
 					<IonButtons slot="start">
-						<IonBackButton defaultHref="/" />
+						<IonBackButton defaultHref="/you-are" />
 					</IonButtons>
-					<IonTitle>Cadastro</IonTitle>
+					<IonTitle className="font-bold">Cadastro</IonTitle>
 				</IonToolbar>
 			</IonHeader>
 
 			<IonContent className="ion-padding">
 				<form onSubmit={handleSubmit(registerUser)}>
 					<IonList>
-						<IonItem lines="none">
-							{/* === ION INPUT === */}
-							<IonLabel position="stacked">E-mail</IonLabel>
-							<IonInput
-								inputmode="email"
-								placeholder="Digite seu e-mail"
-								type="email"
-								{...register('email')}
-							/>
-							<ErrorMessage
-								errors={errors}
-								name="email"
-								as={<div style={{ color: 'red' }} />}
-							/>
-						</IonItem>
-
 						<IonItem lines="none">
 							{/* === ION INPUT === */}
 							<IonLabel position="stacked">Nome</IonLabel>
@@ -202,6 +185,21 @@ const SignUp = () => {
 
 						<IonItem lines="none">
 							{/* === ION INPUT === */}
+							<IonLabel position="stacked">E-mail</IonLabel>
+							<IonInput
+								inputmode="email"
+								placeholder="Digite seu e-mail"
+								type="email"
+								{...register('email')}
+							/>
+							<ErrorMessage
+								errors={errors}
+								name="email"
+								as={<div style={{ color: 'red' }} />}
+							/>
+						</IonItem>
+						<IonItem lines="none">
+							{/* === ION INPUT === */}
 							<IonLabel position="stacked">CPF</IonLabel>
 							<IonInput
 								placeholder="000.000.000-00"
@@ -217,35 +215,6 @@ const SignUp = () => {
 								as={<div style={{ color: 'red' }} />}
 							/>
 						</IonItem>
-						<IonItem lines="none">
-							{/* === ION SELECT === */}
-							<IonLabel position="stacked">Estado Civil</IonLabel>
-							<Controller
-								render={({ field }) => (
-									<IonSelect
-										placeholder="Estado Civil"
-										value={field.value}
-										onIonChange={e =>
-											setValue('matrial_status', e.detail.value)
-										}
-									>
-										<IonSelectOption value="married">{`Casado (a)`}</IonSelectOption>
-										<IonSelectOption value="single">{`Solteiro (a)`}</IonSelectOption>
-										<IonSelectOption value="stable_union">{`União Estavel`}</IonSelectOption>
-										<IonSelectOption value="widower">{`Viúvo (a)`}</IonSelectOption>
-										<IonSelectOption value="divorced">{`Divorciado (a)`}</IonSelectOption>
-									</IonSelect>
-								)}
-								control={control}
-								name="matrial_status"
-							/>
-							<ErrorMessage
-								errors={errors}
-								name="matrial_status"
-								as={<div style={{ color: 'red' }} />}
-							/>
-						</IonItem>
-
 						<IonItem lines="none">
 							{/* === ION DATE TIME === */}
 							<IonLabel position="stacked">Data de nascimento</IonLabel>
@@ -264,7 +233,7 @@ const SignUp = () => {
 						<IonItem lines="none">
 							{/* === ION SELECT === */}
 							<IonLabel position="stacked">
-								Identidade de Gênero
+								Como você se identifica
 							</IonLabel>
 							<Controller
 								render={({ field }) => (
@@ -291,26 +260,28 @@ const SignUp = () => {
 						</IonItem>
 						<IonItem lines="none">
 							{/* === ION SELECT === */}
-							<IonLabel position="stacked">Sexo</IonLabel>
+							<IonLabel position="stacked">Pronome</IonLabel>
 							<Controller
 								render={({ field }) => (
 									<IonSelect
-										placeholder="Selecione o sexo"
+										placeholder="Ele/ela/dele/dela"
 										value={field.value}
 										onIonChange={e =>
-											setValue('gender', e.detail.value)
+											setValue('pronoun', e.detail.value)
 										}
 									>
-										<IonSelectOption value="m">{`Masculino`}</IonSelectOption>
-										<IonSelectOption value="f">{`Feminino`}</IonSelectOption>
+										<IonSelectOption value="ele">{`Ele`}</IonSelectOption>
+										<IonSelectOption value="ela">{`Ela`}</IonSelectOption>
+										<IonSelectOption value="dele">{`Dele`}</IonSelectOption>
+										<IonSelectOption value="dela">{`Dela`}</IonSelectOption>
 									</IonSelect>
 								)}
 								control={control}
-								name="gender"
+								name="pronoun"
 							/>
 							<ErrorMessage
 								errors={errors}
-								name="gender"
+								name="pronoun"
 								as={<div style={{ color: 'red' }} />}
 							/>
 						</IonItem>
@@ -349,7 +320,9 @@ const SignUp = () => {
 								shape="round"
 								type="submit"
 							>
-								<IonText className="text-white">Cadastrar</IonText>
+								<IonText className="text-white">
+									Finalizar Cadastro
+								</IonText>
 							</IonButton>
 						</IonItem>
 					</IonList>

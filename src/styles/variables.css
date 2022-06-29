@@ -345,13 +345,15 @@ ion-item {
 	--padding-top: 0px !important;
 	--color: #f4f4f4;
 	--background: transparent;
+	position: relative !important;
 }
 
 ion-label.label-stacked {
 	margin-bottom: 10px !important;
-	@apply text-sm !important;
 	@apply text-black-300 !important;
+	@apply text-xl !important;
 	@apply font-semibold !important;
+	color: #3f3f3f;
 }
 
 ion-input {
@@ -366,8 +368,8 @@ ion-textarea {
 }
 
 ion-input input {
-	@apply py-4 !important;
-	@apply px-3 !important;
+	@apply py-6 !important;
+	@apply px-4 !important;
 }
 
 ion-searchbar {
@@ -378,17 +380,17 @@ ion-select {
 	@apply w-auto !important;
 	@apply rounded-xl !important;
 	@apply bg-gray-100 !important;
-	@apply py-4 !important;
+	@apply py-6 !important;
 	@apply px-3 !important;
 	/* Applies to the value and placeholder color */
 	@apply text-black-300 !important;
 	/* Set full opacity on the placeholder */
-	--placeholder-opacity: 1;
+	--placeholder-opacity: 0.4;
 }
 
 ion-datetime {
 	width: -webkit-fill-available !important;
-	@apply py-4 !important;
+	@apply py-6 !important;
 	@apply px-3 !important;
 	@apply rounded-xl !important;
 	@apply bg-gray-100 !important;
