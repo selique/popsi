@@ -37,10 +37,14 @@ const Modal = ({
 		>
 			<div className="h-[100vh]">
 				<div
-					className={`h-[${heightBackdrop}vh] w-full`}
+					className={`w-full`}
+					style={{ height: heightBackdrop + 'vh' }}
 					onClick={onDidDismiss}
 				/>
-				<div className={`h-[${height}vh] bg-white rounded-t-2xl pt-4 px-2`}>
+				<div
+					className={`bg-white rounded-t-2xl p-4`}
+					style={{ height: height + 'vh' }}
+				>
 					{title && (
 						<div className="w-full flex justify-between items-center mb-3">
 							<IonText className="text-xl font-bold">{title}</IonText>

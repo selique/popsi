@@ -1,15 +1,24 @@
 import * as React from 'react'
+import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
 
 import { SocialSharing } from '@awesome-cordova-plugins/social-sharing'
-import { IonAvatar, IonList, IonNote, isPlatform } from '@ionic/react'
+import {
+	IonAvatar,
+	IonCol,
+	IonGrid,
+	IonList,
+	IonNote,
+	IonRow,
+	isPlatform
+} from '@ionic/react'
 import {
 	IonPage,
 	IonContent,
 	IonText,
 	IonSlides,
 	IonSlide,
-	IonModal,
+	IonInput,
 	IonItem,
 	IonLabel,
 	IonTextarea,
@@ -21,7 +30,6 @@ import Image from 'next/image'
 import styled from 'styled-components'
 
 import Letter from '../../../assets/icons/Letter'
-import Lines from '../../../assets/Lines'
 import Profile from '../../../assets/Profile.png'
 import { useAuth } from '../../../contexts/Auth'
 import Button from '../../ui/Button'
@@ -90,6 +98,7 @@ const HomeProfessional = () => {
 	const [modalAgendaOpen, setModalAgendaOpen] = React.useState(false)
 	const [modalInviteUserOpen, setModalInviteUserOpen] = React.useState(false)
 	const { user } = useAuth()
+	const { setValue, register, handleSubmit, watch } = useForm()
 
 	const slideOpts = {
 		slidesPerView: 2.6,
@@ -110,6 +119,8 @@ const HomeProfessional = () => {
 			console.log(error)
 		}
 	}
+
+	const enviteForEmail = dataForm => console.log(dataForm)
 
 	return (
 		<IonPage>
@@ -201,81 +212,95 @@ const HomeProfessional = () => {
 						))}
 					</div>
 				</Card>
-				<IonModal
+				<ModalSheet
+					title="Convidar paciênte"
 					isOpen={modalInviteUserOpen}
 					onDidDismiss={() => setModalInviteUserOpen(false)}
-					breakpoints={[0, 0.2, 0.5, 1]}
-					initialBreakpoint={0.5}
-					backdropBreakpoint={0.2}
+					height={50}
 				>
-					<IonContent className="ion-padding">
-						{isPlatform !== 'ios' || isPlatform !== 'android' ? (
-							<>
-								<IonItem lines="none">
-									<IonLabel>
-										<IonText className="text-xl font-semibold">
-											Convite web
-										</IonText>
-									</IonLabel>
-									<IonIcon
-										slot="end"
-										icon={close}
-										onClick={() => setModalInviteUserOpen(false)}
-									/>
-								</IonItem>
-								<IonItem lines="none">
-									<IonText className="text-sm text-gray-600">
-										clique para copiar e envie o link abaixo para
-										convidar
-									</IonText>
-								</IonItem>
-								<IonItem lines="none">
-									<IonTextarea
-										onClick={() =>
-											navigator.clipboard.writeText(
-												`${process.env.SITE_URL}/sign-up?medic=${user.id}`
-											)
-										}
-										value={`${process.env.SITE_URL}/sign-up?medic=${user.id}`}
-										readonly
-										className="text-sm"
-									/>
-								</IonItem>
-							</>
-						) : (
-							<IonItem lines="none">
-								<IonLabel>
-									<IonText className="text-xl font-semibold">
-										Convite mobile
-									</IonText>
-								</IonLabel>
-								<IonIcon
-									slot="end"
-									icon={close}
-									onClick={() => setModalInviteUserOpen(false)}
+					{isPlatform !== 'ios' || isPlatform !== 'android' ? (
+						<form onSubmit={handleSubmit(enviteForEmail)}>
+							<IonItem lines="none" className="mb-4">
+								<IonLabel position="stacked">E-mail</IonLabel>
+								<IonInput
+									onIonChange={e =>
+										setValue('emailEnvite', e.detail.value)
+									}
+									{...register('emailEnvite')}
+									placeholder="Email"
 								/>
-								<div className="flex justify-center my-4">
-									<IonText className="text-black font-semibold text-center">
-										Convidar paciente
-									</IonText>
-								</div>
-								<div className="bg-gray-300 flex justify-center my-4">
-									<IonText className="text-gray-900 text-center">
-										{`${process.env.SITE_URL}/sign-up?medic=${user.id}`}
-									</IonText>
-								</div>
-								<Button
-									className="bg-purple-200"
-									onClick={() => handleShareUrl()}
-								>
-									<IonText className="text-black text-semibold">
-										Compartilhar
-									</IonText>
-								</Button>
 							</IonItem>
-						)}
-					</IonContent>
-				</IonModal>
+							<IonText className="text-black font-semibold w-full text-center">
+								Ou envie um link convite
+							</IonText>
+							<IonItem lines="none" className="mt-2">
+								<IonLabel position="stacked">Link</IonLabel>
+								<IonTextarea
+									onClick={() => {
+										navigator.clipboard.writeText(
+											`${process.env.SITE_URL}/sign-up?medic=${user.id}`
+										)
+										setModalInviteUserOpen(false)
+									}}
+									value={`${process.env.SITE_URL}/sign-up?medic=${user.id}`}
+									readonly
+									className="text-sm"
+								/>
+							</IonItem>
+							<IonGrid>
+								<IonRow>
+									<IonCol>
+										<Button
+											className="bg-red-400 text-white font-bold text-lg"
+											type="button"
+											onClick={() => setModalInviteUserOpen(false)}
+										>
+											Cancelar
+										</Button>
+									</IonCol>
+									<IonCol>
+										<Button
+											className={`${
+												!watch('emailEnvite') &&
+												watch('emailEnvite') === ''
+													? 'opacity-40'
+													: 'opacity-100'
+											} bg-purple-100 text-white font-bold text-lg`}
+											type="submit"
+											disabled={
+												!watch('emailEnvite') &&
+												watch('emailEnvite') === ''
+											}
+										>
+											Continuar
+										</Button>
+									</IonCol>
+								</IonRow>
+							</IonGrid>
+						</form>
+					) : (
+						<IonItem lines="none">
+							<div className="flex justify-center my-4">
+								<IonText className="text-black font-semibold text-center">
+									Convidar paciente
+								</IonText>
+							</div>
+							<div className="bg-gray-300 flex justify-center my-4">
+								<IonText className="text-gray-900 text-center">
+									{`${process.env.SITE_URL}/sign-up?medic=${user.id}`}
+								</IonText>
+							</div>
+							<Button
+								className="bg-purple-200"
+								onClick={() => handleShareUrl()}
+							>
+								<IonText className="text-black text-semibold">
+									Compartilhar
+								</IonText>
+							</Button>
+						</IonItem>
+					)}
+				</ModalSheet>
 			</IonContent>
 		</IonPage>
 	)

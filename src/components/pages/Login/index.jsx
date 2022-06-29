@@ -14,7 +14,6 @@ import {
 	IonLabel,
 	IonList,
 	IonItem,
-	IonButton,
 	useIonRouter,
 	IonIcon
 } from '@ionic/react'
