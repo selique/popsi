@@ -421,6 +421,11 @@ ion-card {
 	@apply bg-white !important;
 }
 
+ion-toggle {
+	--background: #d9d9d9;
+	--handle-background: #fff;
+}
+
 /* ion-radio-group {
 	@apply flex !important;
 	@apply w-full !important;

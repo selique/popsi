@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { Link } from 'react-router-dom'
 
 import {
 	IonContent,
@@ -12,9 +13,12 @@ import {
 	IonTitle,
 	useIonLoading,
 	useIonToast,
-	IonSearchbar
+	IonSearchbar,
+	IonItem,
+	IonAvatar
 } from '@ionic/react'
 import { filterOutline, addOutline } from 'ionicons/icons'
+import Image from 'next/image'
 
 import { useAuth } from '../../../contexts/Auth'
 import { supabase } from '../../../utils/supabaseClient'
@@ -36,6 +40,7 @@ const Patients = () => {
 				.from('profiles')
 				.select(
 					`
+					id,
 					full_name,
 					avatar_url
 				`
@@ -140,25 +145,29 @@ const Patients = () => {
 						))}
 					</IonSlides>
 					<div className="mt-5">
-						{patient.map(({ full_name, avatar_url }, index) => (
-							<Card
-								key={index}
-								classContainer="mb-3"
-								className="flex items-center"
-							>
-								<div className="w-[50px] h-[50px]">
-									<Avatar
-										width="100%"
-										height="100%"
-										background={avatar_url}
-										hasBorder={false}
-									/>
-								</div>
-								<IonText className="font-semibold ml-3 text-xl">
-									{full_name}
-								</IonText>
-							</Card>
-						))}
+						<Card>
+							{patient.map(({ full_name, avatar_url, id }, index) => {
+								return (
+									<Link to={`/app/patients/quiz/${id}`} key={index}>
+										<IonItem
+											lines={index + 1 === patient.length && 'none'}
+										>
+											<IonAvatar slot="start">
+												{avatar_url && (
+													<Image
+														src={avatar_url}
+														alt="Foto de perfil"
+													/>
+												)}
+											</IonAvatar>
+											<IonText className="font-semibold ml-3 text-md">
+												{full_name}
+											</IonText>
+										</IonItem>
+									</Link>
+								)
+							})}
+						</Card>
 					</div>
 				</div>
 			</IonContent>

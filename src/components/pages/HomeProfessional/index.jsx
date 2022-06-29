@@ -183,7 +183,7 @@ const HomeProfessional = () => {
 					<div className="my-4">
 						{[...Array(6)].map((_, index) => (
 							<IonList key={index}>
-								<IonItem>
+								<IonItem lines={index === 5 && 'none'}>
 									<IonAvatar slot="start">
 										<Image src={Profile} alt="Foto de perfil" />
 									</IonAvatar>
@@ -276,75 +276,6 @@ const HomeProfessional = () => {
 						)}
 					</IonContent>
 				</IonModal>
-				<ModalSheet
-					isOpen={modalAgendaOpen}
-					onDidDismiss={() => setModalAgendaOpen(false)}
-					height={80}
-				>
-					<IonContent className="ion-padding">
-						<div className="flex justify-center my-4">
-							<IonText className="text-black font-semibold text-center">
-								Agenda
-							</IonText>
-						</div>
-						<div className="relative rounded-2xl bg-purple-100">
-							<Lines
-								color="#fff"
-								className="w-full absolute top-0 left-[-5%]"
-							/>
-							<div className="p-4">
-								<div className="my-2">
-									<IonSlides>
-										{months.map(item => (
-											<IonSlide key={item}>
-												<IonText className="text-white font-semibold">
-													{item}
-												</IonText>
-											</IonSlide>
-										))}
-									</IonSlides>
-								</div>
-								<div className="mb-4">
-									<IonSlides
-										options={{
-											slidesPerView: 5,
-											spaceBetween: 5
-										}}
-										className="my-10"
-									>
-										{dayOfMonths.map(item => (
-											<IonSlide key={item.day}>
-												<div
-													className="rounded-lg p-3"
-													style={{ border: '1px solid white' }}
-												>
-													<div className="flex flex-col">
-														<IonText className="text-white font-light text-xsm">
-															{item.dayWeek}
-														</IonText>
-														<IonText className="text-white text-xl mt-2">
-															{item.day}
-														</IonText>
-													</div>
-												</div>
-											</IonSlide>
-										))}
-									</IonSlides>
-								</div>
-								<Button onClick={() => console.log('Clickou')}>
-									<IonText className="text-black text-semibold">
-										Novo agendamento
-									</IonText>
-								</Button>
-							</div>
-						</div>
-						<div className="mt-5">
-							<IonText className="text-black font-semibold">
-								Quarta, 27 de abril
-							</IonText>
-						</div>
-					</IonContent>
-				</ModalSheet>
 			</IonContent>
 		</IonPage>
 	)
