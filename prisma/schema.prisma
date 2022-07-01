@@ -38,9 +38,13 @@ model Profile {
    medic         Profile? @relation("medic", fields: [medic_id], references: [id])
    medicRelation Profile? @relation("medic")
 
-   // Relation: medics and patients messages
-   MedicMessages   Messages[] @relation("medic_messages")
-   PatientMessages Messages[] @relation("patient_messages")
+   // Relation: Messages
+   sender   Messages[] @relation("sender_user")
+   receiver Messages[] @relation("receiver_user")
+
+   // Relation: Chats
+   medic_chat   Chats[] @relation("medic_chat")
+   patient_chat Chats[] @relation("patient_chat")
 
    // Timestamp
    created_at DateTime  @default(now()) @db.Timestamptz()
@@ -196,14 +200,18 @@ model Messages {
    video   String?
    audio   String?
 
-   status MessagesStatus @default(RECEIVED)
+   status MessagesStatus @default(SENT)
 
    // Relation: Profiles
-   Medic    Profile? @relation("medic_messages", fields: [medic_id], references: [id])
-   medic_id String?  @db.Uuid
+   Sender    Profile? @relation("sender_user", fields: [sender_id], references: [id])
+   sender_id String?  @db.Uuid
 
-   Patient    Profile? @relation("patient_messages", fields: [patient_id], references: [id])
-   patient_id String?  @db.Uuid
+   Receiver    Profile? @relation("receiver_user", fields: [receiver_id], references: [id])
+   receiver_id String?  @db.Uuid
+
+   // Relation: Chats
+   Chat    Chats? @relation(fields: [chat_id], references: [id])
+   chat_id String @db.Uuid
 
    // Timestamp
    updated_at DateTime? @db.Timestamptz()
@@ -213,9 +221,25 @@ model Messages {
 }
 
 enum MessagesStatus {
-   SENT
-   RECEIVED
    PENDING
+   SENT
+   READ
 
    @@map("messages_status")
+}
+
+model Chats {
+   id String @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+   // Relation: Messages
+   Messages Messages[]
+
+   // Relation: Profiles
+   medic_chat Profile? @relation("medic_chat", fields: [medic_id], references: [id])
+   medic_id   String   @db.Uuid
+
+   patient_chat Profile? @relation("patient_chat", fields: [patient_id], references: [id])
+   patient_id   String   @db.Uuid
+
+   @@map("chats")
 }

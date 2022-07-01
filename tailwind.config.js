@@ -25,7 +25,8 @@ module.exports = {
 				blue: {
 					100: '#D8EAF6',
 					200: '#87C6EB',
-					500: '#6599FF'
+					500: '#6599FF',
+					800: '#48F2D4'
 				},
 				black: {
 					DEFAULT: '#000000',
