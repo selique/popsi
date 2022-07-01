@@ -1,6 +1,7 @@
 import dynamic from 'next/dynamic'
 
 import { AuthProvider } from '../contexts/Auth'
+import ChatNotificationsProvider from '../contexts/chatNotifications'
 
 const App = dynamic(() => import('../components/AppShell'), {
 	ssr: false
@@ -9,7 +10,9 @@ const App = dynamic(() => import('../components/AppShell'), {
 export default function Index() {
 	return (
 		<AuthProvider>
-			<App />
+			<ChatNotificationsProvider>
+				<App />
+			</ChatNotificationsProvider>
 		</AuthProvider>
 	)
 }

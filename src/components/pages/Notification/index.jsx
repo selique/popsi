@@ -78,7 +78,6 @@ const Notification = () => {
 	}
 	React.useEffect(() => {
 		if (user) getNotifications()
-		console.log('user', user)
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
@@ -89,10 +88,7 @@ const Notification = () => {
 					professional ? 'medic_id' : 'patient_id'
 				}=eq.${user.id}`
 			)
-			.on('*', payload => {
-				console.log('em qualquer alteração da tabela', payload)
-				getNotifications()
-			})
+			.on('*', () => getNotifications())
 			.subscribe()
 
 		return () => supabase.removeSubscription(notificationSubscription)
@@ -125,7 +121,7 @@ const Notification = () => {
 			case 'SENT':
 				return 'bg-deYork'
 			case 'RECEIVED':
-				return 'bg-glossyGreen'
+				return 'bg-glossyGrape'
 			case 'IN_PROGRESS':
 				return 'bg-texasRose'
 			case 'FINISHED':
