@@ -60,7 +60,6 @@ const Quiz = () => {
 				)
 				.eq('medic_id', user.id)
 
-			console.log('invited', data)
 			if (data) setInvitedPatients(data)
 		}
 
@@ -85,7 +84,6 @@ const Quiz = () => {
 					.eq('owner_id', user.id)
 
 				if (data) {
-					console.log('surveys', data)
 					setSurveys(data)
 				}
 			} else {
@@ -100,7 +98,6 @@ const Quiz = () => {
 					.eq('A', user.id)
 
 				if (data && data.surveys) {
-					console.log('surveys_invited', data.surveys)
 					setSurveys(data.surveys)
 				}
 			}
@@ -121,8 +118,6 @@ const Quiz = () => {
 				})
 			}
 		})
-
-		console.log('users Invited', usersInvited)
 
 		const { data, error } = await supabase
 			.from('_survey_invited')
