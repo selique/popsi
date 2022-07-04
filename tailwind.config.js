@@ -48,6 +48,10 @@ module.exports = {
 						100: '#7B61FF4D'
 					}
 				},
+				danger: {
+					DEFAULT: '#D77B7B'
+				}
+				,
 				glossyGrape: {
 					DEFAULT: '#AC8FBF'
 				},
