@@ -13,7 +13,7 @@ create or replace function handle_medic_survey_notification() returns trigger as
       where id = s_id into m_id;
 
       update public.surveys_notifications
-      set status = 'FINISHED'
+      set status = 'FINISHED', updated_at = current_timestamp
       where "for" = 'PATIENT' and medic_id = m_id and patient_id = new."profileId" and surveys_id = s_id;
 
       insert into public.surveys_notifications(
