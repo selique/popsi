@@ -133,7 +133,7 @@ const Login = () => {
 					<div className="flex justify-center">
 						<IonText className="font-medium">
 							Esqueceu a sua senha?
-							<Link to="/sign-up">
+							<Link to="/forgot-password">
 								<IonText className="text-purple-100 ml-2">
 									Vamos lá
 								</IonText>
