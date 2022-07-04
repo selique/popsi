@@ -8,18 +8,19 @@ generator client {
 }
 
 model Profile {
-   id String @id @unique @default(uuid()) @db.Uuid
+   id String @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
    // Profile data mutable
    full_name       String?
    avatar_url      String?
    bio             String?
    nickname        String?
-   matrial_status  String?
-   gender          String?
+   pronoun         String?
    gender_identity String?
    cpf             String?
    birth_date      DateTime? @db.Date
+   crp_number      String?
+   crp_region      String?
    role            Role?     @default(PATIENT)
 
    // Relation: Surveys
