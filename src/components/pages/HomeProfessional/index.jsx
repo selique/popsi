@@ -216,23 +216,10 @@ const HomeProfessional = () => {
 					title="Convidar paciênte"
 					isOpen={modalInviteUserOpen}
 					onDidDismiss={() => setModalInviteUserOpen(false)}
-					height={50}
+					height={30}
 				>
 					{isPlatform !== 'ios' || isPlatform !== 'android' ? (
 						<form onSubmit={handleSubmit(enviteForEmail)}>
-							<IonItem lines="none" className="mb-4">
-								<IonLabel position="stacked">E-mail</IonLabel>
-								<IonInput
-									onIonChange={e =>
-										setValue('emailEnvite', e.detail.value)
-									}
-									{...register('emailEnvite')}
-									placeholder="Email"
-								/>
-							</IonItem>
-							<IonText className="text-black font-semibold w-full text-center">
-								Ou envie um link convite
-							</IonText>
 							<IonItem lines="none" className="mt-2">
 								<IonLabel position="stacked">Link</IonLabel>
 								<IonTextarea
