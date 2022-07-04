@@ -1,3 +1,4 @@
+import * as React from 'react'
 import { Link } from 'react-router-dom'
 
 import {
@@ -101,8 +102,8 @@ const PatientHistoric = () => {
 				</Card>
 				<div className="mt-6">
 					<IonList>
-						{quiz.map(item => (
-							<>
+						{quiz.map((item, index) => (
+							<React.Fragment key={index}>
 								<IonText className="text-black font-semibold">
 									{item.data}
 								</IonText>
@@ -164,7 +165,7 @@ const PatientHistoric = () => {
 										</IonItem>
 									</Card>
 								))}
-							</>
+							</React.Fragment>
 						))}
 					</IonList>
 				</div>

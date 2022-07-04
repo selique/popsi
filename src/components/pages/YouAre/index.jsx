@@ -1,5 +1,6 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
+import { useHistory } from 'react-router-dom'
 
 import {
 	IonContent,
@@ -12,28 +13,54 @@ import {
 	IonText,
 	IonSelect,
 	IonSelectOption,
-	IonInput,
-	useIonRouter
+	IonInput
 } from '@ionic/react'
 
 import Button from '../../ui/Button'
+import crpRegions from './crpRegions'
 
 const YouAre = () => {
 	const { handleSubmit, register, watch, setValue, unregister } = useForm({
 		mode: 'onChange'
 	})
-	const router = useIonRouter()
+
+	const [regionError, setRegionError] = React.useState('')
+	const [crpNumberError, setCrpNumberError] = React.useState('')
+
+	const history = useHistory()
 
 	React.useEffect(() => {
 		if (watch('type') === 'patient') {
 			unregister('region')
 			unregister('crpNumber')
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [watch('type')])
 
 	const handleSubmitForm = dataForm => {
-		console.log(dataForm)
-		router.push('/sign-up')
+		if (dataForm.type === 'medic') {
+			if (!dataForm.region) {
+				setRegionError('A região é obrigatória.')
+			} else {
+				setRegionError('')
+			}
+
+			if (!dataForm.crpNumber) {
+				setCrpNumberError('O CRP é obrigatório.')
+			} else {
+				setCrpNumberError('')
+			}
+
+			if (!dataForm.region || !dataForm.crpNumber) return
+		}
+
+		console.log('user is', dataForm)
+		history.push({
+			pathname: '/sign-up',
+			state: {
+				userType: dataForm
+			}
+		})
 	}
 
 	return (
@@ -51,7 +78,11 @@ const YouAre = () => {
 							</IonText>
 							<IonList>
 								<IonRadioGroup
-									onIonChange={e => setValue('type', e.detail.value)}
+									onIonChange={e => {
+										setValue('type', e.detail.value)
+										setRegionError('')
+										setCrpNumberError('')
+									}}
 									{...register('type')}
 								>
 									<IonItem lines="none">
@@ -75,26 +106,49 @@ const YouAre = () => {
 												placeholder="Região"
 												onIonChange={e => {
 													setValue('region', e.detail.value)
+													setRegionError('')
 												}}
 												interface="action-sheet"
 												{...register('region')}
 											>
-												<IonSelectOption value="SP">
-													SP
-												</IonSelectOption>
-												<IonSelectOption value="MG">
-													MG
-												</IonSelectOption>
+												{crpRegions.map((region, index) => (
+													<IonSelectOption
+														key={index}
+														value={region}
+													>
+														{region}
+													</IonSelectOption>
+												))}
 											</IonSelect>
 											<IonInput
 												placeholder="Número de registro"
 												className="ml-2"
+												type="number"
+												onIonChange={e =>
+													e.detail.value !== ''
+														? setCrpNumberError('')
+														: setCrpNumberError(
+																'O CRP é obrigatório.'
+														  )
+												}
 												{...register('crpNumber')}
 											/>
 										</IonItem>
 									</div>
 								)}
 							</IonList>
+							<div className="flex flex-col items-center mt-2">
+								{regionError && (
+									<IonText className="text-red-500 text-sm font-bold">
+										{regionError}
+									</IonText>
+								)}
+								{crpNumberError && (
+									<IonText className="text-red-500 text-sm font-bold">
+										{crpNumberError}
+									</IonText>
+								)}
+							</div>
 						</div>
 						<Button
 							type="submit"

@@ -29,11 +29,13 @@ import { format, parseISO } from 'date-fns'
 import * as Yup from 'yup'
 
 import { useAuth } from '../../../contexts/Auth'
+import Button from './../../ui/Button'
 const SignUp = () => {
 	const { signUp } = useAuth()
 	const [cpfField, setCpfField] = React.useState()
 	const [showLoading, hideLoading] = useIonLoading()
 	const [showToast] = useIonToast()
+	const [userType, setUserType] = React.useState({})
 
 	const location = useLocation()
 	const [medicIdQuery, setMedicIdQuery] = React.useState('')
@@ -41,32 +43,40 @@ const SignUp = () => {
 	React.useEffect(() => {
 		const params = new URLSearchParams(location.search)
 		setMedicIdQuery(params.get('medic') || null)
-	}, [])
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [location])
+
+	React.useEffect(() => {
+		const state = location.state
+
+		console.log('state', state)
+		if (state) setUserType(state.userType)
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [location])
 
 	const schema = Yup.object().shape({
 		full_name: Yup.string().required('O nome é obrigatório'),
+		nickname: Yup.string()
+			.min(3, 'O nickname deve ter no mínimo 3 caracteres')
+			.notRequired(),
 		email: Yup.string()
 			.email('Insira um e-mail válido')
 			.required('O e-mail é obrigatório'),
+		cpf: Yup.string()
+			.min(11, 'O CPF deve ter no mínimo 11 caracteres')
+			.required('O CPF é obrigatório'),
+		birth_date: Yup.string().required('A data de nascimento é obrigatória'),
+		gender_identity: Yup.string().required(
+			'O campo Indetidade de Gênero é obrigatorio'
+		),
+		pronoun: Yup.string().required('O campo pronome é obrigatorio'),
+		avatar_url: Yup.string().notRequired(),
 		password: Yup.string()
 			.min(6, 'A senha deve ter no mínimo 6 caracteres')
 			.required('A senha é obrigatória'),
 		confirm_password: Yup.string()
 			.oneOf([Yup.ref('password'), null], 'As senhas não conferem')
-			.required('A confirmação da senha é obrigatória'),
-		avatar_url: Yup.string().notRequired(),
-		matrial_status: Yup.string().required('O estado civil é obrigatório'),
-		gender: Yup.string().required('O campo Sexo é obrigatorio'),
-		gender_identity: Yup.string().required(
-			'O campo Indetidade de Gênero é obrigatorio'
-		),
-		cpf: Yup.string()
-			.min(11, 'O CPF deve ter no mínimo 11 caracteres')
-			.required('O CPF é obrigatório'),
-		nickname: Yup.string()
-			.min(3, 'O nickname deve ter no mínimo 3 caracteres')
-			.notRequired(),
-		birth_date: Yup.string().required('A data de nascimento é obrigatória')
+			.required('A confirmação da senha é obrigatória')
 	})
 
 	const {
@@ -82,28 +92,31 @@ const SignUp = () => {
 
 	const registerUser = async data => {
 		await showLoading()
-
 		try {
-			// console.log(
-			// 	'creating a new user account with: ',
-			// 	{
-			// 		email: data.email,
-			// 		password: data.password
-			// 	},
-			// 	{
-			// 		data: {
-			// 			full_name: data.full_name,
-			// 			avatar_url: '',
-			// 			nickname: data.nickname,
-			// 			cpf: data.cpf,
-			// 			matrial_status: data.matrial_status,
-			// 			birth_date: format(parseISO(data.birth_date), 'yyyy-MM-dd'),
-			// 			gender: data.gender,
-			// 			gender_identity: data.gender_identity,
-			// 			medic_id: medicIdQuery
-			// 		}
-			// 	}
-			// )
+			const signUpData = {
+				full_name: data.full_name,
+				avatar_url: '',
+				nickname: data.nickname,
+				cpf: data.cpf,
+				birth_date: format(parseISO(data.birth_date), 'yyyy-MM-dd'),
+				gender_identity: data.gender_identity,
+				medic_id: medicIdQuery,
+				role: medicIdQuery
+					? 'PATIENT'
+					: userType.type
+					? userType.type.toUpperCase()
+					: 'PATIENT',
+				crp_number: medicIdQuery
+					? null
+					: userType && userType.type === 'medic'
+					? userType.crpNumber
+					: null,
+				crp_region: medicIdQuery
+					? null
+					: userType && userType.type === 'medic'
+					? userType.region
+					: null
+			}
 
 			await signUp(
 				{
@@ -111,16 +124,7 @@ const SignUp = () => {
 					password: data.password
 				},
 				{
-					data: {
-						full_name: data.full_name,
-						avatar_url: '',
-						nickname: data.nickname,
-						cpf: data.cpf,
-						gender_identity: data.gender_identity,
-						birth_date: format(parseISO(data.birth_date), 'yyyy-MM-dd'),
-						pronoun: data.pronoun,
-						medic_id: medicIdQuery
-					},
+					data: signUpData,
 					redirectTo: 'http://localhost:3000/login'
 				}
 			)
@@ -264,16 +268,14 @@ const SignUp = () => {
 							<Controller
 								render={({ field }) => (
 									<IonSelect
-										placeholder="Ele/ela/dele/dela"
+										placeholder="Ele/dele/ela/dela"
 										value={field.value}
 										onIonChange={e =>
 											setValue('pronoun', e.detail.value)
 										}
 									>
-										<IonSelectOption value="ele">{`Ele`}</IonSelectOption>
-										<IonSelectOption value="ela">{`Ela`}</IonSelectOption>
-										<IonSelectOption value="dele">{`Dele`}</IonSelectOption>
-										<IonSelectOption value="dela">{`Dela`}</IonSelectOption>
+										<IonSelectOption value="ele/dele">{`Ele/Dele`}</IonSelectOption>
+										<IonSelectOption value="ela/dela">{`Ela/Dela`}</IonSelectOption>
 									</IonSelect>
 								)}
 								control={control}
@@ -313,18 +315,11 @@ const SignUp = () => {
 								as={<div style={{ color: 'red' }} />}
 							/>
 						</IonItem>
-						<IonItem lines="none">
-							<IonButton
-								color="purple"
-								expand="full"
-								shape="round"
-								type="submit"
-							>
-								<IonText className="text-white">
-									Finalizar Cadastro
-								</IonText>
-							</IonButton>
-						</IonItem>
+						<Button type="submit" className="bg-purple-100 py-5 my-6">
+							<IonText className="text-white">
+								Finalizar Cadastro
+							</IonText>
+						</Button>
 					</IonList>
 				</form>
 			</IonContent>
