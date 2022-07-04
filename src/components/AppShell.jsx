@@ -6,10 +6,12 @@ import { IonReactRouter } from '@ionic/react-router'
 import { useAuth } from '../contexts/Auth'
 import Apresentation from './pages/Apresentation'
 import Breathing from './pages/Breathing'
+import ForgotPassword from './pages/ForgotPassword'
 import FormAnswers from './pages/FormAnswers'
 import FormSurvey from './pages/FormSurvey'
 import LastApresentation from './pages/LastApresentation'
 import Login from './pages/Login'
+import RedefinePassword from './pages/RedefinePassword'
 import Scheduling from './pages/Scheduling'
 import Signinup from './pages/Signinup'
 import SignUp from './pages/SignUp'
@@ -50,6 +52,16 @@ const AppShell = () => {
 						exact={true}
 					/>
 					<Route path="/login" component={() => <Login />} exact={true} />
+					<Route
+						path="/forgot-password"
+						component={() => <ForgotPassword />}
+						exact={true}
+					/>
+					<Route
+						path="/redefine-password"
+						component={() => <RedefinePassword />}
+						exact={true}
+					/>
 					<Route
 						path="/you-are"
 						component={() => <YouAre />}
