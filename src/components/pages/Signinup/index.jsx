@@ -1,43 +1,46 @@
 import { Link } from 'react-router-dom'
 
-import { IonPage, IonContent, IonText } from '@ionic/react'
+import { IonContent, IonPage, IonText } from '@ionic/react'
+import Image from 'next/image'
 
-import Lines from '../../../assets/Lines'
-import SigninupImage from '../../../assets/Signinup'
+import Facebook from '../../../assets/Facebook'
+import Google from '../../../assets/Google'
+import Logo from '../../../assets/logo.png'
 import Button from '../../ui/Button'
 
 const Signinup = () => {
 	return (
 		<IonPage>
-			<IonContent className="ion-padding" fullscreen>
-				<div className="relative w-full h-full flex flex-col justify-between items-center overflow-hidden">
-					<Lines className="absolute top-0 right-[28%] rotate-[100deg] z-[-1] w-full" />
-					<div />
-					<div className="flex flex-col items-center w-full">
-						<IonText className="text-lg w-max">
-							Lorem ipsum dolors
-						</IonText>
-						<SigninupImage className="my-12" />
-						<IonText className="text-sm text-black w-max text-center">
-							But I must explain to you how all this mistaken
-						</IonText>
-						<IonText className="text-xsm text-black text-center font-extralight mt-2">
-							At vero eos et accusamus et iusto odio ignissimos ducimus
-							qui blanditiis praesenti.
-						</IonText>
-					</div>
-					<div className="w-full bg-blue-100 grid grid-cols-2 rounded-2xl">
-						<Link to="/login">
-							<Button className="w-full bg-blue-200 text-white">
-								Entrar
+			<IonContent fullscreen>
+				<div className="w-full h-full flex flex-col justify-center items-center">
+					<div className="w-[80%] flex flex-col items-center">
+						<Image src={Logo} alt="POPSI" />
+						<div className="text-center w-full mt-12">
+							<IonText>Não tem cadastro ainda ? </IonText>
+							<Link to="/you-are">
+								<Button className="bg-blue-200 text-white text-md mt-6 mb-3">
+									Cadastre-se agora
+								</Button>
+							</Link>
+							<Button className="bg-white shadow-md">
+								<Google />
+								<IonText className="ml-2 text-md">Google</IonText>
 							</Button>
-						</Link>
-						<Link to="/sign-up">
-							<Button className="bg-blue-100 w-full">Cadastrar</Button>
-						</Link>
+							<Button className="bg-blue-500 shadow-md mt-3 mb-6">
+								<Facebook />
+								<IonText className="ml-2 text-white text-md">
+									Facebook
+								</IonText>
+							</Button>
+							<IonText>Já tenho cadastro</IonText>
+							<Link to="/login">
+								<Button className="bg-purple-100 mt-6 text-white text-md">
+									Entrar
+								</Button>
+							</Link>
+						</div>
 					</div>
 				</div>
-				<Lines className="absolute bottom-0 z-[-1]" />
 			</IonContent>
 		</IonPage>
 	)

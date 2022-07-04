@@ -14,13 +14,12 @@ import {
 	IonLabel,
 	IonList,
 	IonItem,
-	IonButton,
-	useIonRouter
+	useIonRouter,
+	IonIcon
 } from '@ionic/react'
+import { eyeOutline, eyeOffOutline } from 'ionicons/icons'
 import * as Yup from 'yup'
 
-import Facebook from '../../../assets/Facebook'
-import Google from '../../../assets/Google'
 import Lines from '../../../assets/Lines'
 import { useAuth } from '../../../contexts/Auth'
 import Button from '../../ui/Button'
@@ -30,6 +29,7 @@ const Login = () => {
 	const router = useIonRouter()
 	const [showLoading, hideLoading] = useIonLoading()
 	const [showToast] = useIonToast()
+	const [showPassword, setShowPassword] = React.useState(false)
 
 	const schema = Yup.object().shape({
 		email: Yup.string()
@@ -67,18 +67,20 @@ const Login = () => {
 	return (
 		<IonPage>
 			<IonContent className="ion-padding">
-				<div className="relative w-full h-full flex flex-col justify-between overflow-hidden">
+				<div className="relative w-full h-full flex flex-col justify-center overflow-hidden">
 					<Lines className="absolute top-0 right-[28%] rotate-[100deg] z-[-1] w-full" />
 					<div />
-					<IonText className="text-6xl font-bold text-black-200">
-						Bem vindo de volta!
+					<IonText className="text-6xl font-bold text-black-200 mb-16">
+						Bem vindo <br /> de volta!
 					</IonText>
 					<form onSubmit={handleSubmit(handleLogin)}>
 						<IonList>
 							<IonItem lines="none">
-								<IonLabel position="stacked">Email</IonLabel>
+								<IonLabel position="stacked">
+									Usuário ou e-mail
+								</IonLabel>
 								<IonInput
-									placeholder="Digite seu e-mail"
+									placeholder="usuario@usuario.com"
 									type="email"
 									{...register('email', {
 										required: 'E-mail é obrigatório',
@@ -97,51 +99,43 @@ const Login = () => {
 							<IonItem lines="none">
 								<IonLabel position="stacked">Senha</IonLabel>
 								<IonInput
-									placeholder="Senha"
-									type="password"
+									placeholder="*********"
+									type={showPassword ? 'text' : 'password'}
 									{...register('password', {
 										required: 'Senha é obrigatória'
 									})}
 								/>
+								<Button
+									className="absolute top-[35px] right-2 w-max z-[3] text-2xl bg-transparent"
+									type="button"
+									onClick={() => {
+										showPassword
+											? setShowPassword(false)
+											: setShowPassword(true)
+									}}
+								>
+									<IonIcon
+										icon={showPassword ? eyeOffOutline : eyeOutline}
+										className="text-[#AC8FBF]"
+									/>
+								</Button>
 								<ErrorMessage
 									errors={errors}
 									name="password"
 									as={<div style={{ color: 'red' }} />}
 								/>
 							</IonItem>
-							<IonItem lines="none">
-								<IonButton
-									color="purple"
-									expand="full"
-									shape="round"
-									type="submit"
-								>
-									<IonText className="text-white">Entrar</IonText>
-								</IonButton>
-							</IonItem>
+							<Button type="submit" className="bg-purple-100 py-5 my-6">
+								<IonText className="text-white text-lg">Entrar</IonText>
+							</Button>
 						</IonList>
 					</form>
-					<div className="flex justify-center items-center">
-						<div className="w-full h-[1px] bg-black mr-2" />
-						<IonText>ou</IonText>
-						<div className="w-full h-[1px] bg-black ml-2" />
-					</div>
-					<Button className="bg-white shadow-md">
-						<Google />
-						<IonText className="ml-2 text-lg">Google</IonText>
-					</Button>
-					<Button className="bg-blue-500 shadow-md mt-4">
-						<Facebook />
-						<IonText className="ml-2 text-white text-lg">
-							Facebook
-						</IonText>
-					</Button>
 					<div className="flex justify-center">
 						<IonText className="font-medium">
-							Não tem cadastro?
+							Esqueceu a sua senha?
 							<Link to="/sign-up">
-								<IonText className="text-purple ml-2">
-									Cadastre-se
+								<IonText className="text-purple-100 ml-2">
+									Vamos lá
 								</IonText>
 							</Link>
 						</IonText>

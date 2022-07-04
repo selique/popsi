@@ -32,6 +32,9 @@ import HomeClient from './pages/HomeClient'
 import HomeProfessional from './pages/HomeProfessional'
 import Notification from './pages/Notification'
 import Patients from './pages/Patients'
+import PatientHistoric from './pages/Patients/Historic'
+import PatientOptions from './pages/Patients/Options'
+import PatientQuiz from './pages/Patients/Quiz'
 import Profile from './pages/Profile'
 import Quiz from './pages/Quiz'
 
@@ -77,6 +80,21 @@ const Tabs = () => {
 					exact={true}
 				/>
 				<Route path="/app/patients" component={Patients} exact={true} />
+				<Route
+					path="/app/patients/quiz/:id"
+					component={PatientQuiz}
+					exact={true}
+				/>
+				<Route
+					path="/app/patients/quiz/options/:id"
+					component={PatientOptions}
+					exact={true}
+				/>
+				<Route
+					path="/app/patients/quiz/options/historic/:id"
+					component={PatientHistoric}
+					exact={true}
+				/>
 				<Route path="/app/quiz" component={Quiz} exact={true} />
 				<Route path="/app/chat/:id" component={Chat} exact={true} />
 				<Route path="/app/all-chats" component={AllChats} exact={true} />
