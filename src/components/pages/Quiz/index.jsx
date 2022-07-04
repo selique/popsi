@@ -15,13 +15,19 @@ import {
 	IonBackButton,
 	IonButtons,
 	IonSearchbar,
-	IonCheckbox
+	IonCheckbox,
+	IonLabel,
+	IonRadioGroup,
+	IonListHeader,
+	IonRadio,
+	IonItem
 } from '@ionic/react'
 import {
 	searchOutline,
 	documentOutline,
 	shareSocialOutline,
-	addOutline
+	addOutline,
+	chevronForwardOutline
 } from 'ionicons/icons'
 
 import { useAuth } from '../../../contexts/Auth'
@@ -46,6 +52,8 @@ const Quiz = () => {
 	const [surveySelectedToInvite, setSurveySelectedToInvite] =
 		React.useState(null)
 	const [isInvitedLoading, setIsInvitedLoading] = React.useState(false)
+
+	const [showFrequencyModal, setshowFrequencyModal] = React.useState(false)
 
 	React.useEffect(() => {
 		const getInvitedPatients = async () => {
@@ -338,16 +346,38 @@ const Quiz = () => {
 													control={control}
 													name={`envited${index}`}
 													render={({ field: { onChange } }) => (
-														<IonCheckbox
-															value={item.id}
-															disabled={isInvitedLoading}
-															onIonChange={() =>
-																!isInvitedLoading &&
-																onChange(item.id)
-															}
-														/>
+														<div className="flex justify-end">
+															<IonCheckbox
+																value={item.id}
+																disabled={isInvitedLoading}
+																onIonChange={() =>
+																	!isInvitedLoading &&
+																	onChange(item.id)
+																}
+															/>
+														</div>
 													)}
 												/>
+												<IonLabel className="font-bold">
+													Frequência
+												</IonLabel>
+
+												<div />
+
+												<div
+													onClick={() => {
+														setshowFrequencyModal(
+															!showFrequencyModal
+														)
+													}}
+													className="flex justify-center"
+												>
+													<IonLabel>Uma vez</IonLabel>
+													<IonIcon
+														className="w-6 h-6"
+														src={chevronForwardOutline}
+													/>
+												</div>
 											</div>
 										)
 									})
@@ -370,6 +400,78 @@ const Quiz = () => {
 							</IonText>
 						</Button>
 					</form>
+				</Modal>
+				{/* frequência */}
+				<Modal isOpen={showFrequencyModal} title="Frequência">
+					<div className="p-5">
+						<IonRadioGroup>
+							<IonItem lines="none">
+								<IonRadio slot="start" value="diariamente" />
+								<IonLabel>Diariamente</IonLabel>
+							</IonItem>
+
+							<IonItem lines="none">
+								<IonLabel>Semanalmente</IonLabel>
+								<IonRadio slot="start" value="semanalmente" />
+							</IonItem>
+
+							<IonItem lines="none">
+								<IonLabel>Quinzenal</IonLabel>
+								<IonRadio slot="start" value="quinzenal" />
+							</IonItem>
+						</IonRadioGroup>
+
+						<div className="w-full h-[1px] bg-gray-300 my-5" />
+
+						<div>
+							<IonItem lines="none">
+								<IonText>Segunda-Feira</IonText>
+								<IonCheckbox slot="start" color="primary" />
+							</IonItem>
+							<IonItem lines="none">
+								<IonText>Terça-Feira</IonText>
+								<IonCheckbox slot="start" color="primary" />
+							</IonItem>
+							<IonItem lines="none">
+								<IonText>Quarta-Feira</IonText>
+								<IonCheckbox slot="start" color="primary" />
+							</IonItem>
+							<IonItem lines="none">
+								<IonText>Quinta-Feira</IonText>
+								<IonCheckbox slot="start" color="primary" />
+							</IonItem>
+							<IonItem lines="none">
+								<IonText>Sexta-Feira</IonText>
+								<IonCheckbox slot="start" color="primary" />
+							</IonItem>
+							<IonItem lines="none">
+								<IonText>Sábado</IonText>
+								<IonCheckbox slot="start" color="primary" />
+							</IonItem>
+							<IonItem lines="none">
+								<IonText>Domingo</IonText>
+								<IonCheckbox slot="start" color="primary" />
+							</IonItem>
+						</div>
+
+						<div className="flex w-full justify-around mt-10">
+							<Button
+								onClick={() => {
+									setshowFrequencyModal(!showFrequencyModal)
+								}}
+								className="bg-red-400 py-5 my-6"
+							>
+								<IonText className="text-white text-lg">
+									Cancelar
+								</IonText>
+							</Button>
+							<Button className="bg-purple-100 ml-3 py-5 my-6">
+								<IonText className="text-white text-lg">
+									Continuar
+								</IonText>
+							</Button>
+						</div>
+					</div>
 				</Modal>
 			</IonContent>
 		</IonPage>

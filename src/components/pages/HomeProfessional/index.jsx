@@ -222,17 +222,34 @@ const HomeProfessional = () => {
 						<form onSubmit={handleSubmit(enviteForEmail)}>
 							<IonItem lines="none" className="mt-2">
 								<IonLabel position="stacked">Link</IonLabel>
-								<IonTextarea
+								<Button
+									className="justify-start w-full"
 									onClick={() => {
 										navigator.clipboard.writeText(
 											`${process.env.SITE_URL}/sign-up?medic=${user.id}`
 										)
 										setModalInviteUserOpen(false)
 									}}
-									value={`${process.env.SITE_URL}/sign-up?medic=${user.id}`}
+								>
+									<IonText>
+										{`${process.env.SITE_URL}/sign-up?medic=${user.id}`.slice(
+											0,
+											34
+										) + '...'}
+									</IonText>
+								</Button>
+
+								{/* <IonTextarea
+									onClick={() => {
+										navigator.clipboard.writeText(
+											`${process.env.SITE_URL}/sign-up?medic=${user.id}`
+										)
+										setModalInviteUserOpen(false)
+									}}
+									value={`${process.env.SITE_URL}/sign-up?medic=${user.id}`.slice(0, 34) + '...'}
 									readonly
 									className="text-sm"
-								/>
+								/> */}
 							</IonItem>
 							<IonGrid>
 								<IonRow>
