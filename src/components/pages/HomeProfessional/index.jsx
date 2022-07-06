@@ -192,7 +192,10 @@ const HomeProfessional = () => {
 						Questionários respondidos recentemente
 					</IonText>
 					<div className="my-4">
-						{[...Array(6)].map((_, index) => (
+						<IonText>
+							Nenhum questionário recentemente respondido.
+						</IonText>
+						{/* {[...Array(6)].map((_, index) => (
 							<IonList key={index}>
 								<IonItem lines={index === 5 && 'none'}>
 									<IonAvatar slot="start">
@@ -209,7 +212,7 @@ const HomeProfessional = () => {
 									<IonNote slot="end">10:30 am</IonNote>
 								</IonItem>
 							</IonList>
-						))}
+						))} */}
 					</div>
 				</Card>
 				<ModalSheet
