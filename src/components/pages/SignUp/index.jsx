@@ -268,7 +268,7 @@ const SignUp = () => {
 							<Controller
 								render={({ field }) => (
 									<IonSelect
-										placeholder="Ele/dele/ela/dela"
+										placeholder="Ele/dele/ela/dela/elu/delu"
 										value={field.value}
 										onIonChange={e =>
 											setValue('pronoun', e.detail.value)
@@ -276,6 +276,7 @@ const SignUp = () => {
 									>
 										<IonSelectOption value="ele/dele">{`Ele/Dele`}</IonSelectOption>
 										<IonSelectOption value="ela/dela">{`Ela/Dela`}</IonSelectOption>
+										<IonSelectOption value="elu/delu">{`Elu/Delu`}</IonSelectOption>
 									</IonSelect>
 								)}
 								control={control}
