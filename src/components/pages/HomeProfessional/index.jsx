@@ -192,7 +192,10 @@ const HomeProfessional = () => {
 						Questionários respondidos recentemente
 					</IonText>
 					<div className="my-4">
-						{[...Array(6)].map((_, index) => (
+						<IonText>
+							Nenhum questionário recentemente respondido.
+						</IonText>
+						{/* {[...Array(6)].map((_, index) => (
 							<IonList key={index}>
 								<IonItem lines={index === 5 && 'none'}>
 									<IonAvatar slot="start">
@@ -209,30 +212,17 @@ const HomeProfessional = () => {
 									<IonNote slot="end">10:30 am</IonNote>
 								</IonItem>
 							</IonList>
-						))}
+						))} */}
 					</div>
 				</Card>
 				<ModalSheet
 					title="Convidar paciênte"
 					isOpen={modalInviteUserOpen}
 					onDidDismiss={() => setModalInviteUserOpen(false)}
-					height={50}
+					height={30}
 				>
 					{isPlatform !== 'ios' || isPlatform !== 'android' ? (
 						<form onSubmit={handleSubmit(enviteForEmail)}>
-							<IonItem lines="none" className="mb-4">
-								<IonLabel position="stacked">E-mail</IonLabel>
-								<IonInput
-									onIonChange={e =>
-										setValue('emailEnvite', e.detail.value)
-									}
-									{...register('emailEnvite')}
-									placeholder="Email"
-								/>
-							</IonItem>
-							<IonText className="text-black font-semibold w-full text-center">
-								Ou envie um link convite
-							</IonText>
 							<IonItem lines="none" className="mt-2">
 								<IonLabel position="stacked">Link</IonLabel>
 								<IonTextarea

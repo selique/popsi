@@ -15,37 +15,54 @@ import {
 	IonBackButton,
 	IonButtons,
 	IonSearchbar,
-	IonCheckbox
+	IonCheckbox,
+	IonItem,
+	IonPopover,
+	IonButton,
+	useIonPopover
 } from '@ionic/react'
 import {
 	searchOutline,
-	documentOutline,
+	pencil,
 	shareSocialOutline,
-	addOutline
+	addOutline,
+	documentTextOutline,
+	ellipsisHorizontalOutline,
+	createOutline
 } from 'ionicons/icons'
 
 import { useAuth } from '../../../contexts/Auth'
 import { supabase } from '../../../utils/supabaseClient'
 import Avatar from '../../ui/Avatar'
-import Button from '../../ui/Button'
 import Input from '../../ui/Input'
 import Modal from '../../ui/Modal/SheetBottom'
+import Button from './../../ui/Button'
+import Card from './../../ui/Card'
 
 const imageTemp2 =
 	'https://pm1.narvii.com/6583/13022a93a381cddb0c98d4e0a813635bd1215d89_hq.jpg'
 
 const Quiz = () => {
 	const { user, professional } = useAuth()
+
 	const { register, control, handleSubmit, setValue, getValues, reset } =
 		useForm({
 			mode: 'onChange'
 		})
 
 	const [surveys, setSurveys] = React.useState(null)
-	const [invitedPatients, setInvitedPatients] = React.useState(null)
 	const [surveySelectedToInvite, setSurveySelectedToInvite] =
 		React.useState(null)
+	const [searchSurvey, setSearchSurvey] = React.useState('')
+	const [surveysFiltered, setSurveysFiltered] = React.useState(null)
+
+	const [invitedPatients, setInvitedPatients] = React.useState(null)
 	const [isInvitedLoading, setIsInvitedLoading] = React.useState(false)
+
+	const [showPopOver, setShowPopOver] = React.useState({
+		open: false,
+		event: null
+	})
 
 	React.useEffect(() => {
 		const getInvitedPatients = async () => {
@@ -92,20 +109,39 @@ const Quiz = () => {
 					.select(
 						`
 						id,
-						surveys ( * )
+						surveys:B (
+							id,
+							profiles:owner_id (nickname),
+							title,
+							description,
+							_survey_invited ( profiles ( * ) )
+						)
 					`
 					)
 					.eq('A', user.id)
 
-				if (data && data.surveys) {
-					setSurveys(data.surveys)
+				if (data) {
+					setSurveys(data.map(item => item.surveys))
 				}
 			}
 		}
 
 		getSurveys()
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [])
+	}, [professional])
+
+	React.useEffect(() => {
+		if (surveys && searchSurvey !== '') {
+			const filteredArray = surveys.filter(survey => {
+				return survey.title
+					.toLowerCase()
+					.includes(searchSurvey.toLowerCase())
+			})
+			setSurveysFiltered(filteredArray)
+		} else {
+			setSurveysFiltered(surveys)
+		}
+	}, [surveys, searchSurvey])
 
 	const handleInvited = async dataForm => {
 		setIsInvitedLoading(true)
@@ -150,96 +186,109 @@ const Quiz = () => {
 			<IonContent className="ion-padding" fullscreen>
 				<Input
 					icon={<IonIcon src={searchOutline} />}
+					onChange={e => setSearchSurvey(e.target.value)}
 					placeholder="Pesquisar"
 					background="bg-white"
 					classContent="mb-6"
 				/>
 				<div>
 					<IonText>Recentes</IonText>
-					{!surveys ? (
+					{!surveysFiltered ||
+					(surveysFiltered && surveysFiltered.length === 0) ? (
 						<>
 							<br />
 							<IonText>Nenhum questionário encontrado.</IonText>
 						</>
 					) : (
-						surveys.map((item, index) => (
-							<Link to={`/form/answers/${item.id}`} key={index}>
-								<div
-									className={`grid ${
-										professional
-											? 'grid-cols-[auto_1fr_auto]'
-											: 'grid-cols-[auto_1fr]'
-									} mt-5 items-center gap-4 ${
-										!professional && 'bg-gray-200 p-3 rounded-2xl'
-									}`}
-								>
-									<div className="relative">
-										<div className="bg-purple-opacity-100 text-white flex justify-center items-center text-3xl p-5 rounded-2xl">
-											<IonIcon src={documentOutline} color="white" />
-										</div>
-										{/* {professional && (
-										<div className="absolute bottom-0 right-0">
-											<Avatar
-												background={item.peaples[0].image}
-												width={'20px'}
-												height={'20px'}
-												style={{ border: '1px solid #ffffff' }}
-												className={`absolute bottom-0 right-0`}
-											/>
-											<Avatar
-												background={item.peaples[1].image}
-												width={'20px'}
-												height={'20px'}
-												style={{ border: '1px solid #ffffff' }}
-												className={`absolute bottom-0 right-2`}
-											/>
-											<Avatar
-												background={item.peaples[2].image}
-												width={'20px'}
-												height={'20px'}
-												style={{ border: '1px solid #ffffff' }}
-												className={`absolute bottom-0 right-4`}
-											/>
-										</div>
-									)} */}
-									</div>
-									<div className="flex flex-col">
-										<IonText className="text-black">
-											{item.title}
-										</IonText>
-										<IonText className="text-gray-900 text-xsm">
-											{item.description}
-										</IonText>
-										{!professional && (
-											<div className="flex items-center mt-3">
-												<Avatar
-													background={imageTemp2}
-													width={'20px'}
-													height={'20px'}
-													style={{ border: '1px solid #ffffff' }}
-												/>
-												<IonText className="ml-1 capitalize">
-													{item.profiles.nickname}
-												</IonText>
-											</div>
-										)}
-									</div>
-									{professional && (
+						surveysFiltered.map((item, index) => (
+							<Card key={index} classContainer="my-3">
+								<IonItem lines="none">
+									<Link
+										to={`/form/answers/${item.id}`}
+										className="flex items-center h-full w-full"
+									>
 										<div
-											className="text-purple-100 text-2xl"
-											onClick={e => {
-												e.preventDefault()
-												setSurveySelectedToInvite(item.id)
-											}}
+											slot="start"
+											className="flex items-center justify-center bg-purple-200 py-3 px-2 rounded-2xl mr-2"
 										>
 											<IonIcon
-												src={shareSocialOutline}
-												color="#AC8FBF"
+												icon={documentTextOutline}
+												className="text-3xl text-white"
 											/>
 										</div>
+										<div className="flex flex-col">
+											<IonText className="font-semibold">
+												{item.title}
+											</IonText>
+										</div>
+									</Link>
+									{professional && (
+										<>
+											<IonIcon
+												icon={ellipsisHorizontalOutline}
+												className="text-2xl"
+												slot="end"
+												onClick={e =>
+													setShowPopOver({
+														open: true,
+														event: e
+													})
+												}
+											/>
+											<IonPopover
+												isOpen={showPopOver.open}
+												event={showPopOver.event}
+												onDidDismiss={() =>
+													setShowPopOver({
+														open: false,
+														event: undefined
+													})
+												}
+											>
+												<div className="flex flex-col p-2">
+													<div
+														className="flex items-center py-2"
+														onClick={e => {
+															e.preventDefault()
+															setShowPopOver({
+																open: false,
+																event: undefined
+															})
+															setSurveySelectedToInvite(item.id)
+														}}
+													>
+														<IonIcon
+															icon={shareSocialOutline}
+															className="text-md mr-2"
+														/>
+														<IonText className="text-md">
+															Convidar Paciente
+														</IonText>
+													</div>
+													<div
+														className="flex items-center py-2"
+														onClick={e => {
+															e.preventDefault()
+															setShowPopOver({
+																open: false,
+																event: undefined
+															})
+														}}
+													>
+														<IonIcon
+															icon={createOutline}
+															className="text-md mr-2"
+														/>
+														<IonText className="text-md">
+															Editar formulário
+														</IonText>
+													</div>
+												</div>
+											</IonPopover>
+										</>
 									)}
-								</div>
-							</Link>
+								</IonItem>
+							</Card>
 						))
 					)}
 				</div>
@@ -263,7 +312,13 @@ const Quiz = () => {
 					swipeToClose={false}
 				>
 					<form onSubmit={handleSubmit(handleInvited)}>
-						<IonSearchbar className="mb-4" />
+						<Input
+							icon={<IonIcon src={searchOutline} />}
+							placeholder="Pesquisar"
+							background="bg-white"
+							classContent="mb-6"
+							className="drop-shadow-md"
+						/>
 						<div>
 							{/* <IonText className="font-bold">Ultimos envios</IonText>
 							<IonSlides
