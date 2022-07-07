@@ -15,12 +15,15 @@ import {
 import Router from 'next/router'
 
 import animation from '../../../assets/animations/breathing.json'
+import { useAuth } from '../../../contexts/Auth'
 import Button from '../../ui/Button'
 
 const Breathing = () => {
 	const [showModal, setShowModal] = React.useState(false)
 	const [count, setCount] = React.useState(5)
 	const [breathe, setBreath] = React.useState(true)
+
+	const { user, loading } = useAuth()
 
 	React.useEffect(() => {
 		if (showModal && count > 0) {
@@ -61,7 +64,7 @@ const Breathing = () => {
 				<div className="h-[75vh] flex items-center">
 					<div className="flex flex-col">
 						<IonText className="text-xl mb-8 font-medium">
-							Bem vindo, Geovane
+							Bem vindo, {user.user_metadata.nickname}
 						</IonText>
 						<IonText className="text-xl text-gray-900">
 							A respiração profunda guiada pode ajudá-lo a se sentir mais
