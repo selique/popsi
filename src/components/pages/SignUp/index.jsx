@@ -101,6 +101,7 @@ const SignUp = () => {
 				birth_date: format(parseISO(data.birth_date), 'yyyy-MM-dd'),
 				gender_identity: data.gender_identity,
 				medic_id: medicIdQuery,
+				pronoun: data.pronoun,
 				role: medicIdQuery
 					? 'PATIENT'
 					: userType.type
