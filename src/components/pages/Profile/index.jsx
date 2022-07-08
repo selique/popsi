@@ -8,7 +8,8 @@ import {
 	IonSlides,
 	useIonLoading,
 	useIonToast,
-	IonText
+	IonButtons,
+	IonBackButton
 } from '@ionic/react'
 import styled from 'styled-components'
 
@@ -135,6 +136,20 @@ const Profile = () => {
 					rounded-b-3xl
 				`}
 				>
+					<div
+						className={`
+						fixed
+						top-0
+						left-0
+					`}
+					>
+						<IonButtons slot="start">
+							<IonBackButton
+								defaultHref="/app/home"
+								className="text-white"
+							/>
+						</IonButtons>
+					</div>
 					<ContainerAvatar
 						className={`
 								absolute
@@ -163,7 +178,11 @@ const Profile = () => {
 					<p className="text-center font-bold text-black text-xl capitalize">
 						{profile.full_name}
 					</p>
-					{professional ? (
+					<p className="text-center font-bold text-black text-md capitalize">
+						Biografia:
+					</p>
+					<p className="text-sm text-center">{profile.bio}</p>
+					{/* {professional ? (
 						<p className="text-center text-gray-900 text-lg capitalize">
 							Especialidades
 						</p>
@@ -174,7 +193,6 @@ const Profile = () => {
 							mistaken idea of denouncing pleasure
 						</p>
 					)}
-					<p className="text-sm text-center">{profile.bio}</p>
 					{professional ? (
 						<div className="grid grid-cols-3 gap-3 justify-items-center text-center items-center text-sm">
 							<IonText>Depressão</IonText>
@@ -199,7 +217,7 @@ const Profile = () => {
 								</p>
 							</div>
 						</div>
-					)}
+					)} */}
 					<Link to="/app/edit">
 						<Button className="bg-blue-200 py-1 mt-8">
 							<p className="text-white font-medium text-sm">
