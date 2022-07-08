@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Redirect, Route } from 'react-router-dom'
+import { Redirect, Route, useLocation } from 'react-router-dom'
 import { useHistory } from 'react-router-dom'
 
 import {
@@ -16,7 +16,6 @@ import {
 import {
 	home,
 	list,
-	// personOutline,
 	notificationsOutline,
 	fileTrayOutline,
 	chatboxEllipsesOutline,
@@ -25,7 +24,7 @@ import {
 import { useRouter } from 'next/router'
 
 import { useAuth } from '../contexts/Auth'
-import { useChatNotifications } from './../contexts/chatNotifications'
+import { useChatNotifications } from '../contexts/chatNotifications'
 import AllChats from './pages/AllChats'
 import Chat from './pages/Chat'
 import EditProfile from './pages/EditProfile'
@@ -45,10 +44,10 @@ const Tabs = () => {
 
 	const { isThereMessages } = useChatNotifications()
 
-	const { pathname } = location
-
 	const router = useRouter()
 	const history = useHistory()
+
+	const { pathname } = useLocation()
 
 	const hideTabBarFor = ['/app/chat/']
 
@@ -88,15 +87,46 @@ const Tabs = () => {
 			label: 'Questionário'
 		},
 		{
-			path: professional
-				? '/app/all-chats'
-				: `/app/chat/${user.user_metadata.medic_id}`,
-			icon: chatboxEllipsesOutline,
-			iconStyle: isThereMessages
-				? 'relative before:content-[attr(before)] before:absolute before:w-[9px] before:h-[9px] before:bg-red-500 before:top-0 before:right-0  before:rounded-full before:z-10 before:animate-ping'
-				: '',
-			label: professional ? 'Chats' : 'Chat'
+			component: (
+				<IonTabButton
+					tab="tab4"
+					href={
+						professional
+							? '/app/all-chats'
+							: `/app/chat/${user.user_metadata.medic_id}`
+					}
+				>
+					<IonIcon
+						className={`${
+							isThereMessages
+								? 'relative after:content-[attr(after)] after:absolute after:w-[9px] after:h-[9px] after:bg-red-500 after:top-0 after:right-0  after:rounded-full after:z-10 after:animate-ping before:content-[attr(before)] before:absolute before:w-[6px] before:h-[6px] before:bg-red-500 before:top-0 before:right-0 before:rounded-full before:z-10 '
+								: ''
+						} ${pathname === '/app/all-chats' ? 'text-glossyGrape' : ''}`}
+						icon={chatboxEllipsesOutline}
+					/>
+					<IonLabel
+						className={
+							pathname === '/app/all-chats' ? 'text-glossyGrape' : ''
+						}
+					>
+						{professional ? 'chats' : 'chat'}
+					</IonLabel>
+					{pathname === '/app/all-chats' && (
+						<div className="h-[3px] w-full bg-glossyGrape rounded-xl" />
+					)}
+				</IonTabButton>
+			)
 		},
+		// {
+		// 	path: professional
+		// 		? '/app/all-chats'
+		// 		: `/app/chat/${user.user_metadata.medic_id}`,
+		// 	icon: chatboxEllipsesOutline,
+		// 	iconStyle: isThereMessages
+		// 		? 'relative before:content-[attr(before)] before:absolute before:w-[9px] before:h-[9px] before:bg-red-500 before:top-0 before:right-0  before:rounded-full before:z-10 before:animate-ping'
+		// 		: '',
+		// 	label: professional ? 'Chats' : 'Chat'
+		// },
 		{
 			path: '/app/notification',
 			icon: notificationsOutline,
@@ -148,12 +178,21 @@ const Tabs = () => {
 			<IonTabBar slot="bottom">
 				{tabButtons.map(
 					(
-						{ path, icon, label, isProfessionalOnly = false, iconStyle },
+						{
+							path,
+							icon,
+							label,
+							isProfessionalOnly = false,
+							iconStyle,
+							component
+						},
 						index
 					) => {
 						if (isProfessionalOnly) {
 							if (professional) {
-								return (
+								return component ? (
+									React.cloneElement(component, { key: index })
+								) : (
 									<IonTabButton key={index} tab={label} href={path}>
 										<IonIcon
 											className={
@@ -179,7 +218,9 @@ const Tabs = () => {
 								return <React.Fragment key={index}></React.Fragment>
 							}
 						} else {
-							return (
+							return component ? (
+								React.cloneElement(component, { key: index })
+							) : (
 								<IonTabButton key={index} tab={label} href={path}>
 									<IonIcon
 										className={
