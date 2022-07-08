@@ -10,7 +10,8 @@ import {
 	IonList,
 	IonNote,
 	IonRow,
-	isPlatform
+	isPlatform,
+	useIonRouter
 } from '@ionic/react'
 import {
 	IonPage,
@@ -25,7 +26,6 @@ import {
 	IonIcon
 } from '@ionic/react'
 import { notificationsOutline } from 'ionicons/icons'
-import { close } from 'ionicons/icons'
 import Image from 'next/image'
 import styled from 'styled-components'
 
@@ -48,57 +48,13 @@ const Slide = styled(IonSlides)`
 	}
 `
 
-const months = [
-	'Janeiro',
-	'Fevereiro',
-	'Março',
-	'Abril',
-	'Maio',
-	'Junho',
-	'Julho',
-	'Agosto',
-	'Setembro',
-	'Outubro',
-	'Novembro',
-	'Dezembro'
-]
-
-const dayOfMonths = [
-	{
-		day: '01',
-		dayWeek: 'Dom'
-	},
-	{
-		day: '02',
-		dayWeek: 'Seg'
-	},
-	{
-		day: '03',
-		dayWeek: 'Ter'
-	},
-	{
-		day: '04',
-		dayWeek: 'Qua'
-	},
-	{
-		day: '05',
-		dayWeek: 'Qui'
-	},
-	{
-		day: '06',
-		dayWeek: 'Sex'
-	},
-	{
-		day: '07',
-		dayWeek: 'Sab'
-	}
-]
-
 const HomeProfessional = () => {
 	const [modalAgendaOpen, setModalAgendaOpen] = React.useState(false)
 	const [modalInviteUserOpen, setModalInviteUserOpen] = React.useState(false)
 	const { user } = useAuth()
 	const { setValue, register, handleSubmit, watch } = useForm()
+
+	const router = useIonRouter()
 
 	const slideOpts = {
 		slidesPerView: 2.6,
@@ -143,7 +99,10 @@ const HomeProfessional = () => {
 								/>
 							</Button>
 						</Link>
-						<IonAvatar className="flex items-center w-[50px] h-max">
+						<IonAvatar
+							className="flex items-center w-[50px] h-max"
+							onClick={() => router.push('/app/profile')}
+						>
 							<Image src={Profile} alt="Foto de perfil" />
 						</IonAvatar>
 					</div>
@@ -192,10 +151,7 @@ const HomeProfessional = () => {
 						Questionários respondidos recentemente
 					</IonText>
 					<div className="my-4">
-						<IonText>
-							Nenhum questionário recentemente respondido.
-						</IonText>
-						{/* {[...Array(6)].map((_, index) => (
+						{[...Array(6)].map((_, index) => (
 							<IonList key={index}>
 								<IonItem lines={index === 5 && 'none'}>
 									<IonAvatar slot="start">
@@ -212,7 +168,7 @@ const HomeProfessional = () => {
 									<IonNote slot="end">10:30 am</IonNote>
 								</IonItem>
 							</IonList>
-						))} */}
+						))}
 					</div>
 				</Card>
 				<ModalSheet
@@ -225,17 +181,34 @@ const HomeProfessional = () => {
 						<form onSubmit={handleSubmit(enviteForEmail)}>
 							<IonItem lines="none" className="mt-2">
 								<IonLabel position="stacked">Link</IonLabel>
-								<IonTextarea
+								<Button
+									className="justify-start w-full"
 									onClick={() => {
 										navigator.clipboard.writeText(
 											`${process.env.SITE_URL}/sign-up?medic=${user.id}`
 										)
 										setModalInviteUserOpen(false)
 									}}
-									value={`${process.env.SITE_URL}/sign-up?medic=${user.id}`}
+								>
+									<IonText>
+										{`${process.env.SITE_URL}/sign-up?medic=${user.id}`.slice(
+											0,
+											34
+										) + '...'}
+									</IonText>
+								</Button>
+
+								{/* <IonTextarea
+									onClick={() => {
+										navigator.clipboard.writeText(
+											`${process.env.SITE_URL}/sign-up?medic=${user.id}`
+										)
+										setModalInviteUserOpen(false)
+									}}
+									value={`${process.env.SITE_URL}/sign-up?medic=${user.id}`.slice(0, 34) + '...'}
 									readonly
 									className="text-sm"
-								/>
+								/> */}
 							</IonItem>
 							<IonGrid>
 								<IonRow>

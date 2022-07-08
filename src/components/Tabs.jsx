@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Redirect, Route } from 'react-router-dom'
+import { Redirect, Route, useLocation } from 'react-router-dom'
 import { useHistory } from 'react-router-dom'
 
 import {
@@ -8,22 +8,23 @@ import {
 	IonTabBar,
 	IonTabButton,
 	IonIcon,
-	IonLabel
+	IonLabel,
+	useIonRouter
 	// useIonLoading,
 	// useIonToast
 } from '@ionic/react'
 import {
 	home,
 	list,
-	// personOutline,
 	notificationsOutline,
 	fileTrayOutline,
-	chatboxEllipsesOutline
+	chatboxEllipsesOutline,
+	peopleOutline
 } from 'ionicons/icons'
 import { useRouter } from 'next/router'
 
 import { useAuth } from '../contexts/Auth'
-import { useChatNotifications } from './../contexts/chatNotifications'
+import { useChatNotifications } from '../contexts/chatNotifications'
 import AllChats from './pages/AllChats'
 import Chat from './pages/Chat'
 import EditProfile from './pages/EditProfile'
@@ -46,6 +47,8 @@ const Tabs = () => {
 	const router = useRouter()
 	const history = useHistory()
 
+	const { pathname } = useLocation()
+
 	const hideTabBarFor = ['/app/chat/']
 
 	React.useEffect(() => {
@@ -65,6 +68,71 @@ const Tabs = () => {
 		return history.listen(location => hideTabBar(location.pathname))
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [history])
+
+	const tabButtons = [
+		{
+			path: '/app/home',
+			icon: home,
+			label: 'Home'
+		},
+		{
+			path: '/app/patients',
+			icon: list,
+			isProfessionalOnly: true,
+			label: 'Patients'
+		},
+		{
+			path: '/app/quiz',
+			icon: fileTrayOutline,
+			label: 'Questionário'
+		},
+		{
+			component: (
+				<IonTabButton
+					tab="tab4"
+					href={
+						professional
+							? '/app/all-chats'
+							: `/app/chat/${user.user_metadata.medic_id}`
+					}
+				>
+					<IonIcon
+						className={`${
+							isThereMessages
+								? 'relative after:content-[attr(after)] after:absolute after:w-[9px] after:h-[9px] after:bg-red-500 after:top-0 after:right-0  after:rounded-full after:z-10 after:animate-ping before:content-[attr(before)] before:absolute before:w-[6px] before:h-[6px] before:bg-red-500 before:top-0 before:right-0 before:rounded-full before:z-10 '
+								: ''
+						} ${pathname === '/app/all-chats' ? 'text-glossyGrape' : ''}`}
+						icon={chatboxEllipsesOutline}
+					/>
+					<IonLabel
+						className={
+							pathname === '/app/all-chats' ? 'text-glossyGrape' : ''
+						}
+					>
+						{professional ? 'chats' : 'chat'}
+					</IonLabel>
+					{pathname === '/app/all-chats' && (
+						<div className="h-[3px] w-full bg-glossyGrape rounded-xl" />
+					)}
+				</IonTabButton>
+			)
+		},
+		// {
+		// 	path: professional
+		// 		? '/app/all-chats'
+		// 		: `/app/chat/${user.user_metadata.medic_id}`,
+		// 	icon: chatboxEllipsesOutline,
+		// 	iconStyle: isThereMessages
+		// 		? 'relative before:content-[attr(before)] before:absolute before:w-[9px] before:h-[9px] before:bg-red-500 before:top-0 before:right-0  before:rounded-full before:z-10 before:animate-ping'
+		// 		: '',
+		// 	label: professional ? 'Chats' : 'Chat'
+		// },
+		{
+			path: '/app/notification',
+			icon: notificationsOutline,
+			label: 'Notifications'
+		}
+	]
 
 	return (
 		<IonTabs>
@@ -108,46 +176,73 @@ const Tabs = () => {
 				<Route path="/app/edit" component={EditProfile} exact={true} />
 			</IonRouterOutlet>
 			<IonTabBar slot="bottom">
-				<IonTabButton tab="tab1" href="/app/home">
-					<IonIcon icon={home} />
-					<IonLabel>Home</IonLabel>
-				</IonTabButton>
-				{professional && (
-					<IonTabButton tab="tab2" href="/app/patients">
-						<IonIcon icon={list} />
-						<IonLabel>Pacients</IonLabel>
-					</IonTabButton>
-				)}
-				<IonTabButton tab="tab3" href="/app/quiz">
-					<IonIcon icon={fileTrayOutline} />
-					<IonLabel>Questionário</IonLabel>
-				</IonTabButton>
-				<IonTabButton
-					tab="tab4"
-					href={
-						professional
-							? '/app/all-chats'
-							: `/app/chat/${user.user_metadata.medic_id}`
-					}
-				>
-					<IonIcon
-						className={
-							isThereMessages
-								? 'relative before:content-[attr(before)] before:absolute before:w-[9px] before:h-[9px] before:bg-red-500 before:top-0 before:right-0  before:rounded-full before:z-10'
-								: ''
+				{tabButtons.map(
+					(
+						{
+							path,
+							icon,
+							label,
+							isProfessionalOnly = false,
+							iconStyle,
+							component
+						},
+						index
+					) => {
+						if (isProfessionalOnly) {
+							if (professional) {
+								return component ? (
+									React.cloneElement(component, { key: index })
+								) : (
+									<IonTabButton key={index} tab={label} href={path}>
+										<IonIcon
+											className={
+												iconStyle + pathname === path
+													? 'text-glossyGrape'
+													: ''
+											}
+											icon={icon}
+										/>
+										<IonLabel
+											className={
+												pathname === path ? 'text-glossyGrape' : ''
+											}
+										>
+											{label}
+										</IonLabel>
+										{pathname === path && (
+											<div className="h-[3px] w-full bg-glossyGrape rounded-xl" />
+										)}
+									</IonTabButton>
+								)
+							} else {
+								return <React.Fragment key={index}></React.Fragment>
+							}
+						} else {
+							return component ? (
+								React.cloneElement(component, { key: index })
+							) : (
+								<IonTabButton key={index} tab={label} href={path}>
+									<IonIcon
+										className={
+											pathname === path ? 'text-glossyGrape' : ''
+										}
+										icon={icon}
+									/>
+									<IonLabel
+										className={
+											pathname === path ? 'text-glossyGrape' : ''
+										}
+									>
+										{label}
+									</IonLabel>
+									{pathname === path && (
+										<div className="h-[3px] w-full bg-glossyGrape rounded-xl" />
+									)}
+								</IonTabButton>
+							)
 						}
-						icon={chatboxEllipsesOutline}
-					/>
-					<IonLabel>{professional ? 'chats' : 'chat'}</IonLabel>
-				</IonTabButton>
-				<IonTabButton tab="tab5" href="/app/notification">
-					<IonIcon icon={notificationsOutline} />
-					<IonLabel>Notificações</IonLabel>
-				</IonTabButton>
-				{/* <IonTabButton tab="tab6" href={'/app/profile'}>
-					<IonIcon icon={personOutline} />
-					<IonLabel>Perfil</IonLabel>
-				</IonTabButton> */}
+					}
+				)}
 			</IonTabBar>
 		</IonTabs>
 	)

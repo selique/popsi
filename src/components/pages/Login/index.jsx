@@ -17,7 +17,7 @@ import {
 	useIonRouter,
 	IonIcon
 } from '@ionic/react'
-import { eyeOutline, eyeOffOutline } from 'ionicons/icons'
+import { eyeOutline, eyeOffOutline, close } from 'ionicons/icons'
 import * as Yup from 'yup'
 
 import Lines from '../../../assets/Lines'
@@ -52,8 +52,9 @@ const Login = () => {
 	const handleLogin = async data => {
 		await showLoading()
 		try {
-			await signIn(data)
-			return user?.id && router.push('/app/home')
+			await signIn(data).then(() => {
+				router.push('/app/home')
+			})
 		} catch (e) {
 			await showToast({
 				message: e.error_description || e.message,
@@ -67,6 +68,14 @@ const Login = () => {
 	return (
 		<IonPage>
 			<IonContent className="ion-padding">
+				<div className="flex justify-end">
+					<div
+						onClick={() => router.push('/signinup')}
+						className="flex justify-center items-center bg-gray-200 rounded-full w-10 h-10"
+					>
+						<IonIcon className="h-6 w-6" src={close} />
+					</div>
+				</div>
 				<div className="relative w-full h-full flex flex-col justify-center overflow-hidden">
 					<Lines className="absolute top-0 right-[28%] rotate-[100deg] z-[-1] w-full" />
 					<div />

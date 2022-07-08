@@ -245,7 +245,7 @@ const Quiz = () => {
 													})
 												}
 											>
-												<div className="flex flex-col p-2">
+												<div className="flex flex-col p-2 bg-red">
 													<div
 														className="flex items-center py-2"
 														onClick={e => {
