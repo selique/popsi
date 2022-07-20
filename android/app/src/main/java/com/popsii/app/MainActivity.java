@@ -1,4 +1,4 @@
-package com.planyourlife.app;
+package com.popsii.app;
 
 import com.getcapacitor.BridgeActivity;
 
