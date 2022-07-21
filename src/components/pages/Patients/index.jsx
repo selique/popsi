@@ -17,13 +17,14 @@ import {
 	IonItem,
 	IonAvatar
 } from '@ionic/react'
-import { filterOutline, addOutline } from 'ionicons/icons'
+import { filterOutline, addOutline, searchOutline } from 'ionicons/icons'
 import Image from 'next/image'
 
 import { useAuth } from '../../../contexts/Auth'
 import { supabase } from '../../../utils/supabaseClient'
 import Avatar from '../../ui/Avatar'
 import Card from '../../ui/Card'
+import Input from './../../ui/Input'
 
 const imageTemp =
 	'https://i0.wp.com/www.kailagarcia.com/wp-content/uploads/2019/05/46846414_205184383758304_7255555943408505199_n.jpg?fit=1080%2C1350&ssl=1'
@@ -32,7 +33,10 @@ const Patients = () => {
 	const [showLoading, hideLoading] = useIonLoading()
 	const [showToast] = useIonToast()
 	const { user, loading } = useAuth()
-	const [patient, setPatient] = React.useState([])
+	const [patients, setPatients] = React.useState([])
+	const [patientsFiltered, setPatientsFiltered] = React.useState([])
+	const [searchPatient, setSearchPatient] = React.useState('')
+
 	const getPatients = async () => {
 		await showLoading()
 		try {
@@ -52,7 +56,7 @@ const Patients = () => {
 			}
 
 			if (data) {
-				setPatient(data)
+				setPatients(data)
 			}
 		} catch (error) {
 			showToast({ message: error.message, duration: 5000 })
@@ -86,6 +90,17 @@ const Patients = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [loading])
 
+	React.useEffect(() => {
+		if (patients && searchPatient !== '') {
+			const filteredArray = patients.filter(({ full_name }) => {
+				return full_name.toLowerCase().includes(searchPatient.toLowerCase())
+			})
+			setPatientsFiltered(filteredArray)
+		} else {
+			setPatientsFiltered(patients)
+		}
+	}, [patients, searchPatient])
+
 	return (
 		<IonPage>
 			<IonHeader>
@@ -97,11 +112,14 @@ const Patients = () => {
 			</IonHeader>
 			<IonContent className="ion-padding" fullscreen>
 				<div className="bg-white-100">
-					<IonSearchbar
+					<Input
+						icon={<IonIcon src={searchOutline} />}
+						onChange={e => setSearchPatient(e.target.value)}
 						placeholder="Pesquisar"
-						className="mb-4 bg-white"
+						background="bg-white"
+						classContent="mb-6"
 					/>
-					<div className="flex items-center justify-between mb-5">
+					{/* <div className="flex items-center justify-between mb-5">
 						<IonText className="text-black font-medium">
 							Favoritos
 						</IonText>
@@ -143,30 +161,49 @@ const Patients = () => {
 								</div>
 							</IonSlide>
 						))}
-					</IonSlides>
+					</IonSlides> */}
 					<div className="mt-5">
 						<Card>
-							{patient.map(({ full_name, avatar_url, id }, index) => {
-								return (
-									<Link to={`/app/patients/quiz/${id}`} key={index}>
-										<IonItem
-											lines={index + 1 === patient.length && 'none'}
-										>
-											<IonAvatar slot="start">
-												{avatar_url && (
-													<Image
-														src={avatar_url}
-														alt="Foto de perfil"
+							{!patientsFiltered ||
+							(patientsFiltered && patientsFiltered.length === 0) ? (
+								<IonText>Nenhum paciente encontrado.</IonText>
+							) : (
+								patientsFiltered.map(
+									({ full_name, avatar_url, id }, index) => {
+										return (
+											// <Link
+											// 	to={`/app/patients/quiz/${id}`}
+											// >
+											<IonItem
+												key={index}
+												lines={
+													index + 1 === patientsFiltered.length &&
+													'none'
+												}
+											>
+												{avatar_url ? (
+													<Avatar
+														width="50px"
+														height="50px"
+														background={avatar_url}
+														hasBorder={false}
+													/>
+												) : (
+													<Avatar
+														width="50px"
+														height="50px"
+														hasBorder={false}
 													/>
 												)}
-											</IonAvatar>
-											<IonText className="font-semibold ml-3 text-md">
-												{full_name}
-											</IonText>
-										</IonItem>
-									</Link>
+												<IonText className="font-semibold ml-3 text-md">
+													{full_name}
+												</IonText>
+											</IonItem>
+											// </Link>
+										)
+									}
 								)
-							})}
+							)}
 						</Card>
 					</div>
 				</div>
