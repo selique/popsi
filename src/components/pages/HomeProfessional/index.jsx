@@ -2,7 +2,8 @@ import * as React from 'react'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
 
-import { SocialSharing } from '@awesome-cordova-plugins/social-sharing'
+import { Clipboard } from '@capacitor/clipboard'
+import { Share } from '@capacitor/share'
 import {
 	IonAvatar,
 	IonCol,
@@ -49,10 +50,8 @@ const Slide = styled(IonSlides)`
 `
 
 const HomeProfessional = () => {
-	const [modalAgendaOpen, setModalAgendaOpen] = React.useState(false)
 	const [modalInviteUserOpen, setModalInviteUserOpen] = React.useState(false)
 	const { user } = useAuth()
-	const { setValue, register, handleSubmit, watch } = useForm()
 
 	const router = useIonRouter()
 
@@ -65,18 +64,15 @@ const HomeProfessional = () => {
 
 	const handleShareUrl = async () => {
 		try {
-			return await SocialSharing.share(
-				'Complete seu cadastro na Popsicle e aproveite os benefícios',
-				'Seu Psicologo te convidou para Popsi',
-				'',
-				`${process.env.SITE_URL}/sign-up?medic=${user.id}`
-			)
+			await Share.share({
+				title: 'Seu Psicologo te convidou para Popsi',
+				text: 'Complete seu cadastro na Popsicle e aproveite os benefícios',
+				url: `${process.env.SITE_URL}/sign-up?medic=${user.id}`
+			})
 		} catch (error) {
 			console.log(error)
 		}
 	}
-
-	const enviteForEmail = dataForm => console.log(dataForm)
 
 	return (
 		<IonPage>
@@ -177,92 +173,47 @@ const HomeProfessional = () => {
 					onDidDismiss={() => setModalInviteUserOpen(false)}
 					height={30}
 				>
-					{isPlatform !== 'ios' || isPlatform !== 'android' ? (
-						<form onSubmit={handleSubmit(enviteForEmail)}>
-							<IonItem lines="none" className="mt-2">
-								<IonLabel position="stacked">Link</IonLabel>
+					<IonItem lines="none" className="mt-2">
+						<IonLabel position="stacked">Link</IonLabel>
+						<Button
+							className="justify-start w-full"
+							onClick={() => {
+								Clipboard.write({
+									string: `${process.env.SITE_URL}/sign-up?medic=${user.id}`
+								})
+								setModalInviteUserOpen(false)
+							}}
+						>
+							<IonText>
+								{`${process.env.SITE_URL}/sign-up?medic=${user.id}`.slice(
+									0,
+									34
+								) + '...'}
+							</IonText>
+						</Button>
+					</IonItem>
+					<IonGrid>
+						<IonRow>
+							<IonCol>
 								<Button
-									className="justify-start w-full"
-									onClick={() => {
-										navigator.clipboard.writeText(
-											`${process.env.SITE_URL}/sign-up?medic=${user.id}`
-										)
-										setModalInviteUserOpen(false)
-									}}
+									className="bg-red-400 text-white font-bold text-lg"
+									type="button"
+									onClick={() => setModalInviteUserOpen(false)}
 								>
-									<IonText>
-										{`${process.env.SITE_URL}/sign-up?medic=${user.id}`.slice(
-											0,
-											34
-										) + '...'}
-									</IonText>
+									Cancelar
 								</Button>
-
-								{/* <IonTextarea
-									onClick={() => {
-										navigator.clipboard.writeText(
-											`${process.env.SITE_URL}/sign-up?medic=${user.id}`
-										)
-										setModalInviteUserOpen(false)
-									}}
-									value={`${process.env.SITE_URL}/sign-up?medic=${user.id}`.slice(0, 34) + '...'}
-									readonly
-									className="text-sm"
-								/> */}
-							</IonItem>
-							<IonGrid>
-								<IonRow>
-									<IonCol>
-										<Button
-											className="bg-red-400 text-white font-bold text-lg"
-											type="button"
-											onClick={() => setModalInviteUserOpen(false)}
-										>
-											Cancelar
-										</Button>
-									</IonCol>
-									<IonCol>
-										<Button
-											className={`${
-												!watch('emailEnvite') &&
-												watch('emailEnvite') === ''
-													? 'opacity-40'
-													: 'opacity-100'
-											} bg-purple-100 text-white font-bold text-lg`}
-											type="submit"
-											disabled={
-												!watch('emailEnvite') &&
-												watch('emailEnvite') === ''
-											}
-										>
-											Continuar
-										</Button>
-									</IonCol>
-								</IonRow>
-							</IonGrid>
-						</form>
-					) : (
-						<IonItem lines="none">
-							<div className="flex justify-center my-4">
-								<IonText className="text-black font-semibold text-center">
-									Convidar paciente
-								</IonText>
-							</div>
-							<div className="bg-gray-300 flex justify-center my-4">
-								<IonText className="text-gray-900 text-center">
-									{`${process.env.SITE_URL}/sign-up?medic=${user.id}`}
-								</IonText>
-							</div>
-							<Button
-								className="bg-purple-200"
-								onClick={() => handleShareUrl()}
-							>
-								<IonText className="text-black text-semibold">
+							</IonCol>
+							<IonCol>
+								<Button
+									className="opacity-100 bg-purple-100 text-white font-bold text-lg"
+									onClick={() => handleShareUrl()}
+									type="submit"
+								>
 									Compartilhar
-								</IonText>
-							</Button>
-						</IonItem>
-					)}
+								</Button>
+							</IonCol>
+						</IonRow>
+					</IonGrid>
 				</ModalSheet>
 			</IonContent>
 		</IonPage>
