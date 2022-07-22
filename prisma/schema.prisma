@@ -24,8 +24,8 @@ model Profile {
    role            Role?     @default(PATIENT)
 
    // Relation: Surveys
-   owner_survey  Surveys[]       @relation("owner_id")
-   SurveyInvited SurveyInvited[]
+   owner_survey         Surveys[]              @relation("owner_id")
+   SurveyGenerateInvite SurveyGenerateInvite[]
 
    // Relation: Answer
    answers Answer[]
@@ -54,23 +54,52 @@ model Profile {
    @@map("profiles")
 }
 
-model SurveyInvited {
-   id String @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-
-   profile_id Profile @relation(fields: [A], references: [id])
-   A          String  @db.Uuid
-
-   survey_id Surveys @relation(fields: [B], references: [id])
-   B         String  @db.Uuid
-
-   @@map("_survey_invited")
-}
-
 enum Role {
    PATIENT
    MEDIC
 
    @@map("roles")
+}
+
+model SurveyGenerateInvite {
+   id String @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+   profile    Profile @relation(fields: [patient_id], references: [id])
+   patient_id String  @db.Uuid
+
+   survey    Surveys @relation(fields: [survey_id], references: [id])
+   survey_id String  @db.Uuid
+
+   allow_reply_later Boolean @default(false)
+
+   created_at DateTime @default(now()) @db.Timestamptz()
+
+   SurveyInvited SurveyInvited[]
+
+   @@map("survey_generate_invite")
+}
+
+model SurveyInvited {
+   id String @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+   survey_generate_invite    SurveyGenerateInvite @relation(fields: [survey_generate_invite_id], references: [id])
+   survey_generate_invite_id String               @db.Uuid
+
+   status SurveyInvitedStatus? @default(PENDING)
+
+   created_at DateTime @default(now()) @db.Timestamptz()
+
+   @@map("_survey_invited")
+}
+
+enum SurveyInvitedStatus {
+   PENDING
+   FINISHED
+   FINISHED_LATE
+   LATE
+   EXPIRED
+
+   @@map("survey_invited_status")
 }
 
 model Surveys {
@@ -86,7 +115,7 @@ model Surveys {
    owner_id String  @db.Uuid
 
    // Relation: Patients
-   SurveyInvited SurveyInvited[]
+   SurveyGenerateInvite SurveyGenerateInvite[]
 
    // Timestamp
    created_at DateTime  @default(now()) @db.Timestamptz()
