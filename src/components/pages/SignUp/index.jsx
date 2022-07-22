@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { useForm, Controller } from 'react-hook-form'
+import { useLocation } from 'react-router-dom'
 
 import formatCpf from '@brazilian-utils/format-cpf'
 import { ErrorMessage } from '@hookform/error-message'
@@ -13,11 +14,6 @@ import {
 	IonDatetime,
 	IonLabel,
 	IonInput,
-	// IonRadioGroup,
-	// IonRadio,
-	// IonToggle,
-	// IonRange,
-	// IonCheckbox,
 	IonItem,
 	IonSelect,
 	IonSelectOption,
@@ -33,36 +29,54 @@ import { format, parseISO } from 'date-fns'
 import * as Yup from 'yup'
 
 import { useAuth } from '../../../contexts/Auth'
+import Button from './../../ui/Button'
 const SignUp = () => {
 	const { signUp } = useAuth()
 	const [cpfField, setCpfField] = React.useState()
 	const [showLoading, hideLoading] = useIonLoading()
 	const [showToast] = useIonToast()
+	const [userType, setUserType] = React.useState({})
+
+	const location = useLocation()
+	const [medicIdQuery, setMedicIdQuery] = React.useState('')
+
+	React.useEffect(() => {
+		const params = new URLSearchParams(location.search)
+		setMedicIdQuery(params.get('medic') || null)
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [location])
+
+	React.useEffect(() => {
+		const state = location.state
+
+		console.log('state', state)
+		if (state) setUserType(state.userType)
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [location])
 
 	const schema = Yup.object().shape({
 		full_name: Yup.string().required('O nome é obrigatório'),
+		nickname: Yup.string()
+			.min(3, 'O nickname deve ter no mínimo 3 caracteres')
+			.notRequired(),
 		email: Yup.string()
 			.email('Insira um e-mail válido')
 			.required('O e-mail é obrigatório'),
+		cpf: Yup.string()
+			.min(11, 'O CPF deve ter no mínimo 11 caracteres')
+			.required('O CPF é obrigatório'),
+		birth_date: Yup.string().required('A data de nascimento é obrigatória'),
+		gender_identity: Yup.string().required(
+			'O campo Indetidade de Gênero é obrigatorio'
+		),
+		pronoun: Yup.string().required('O campo pronome é obrigatorio'),
+		avatar_url: Yup.string().notRequired(),
 		password: Yup.string()
 			.min(6, 'A senha deve ter no mínimo 6 caracteres')
 			.required('A senha é obrigatória'),
 		confirm_password: Yup.string()
 			.oneOf([Yup.ref('password'), null], 'As senhas não conferem')
-			.required('A confirmação da senha é obrigatória'),
-		avatar_url: Yup.string().notRequired(),
-		matrial_status: Yup.string().required('O estado civil é obrigatório'),
-		gender: Yup.string().required('O campo Sexo é obrigatorio'),
-		gender_identity: Yup.string().required(
-			'O campo Indetidade de Gênero é obrigatorio'
-		),
-		cpf: Yup.string()
-			.min(11, 'O CPF deve ter no mínimo 11 caracteres')
-			.required('O CPF é obrigatório'),
-		nickname: Yup.string()
-			.min(3, 'O nickname deve ter no mínimo 3 caracteres')
-			.notRequired(),
-		birth_date: Yup.string().required('A data de nascimento é obrigatória')
+			.required('A confirmação da senha é obrigatória')
 	})
 
 	const {
@@ -78,27 +92,32 @@ const SignUp = () => {
 
 	const registerUser = async data => {
 		await showLoading()
-
 		try {
-			console.log(
-				'creating a new user account with: ',
-				{
-					email: data.email,
-					password: data.password
-				},
-				{
-					data: {
-						full_name: data.full_name,
-						avatar_url: data.avatar_url,
-						nickname: data.nickname,
-						cpf: data.cpf,
-						matrial_status: data.matrial_status,
-						birth_date: format(parseISO(data.birth_date), 'yyyy-MM-dd'),
-						gender: data.gender,
-						gender_identity: data.gender_identity
-					}
-				}
-			)
+			const signUpData = {
+				full_name: data.full_name,
+				avatar_url: '',
+				nickname: data.nickname,
+				cpf: data.cpf,
+				birth_date: format(parseISO(data.birth_date), 'yyyy-MM-dd'),
+				gender_identity: data.gender_identity,
+				medic_id: medicIdQuery,
+				pronoun: data.pronoun,
+				role: medicIdQuery
+					? 'PATIENT'
+					: userType.type
+					? userType.type.toUpperCase()
+					: 'PATIENT',
+				crp_number: medicIdQuery
+					? null
+					: userType && userType.type === 'medic'
+					? userType.crpNumber
+					: null,
+				crp_region: medicIdQuery
+					? null
+					: userType && userType.type === 'medic'
+					? userType.region
+					: null
+			}
 
 			await signUp(
 				{
@@ -106,16 +125,7 @@ const SignUp = () => {
 					password: data.password
 				},
 				{
-					data: {
-						full_name: data.full_name,
-						avatar_url: 'teste',
-						nickname: data.nickname,
-						cpf: data.cpf,
-						matrial_status: data.matrial_status,
-						birth_date: format(parseISO(data.birth_date), 'yyyy-MM-dd'),
-						gender: data.gender,
-						gender_identity: data.gender_identity
-					},
+					data: signUpData,
 					redirectTo: 'http://localhost:3000/login'
 				}
 			)
@@ -139,31 +149,15 @@ const SignUp = () => {
 			<IonHeader>
 				<IonToolbar>
 					<IonButtons slot="start">
-						<IonBackButton defaultHref="/" />
+						<IonBackButton defaultHref="/you-are" />
 					</IonButtons>
-					<IonTitle>Cadastro</IonTitle>
+					<IonTitle className="font-bold">Cadastro</IonTitle>
 				</IonToolbar>
 			</IonHeader>
 
 			<IonContent className="ion-padding">
 				<form onSubmit={handleSubmit(registerUser)}>
 					<IonList>
-						<IonItem lines="none">
-							{/* === ION INPUT === */}
-							<IonLabel position="stacked">E-mail</IonLabel>
-							<IonInput
-								inputmode="email"
-								placeholder="Digite seu e-mail"
-								type="email"
-								{...register('email')}
-							/>
-							<ErrorMessage
-								errors={errors}
-								name="email"
-								as={<div style={{ color: 'red' }} />}
-							/>
-						</IonItem>
-
 						<IonItem lines="none">
 							{/* === ION INPUT === */}
 							<IonLabel position="stacked">Nome</IonLabel>
@@ -196,6 +190,21 @@ const SignUp = () => {
 
 						<IonItem lines="none">
 							{/* === ION INPUT === */}
+							<IonLabel position="stacked">E-mail</IonLabel>
+							<IonInput
+								inputmode="email"
+								placeholder="Digite seu e-mail"
+								type="email"
+								{...register('email')}
+							/>
+							<ErrorMessage
+								errors={errors}
+								name="email"
+								as={<div style={{ color: 'red' }} />}
+							/>
+						</IonItem>
+						<IonItem lines="none">
+							{/* === ION INPUT === */}
 							<IonLabel position="stacked">CPF</IonLabel>
 							<IonInput
 								placeholder="000.000.000-00"
@@ -211,35 +220,6 @@ const SignUp = () => {
 								as={<div style={{ color: 'red' }} />}
 							/>
 						</IonItem>
-						<IonItem lines="none">
-							{/* === ION SELECT === */}
-							<IonLabel position="stacked">Estado Civil</IonLabel>
-							<Controller
-								render={({ field }) => (
-									<IonSelect
-										placeholder="Estado Civil"
-										value={field.value}
-										onIonChange={e =>
-											setValue('matrial_status', e.detail.value)
-										}
-									>
-										<IonSelectOption value="married">{`Casado (a)`}</IonSelectOption>
-										<IonSelectOption value="single">{`Solteiro (a)`}</IonSelectOption>
-										<IonSelectOption value="stable_union">{`União Estavel`}</IonSelectOption>
-										<IonSelectOption value="widower">{`Viúvo (a)`}</IonSelectOption>
-										<IonSelectOption value="divorced">{`Divorciado (a)`}</IonSelectOption>
-									</IonSelect>
-								)}
-								control={control}
-								name="matrial_status"
-							/>
-							<ErrorMessage
-								errors={errors}
-								name="matrial_status"
-								as={<div style={{ color: 'red' }} />}
-							/>
-						</IonItem>
-
 						<IonItem lines="none">
 							{/* === ION DATE TIME === */}
 							<IonLabel position="stacked">Data de nascimento</IonLabel>
@@ -258,7 +238,7 @@ const SignUp = () => {
 						<IonItem lines="none">
 							{/* === ION SELECT === */}
 							<IonLabel position="stacked">
-								Identidade de Gênero
+								Como você se identifica
 							</IonLabel>
 							<Controller
 								render={({ field }) => (
@@ -285,26 +265,26 @@ const SignUp = () => {
 						</IonItem>
 						<IonItem lines="none">
 							{/* === ION SELECT === */}
-							<IonLabel position="stacked">Sexo</IonLabel>
+							<IonLabel position="stacked">Pronome</IonLabel>
 							<Controller
 								render={({ field }) => (
 									<IonSelect
-										placeholder="Selecione o sexo"
+										placeholder="Ele/dele/ela/dela"
 										value={field.value}
 										onIonChange={e =>
-											setValue('gender', e.detail.value)
+											setValue('pronoun', e.detail.value)
 										}
 									>
-										<IonSelectOption value="m">{`Masculino`}</IonSelectOption>
-										<IonSelectOption value="f">{`Feminino`}</IonSelectOption>
+										<IonSelectOption value="ele/dele">{`Ele/Dele`}</IonSelectOption>
+										<IonSelectOption value="ela/dela">{`Ela/Dela`}</IonSelectOption>
 									</IonSelect>
 								)}
 								control={control}
-								name="gender"
+								name="pronoun"
 							/>
 							<ErrorMessage
 								errors={errors}
-								name="gender"
+								name="pronoun"
 								as={<div style={{ color: 'red' }} />}
 							/>
 						</IonItem>
@@ -336,16 +316,11 @@ const SignUp = () => {
 								as={<div style={{ color: 'red' }} />}
 							/>
 						</IonItem>
-						<IonItem lines="none">
-							<IonButton
-								color="purple"
-								expand="full"
-								shape="round"
-								type="submit"
-							>
-								<IonText className="text-white">Cadastrar</IonText>
-							</IonButton>
-						</IonItem>
+						<Button type="submit" className="bg-purple-100 py-5 my-6">
+							<IonText className="text-white">
+								Finalizar Cadastro
+							</IonText>
+						</Button>
 					</IonList>
 				</form>
 			</IonContent>
@@ -354,3 +329,4 @@ const SignUp = () => {
 }
 
 export default SignUp
+null

@@ -308,7 +308,6 @@ ion-fab-button {
 	--background: #ac8fbf;
 }
 
-
 ion-checkbox {
 	--background: #ffffff;
 	--border-radius: 5px;
@@ -331,9 +330,8 @@ ion-radio-group {
 }
 
 ion-list {
-	@apply bg-white-100 !important;
+	@apply bg-[transparent] !important;
 	@apply p-0 !important;
-	--background: #f4f4f4;
 }
 
 ion-item {
@@ -346,14 +344,16 @@ ion-item {
 	--padding-start: 0px !important;
 	--padding-top: 0px !important;
 	--color: #f4f4f4;
-	--background: #f4f4f4;
+	--background: transparent;
+	position: relative !important;
 }
 
 ion-label.label-stacked {
 	margin-bottom: 10px !important;
-	@apply text-sm !important;
 	@apply text-black-300 !important;
+	@apply text-xl !important;
 	@apply font-semibold !important;
+	color: #3f3f3f;
 }
 
 ion-input {
@@ -368,25 +368,29 @@ ion-textarea {
 }
 
 ion-input input {
-	@apply py-4 !important;
-	@apply px-3 !important;
+	@apply py-6 !important;
+	@apply px-4 !important;
+}
+
+ion-searchbar {
+	padding: 0 !important;
 }
 
 ion-select {
 	@apply w-auto !important;
 	@apply rounded-xl !important;
 	@apply bg-gray-100 !important;
-	@apply py-4 !important;
+	@apply py-6 !important;
 	@apply px-3 !important;
 	/* Applies to the value and placeholder color */
 	@apply text-black-300 !important;
 	/* Set full opacity on the placeholder */
-	--placeholder-opacity: 1;
+	--placeholder-opacity: 0.4;
 }
 
 ion-datetime {
 	width: -webkit-fill-available !important;
-	@apply py-4 !important;
+	@apply py-6 !important;
 	@apply px-3 !important;
 	@apply rounded-xl !important;
 	@apply bg-gray-100 !important;
@@ -397,11 +401,30 @@ ion-picker .picker-wrapper {
 	@apply bg-gray-100 !important;
 }
 
-/* EditProfile */
-ion-header.header-profile {
-	@apply bg-white-100 !important;
+ion-header {
+	@apply bg-white !important;
+	height: 10vh;
 }
 
+ion-header > ion-toolbar {
+	height: 100%;
+	display: flex;
+	align-items: center;
+}
+
+ion-checkbox {
+	--border-color: #848383;
+}
+
+ion-card {
+	margin: 0;
+	@apply bg-white !important;
+}
+
+ion-toggle {
+	--background: #d9d9d9;
+	--handle-background: #fff;
+}
 
 /* ion-radio-group {
 	@apply flex !important;
@@ -451,5 +474,3 @@ ion-radio ion-label {
 	@apply bg-orange-900 !important;
 }
 */
-
-

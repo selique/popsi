@@ -1,18 +1,19 @@
 {
-  "appId": "com.popsii.app",
-  "appName": "Popsii",
-  "bundledWebRuntime": false,
-  "npmClient": "npm",
-  "webDir": "build",
-  "plugins": {
-    "SplashScreen": {
-      "launchShowDuration": 0
-    }
-  },
-  "cordova": {
-    "preferences": {}
-  },
-  "server": {
-    "url": "http://192.168.2.11:3000"
-  }
-}
+	"appId": "com.popsii.app",
+	"appName": "Popsii",
+	"bundledWebRuntime": false,
+	"npmClient": "npm",
+	"webDir": "build",
+	"plugins": {
+	  "SplashScreen": {
+		 "launchShowDuration": 0
+	  }
+	},
+	"cordova": {
+	  "preferences": {}
+	},
+	"server": {
+	  "url": "http://192.168.0.3:3000",
+	  "cleartext": true
+	}
+ }

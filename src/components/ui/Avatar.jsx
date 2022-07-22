@@ -9,8 +9,12 @@ const AvatarStyled = styled.div`
 	background-position: center;
 	background-size: cover;
 	position: relative;
+	${({ hasBorder = true }) =>
+		hasBorder &&
+		`
+			border: 20px solid #f4f4f4;
+		`}
 	border-radius: 50%;
-	border: 20px solid #f4f4f4;
 	display: inline-flex;
 	vertical-align: top;
 	justify-content: center;

@@ -59,15 +59,3 @@ create policy "Anyone can update an avatar." on storage.objects
 create policy "Anyone can delete an avatar." on storage.objects
   for delete using ((bucket_id = 'avatars'::text) AND (role() = 'authenticated'::text));
 
-
-grant usage on schema public to postgres, anon, authenticated, service_role;
-alter default privileges in schema public grant all on tables to postgres, anon, authenticated, service_role;
-alter default privileges in schema public grant all on functions to postgres, anon, authenticated, service_role;
-alter default privileges in schema public grant all on sequences to postgres, anon, authenticated, service_role;
-
-alter default privileges for user supabase_admin in schema public grant all
-    on sequences to postgres, anon, authenticated, service_role;
-alter default privileges for user supabase_admin in schema public grant all
-    on tables to postgres, anon, authenticated, service_role;
-alter default privileges for user supabase_admin in schema public grant all
-    on functions to postgres, anon, authenticated, service_role;

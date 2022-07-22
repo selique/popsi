@@ -21,3 +21,27 @@ GRANT ALL ON TABLE public.answers TO authenticated;
 GRANT ALL ON TABLE public.answers TO postgres;
 GRANT ALL ON TABLE public.answers TO anon;
 GRANT ALL ON TABLE public.answers TO service_role;
+
+ALTER TABLE IF EXISTS public.surveys_notifications OWNER to postgres;
+GRANT ALL ON TABLE public.surveys_notifications TO authenticated;
+GRANT ALL ON TABLE public.surveys_notifications TO postgres;
+GRANT ALL ON TABLE public.surveys_notifications TO anon;
+GRANT ALL ON TABLE public.surveys_notifications TO service_role;
+
+ALTER TABLE IF EXISTS public._survey_invited OWNER to postgres;
+GRANT ALL ON TABLE public._survey_invited TO authenticated;
+GRANT ALL ON TABLE public._survey_invited TO postgres;
+GRANT ALL ON TABLE public._survey_invited TO anon;
+GRANT ALL ON TABLE public._survey_invited TO service_role;
+
+ALTER TABLE IF EXISTS public.messages OWNER to postgres;
+GRANT ALL ON TABLE public.messages TO authenticated;
+GRANT ALL ON TABLE public.messages TO postgres;
+GRANT ALL ON TABLE public.messages TO anon;
+GRANT ALL ON TABLE public.messages TO service_role;
+
+ALTER TABLE IF EXISTS public.chats OWNER to postgres;
+GRANT ALL ON TABLE public.chats TO authenticated;
+GRANT ALL ON TABLE public.chats TO postgres;
+GRANT ALL ON TABLE public.chats TO anon;
+GRANT ALL ON TABLE public.chats TO service_role;

@@ -14,7 +14,7 @@ const Apresentation = () => {
 				<div className="relative w-full h-full flex flex-col justify-between items-center overflow-hidden">
 					<Lines className="absolute top-0 right-[28%] rotate-[100deg] z-[-1]" />
 					<div className="w-full flex justify-end">
-						<Link to="/signinup">
+						<Link to="/last-apresentation">
 							<div className="flex items-center">
 								<IonText className="capitalize text-medium">
 									Pular
@@ -39,9 +39,9 @@ const Apresentation = () => {
 							qui blanditiis praesenti.
 						</IonText>
 					</div>
-					<div className="w-2/3">
+					<div className="w-1/2">
 						<Link to="#">
-							<Button className="bg-blue-100">Proximo</Button>
+							<Button className="bg-blue-100 py-5">Proximo</Button>
 						</Link>
 					</div>
 				</div>

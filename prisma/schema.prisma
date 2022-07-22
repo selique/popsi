@@ -8,29 +8,49 @@ generator client {
 }
 
 model Profile {
-   id String @id @unique @default(uuid()) @db.Uuid
+   id String @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
    // Profile data mutable
    full_name       String?
    avatar_url      String?
    bio             String?
    nickname        String?
-   matrial_status  String?
-   gender          String?
+   pronoun         String?
    gender_identity String?
    cpf             String?
    birth_date      DateTime? @db.Date
+   crp_number      String?
+   crp_region      String?
    role            Role?     @default(PATIENT)
 
    // Relation: Surveys
-   surveys Surveys[]
+   owner_survey         Surveys[]              @relation("owner_id")
+   SurveyGenerateInvite SurveyGenerateInvite[]
 
    // Relation: Answer
    answers Answer[]
 
+   // Relation: Notifications
+   medic_notifications   SurveysNotifications[] @relation("medic_surveys_notifications")
+   patient_notifications SurveysNotifications[] @relation("patient_surveys_notifications")
+
+   // Relation Self: Medic
+   medic_id      String?  @unique @db.Uuid
+   medic         Profile? @relation("medic", fields: [medic_id], references: [id])
+   medicRelation Profile? @relation("medic")
+
+   // Relation: Messages
+   sender   Messages[] @relation("sender_user")
+   receiver Messages[] @relation("receiver_user")
+
+   // Relation: Chats
+   medic_chat   Chats[] @relation("medic_chat")
+   patient_chat Chats[] @relation("patient_chat")
+
    // Timestamp
-   created_at DateTime  @default(now())
-   updated_at DateTime?
+   created_at DateTime  @default(now()) @db.Timestamptz()
+   updated_at DateTime? @db.Timestamptz()
+
    @@map("profiles")
 }
 
@@ -41,28 +61,73 @@ enum Role {
    @@map("roles")
 }
 
+model SurveyGenerateInvite {
+   id String @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+   profile    Profile @relation(fields: [patient_id], references: [id])
+   patient_id String  @db.Uuid
+
+   survey    Surveys @relation(fields: [survey_id], references: [id])
+   survey_id String  @db.Uuid
+
+   allow_reply_later Boolean @default(false)
+
+   created_at DateTime @default(now()) @db.Timestamptz()
+
+   SurveyInvited SurveyInvited[]
+
+   @@map("survey_generate_invite")
+}
+
+model SurveyInvited {
+   id String @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+   survey_generate_invite    SurveyGenerateInvite @relation(fields: [survey_generate_invite_id], references: [id])
+   survey_generate_invite_id String               @db.Uuid
+
+   status SurveyInvitedStatus? @default(PENDING)
+
+   created_at DateTime @default(now()) @db.Timestamptz()
+
+   @@map("_survey_invited")
+}
+
+enum SurveyInvitedStatus {
+   PENDING
+   FINISHED
+   FINISHED_LATE
+   LATE
+   EXPIRED
+
+   @@map("survey_invited_status")
+}
+
 model Surveys {
-   id String @id @unique @default(uuid()) @db.Uuid
+   id String @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
    // Survey data
    title       String
    description String
    question    Question[]
 
-   // Relation: Profiles
-   Profile   Profile? @relation(fields: [profileId], references: [id])
-   profileId String   @db.Uuid
+   // Relation: Medic
+   Owner    Profile @relation("owner_id", fields: [owner_id], references: [id])
+   owner_id String  @db.Uuid
+
+   // Relation: Patients
+   SurveyGenerateInvite SurveyGenerateInvite[]
 
    // Timestamp
-   created_at DateTime  @default(now())
-   updated_at DateTime?
+   created_at DateTime  @default(now()) @db.Timestamptz()
+   updated_at DateTime? @db.Timestamptz()
 
+   SurveysNotifications SurveysNotifications[]
 
    @@map("surveys")
 }
 
 model Question {
-   id String @id @unique @default(uuid()) @db.Uuid
+   id String @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
    // Question data
    question     String
@@ -77,8 +142,8 @@ model Question {
    surveysId String   @db.Uuid
 
    // Timestamp
-   created_at DateTime  @default(now())
-   updated_at DateTime?
+   created_at DateTime  @default(now()) @db.Timestamptz()
+   updated_at DateTime? @db.Timestamptz()
 
    @@map("questions")
 }
@@ -93,7 +158,7 @@ enum QuestionTypes {
 }
 
 model Answer {
-   id String @id @unique @default(uuid()) @db.Uuid
+   id String @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
    // Answer data
    answer String[]
@@ -103,12 +168,108 @@ model Answer {
    profileId String   @db.Uuid
 
    // Relation: Question
-   question   Question @relation(fields: [questionId], references: [id])
+   Question   Question @relation(fields: [questionId], references: [id])
    questionId String   @db.Uuid
 
    // Timestamp
-   created_at DateTime  @default(now())
-   updated_at DateTime?
+   created_at DateTime  @default(now()) @db.Timestamptz()
+   updated_at DateTime? @db.Timestamptz()
 
    @@map("answers")
+}
+
+model SurveysNotifications {
+   id String @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+   content String?
+
+   status SurveysNotificationsStatus @default(RECEIVED)
+   for    SurveysNotificationFor     @default(PATIENT)
+
+   // Relation: Profiles
+   Medic    Profile? @relation("medic_surveys_notifications", fields: [medic_id], references: [id])
+   medic_id String?  @db.Uuid
+
+   Patient    Profile? @relation("patient_surveys_notifications", fields: [patient_id], references: [id])
+   patient_id String?  @db.Uuid
+
+   // Relation: Surveys
+   Surveys    Surveys? @relation(fields: [surveys_id], references: [id])
+   surveys_id String   @db.Uuid
+
+   // Timestamp
+   updated_at DateTime? @db.Timestamptz()
+   created_at DateTime  @default(now()) @db.Timestamptz()
+
+   @@map("surveys_notifications")
+}
+
+enum SurveysNotificationsStatus {
+   SENT
+   RECEIVED
+   IN_PROGRESS
+   READED
+   FINISHED
+
+   @@map("surveys_notifications_status")
+}
+
+enum SurveysNotificationFor {
+   MEDIC
+   PATIENT
+
+   @@map("surveys_notifications_for")
+}
+
+model Messages {
+   id String @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+   // Message data
+   message String?
+   image   String?
+   video   String?
+   audio   String?
+
+   status MessagesStatus @default(SENT)
+
+   // Relation: Profiles
+   Sender    Profile? @relation("sender_user", fields: [sender_id], references: [id])
+   sender_id String?  @db.Uuid
+
+   Receiver    Profile? @relation("receiver_user", fields: [receiver_id], references: [id])
+   receiver_id String?  @db.Uuid
+
+   // Relation: Chats
+   Chat    Chats? @relation(fields: [chat_id], references: [id])
+   chat_id String @db.Uuid
+
+   // Timestamp
+   updated_at DateTime? @db.Timestamptz()
+   created_at DateTime  @default(now()) @db.Timestamptz()
+
+   @@map("messages")
+}
+
+enum MessagesStatus {
+   PENDING
+   SENT
+   READ
+
+   @@map("messages_status")
+}
+
+model Chats {
+   id String @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+   // Relation: Messages
+   Messages Messages[]
+
+   // Relation: Profiles
+   medic_chat Profile? @relation("medic_chat", fields: [medic_id], references: [id])
+   medic_id   String   @db.Uuid
+
+   patient_chat Profile? @relation("patient_chat", fields: [patient_id], references: [id])
+   patient_id   String   @db.Uuid
+
+   @@map("chats")
 }

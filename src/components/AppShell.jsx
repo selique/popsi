@@ -6,12 +6,16 @@ import { IonReactRouter } from '@ionic/react-router'
 import { useAuth } from '../contexts/Auth'
 import Apresentation from './pages/Apresentation'
 import Breathing from './pages/Breathing'
-import Form from './pages/Form'
+import ForgotPassword from './pages/ForgotPassword'
 import FormAnswers from './pages/FormAnswers'
+import FormSurvey from './pages/FormSurvey'
+import LastApresentation from './pages/LastApresentation'
 import Login from './pages/Login'
+import RedefinePassword from './pages/RedefinePassword'
 import Scheduling from './pages/Scheduling'
 import Signinup from './pages/Signinup'
 import SignUp from './pages/SignUp'
+import YouAre from './pages/YouAre'
 import PrivateRoute from './PrivateRoute'
 import Tabs from './Tabs'
 
@@ -33,6 +37,11 @@ const AppShell = () => {
 						exact={true}
 					/>
 					<Route
+						path="/last-apresentation"
+						component={() => <LastApresentation />}
+						exact={true}
+					/>
+					<Route
 						path="/signinup"
 						component={() => <Signinup />}
 						exact={true}
@@ -43,6 +52,21 @@ const AppShell = () => {
 						exact={true}
 					/>
 					<Route path="/login" component={() => <Login />} exact={true} />
+					<Route
+						path="/forgot-password"
+						component={() => <ForgotPassword />}
+						exact={true}
+					/>
+					<Route
+						path="/redefine-password"
+						component={() => <RedefinePassword />}
+						exact={true}
+					/>
+					<Route
+						path="/you-are"
+						component={() => <YouAre />}
+						exact={true}
+					/>
 					<PrivateRoute
 						path="/scheduling"
 						component={() => <Scheduling />}
@@ -50,7 +74,7 @@ const AppShell = () => {
 					/>
 					<PrivateRoute
 						path="/form/:id"
-						component={() => <Form />}
+						component={() => <FormSurvey />}
 						exact={true}
 					/>
 					<PrivateRoute
