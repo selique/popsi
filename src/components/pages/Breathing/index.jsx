@@ -1,5 +1,4 @@
 import * as React from 'react'
-import Lottie from 'react-lottie'
 
 import {
 	IonPage,
@@ -12,6 +11,7 @@ import {
 	IonText,
 	IonModal
 } from '@ionic/react'
+import Lottie from 'lottie-react'
 import Router from 'next/router'
 
 import animation from '../../../assets/animations/breathing.json'
@@ -100,7 +100,7 @@ const Breathing = () => {
 								Dê um tempo e respire fundo
 							</IonText>
 							<div className="relative flex justify-center items-center">
-								<Lottie options={defaultOptions} />
+								<Lottie animationData={defaultOptions} />
 								<IonText className="absolute text-xl font-semibold text-white">
 									{breathe ? 'Respire' : 'Inspire'}
 								</IonText>
