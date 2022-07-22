@@ -329,4 +329,3 @@ const SignUp = () => {
 }
 
 export default SignUp
-null
