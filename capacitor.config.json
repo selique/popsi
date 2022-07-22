@@ -13,7 +13,7 @@
 	  "preferences": {}
 	},
 	"server": {
-	  "url": "http://192.168.0.3:3000",
+	  "url": "https://popsi.vercel.app",
 	  "cleartext": true
 	}
  }
