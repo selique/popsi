@@ -3,6 +3,7 @@ ALTER table profiles enable row level security;
 ALTER table answers enable row level security;
 ALTER table questions enable row level security;
 ALTER table surveys enable row level security;
+ALTER table _survey_invited enable row level security;
 ALTER table _prisma_migrations enable row level security;
 
 create policy "Public profiles are viewable by everyone."
@@ -15,6 +16,10 @@ create policy "Users can insert their own profile."
 
 create policy "Users can update own profile."
   on profiles for update
+  using ( auth.uid() = id );
+
+create policy "Medic can only invited one time a user."
+  on _survey_invited for update
   using ( auth.uid() = id );
 
 /**
