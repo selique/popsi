@@ -48,8 +48,9 @@ model Profile {
    patient_chat Chats[] @relation("patient_chat")
 
    // Timestamp
-   created_at DateTime  @default(now()) @db.Timestamptz()
-   updated_at DateTime? @db.Timestamptz()
+   created_at    DateTime        @default(now()) @db.Timestamptz()
+   updated_at    DateTime?       @db.Timestamptz()
+   SurveyInvited SurveyInvited[]
 
    @@map("profiles")
 }
@@ -64,13 +65,17 @@ enum Role {
 model SurveyGenerateInvite {
    id String @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
-   profile    Profile @relation(fields: [patient_id], references: [id])
+   patient    Profile @relation(fields: [patient_id], references: [id])
    patient_id String  @db.Uuid
 
    survey    Surveys @relation(fields: [survey_id], references: [id])
    survey_id String  @db.Uuid
 
    allow_reply_later Boolean @default(false)
+
+   active Boolean @default(true)
+
+   schedule String
 
    created_at DateTime @default(now()) @db.Timestamptz()
 
@@ -84,6 +89,9 @@ model SurveyInvited {
 
    survey_generate_invite    SurveyGenerateInvite @relation(fields: [survey_generate_invite_id], references: [id])
    survey_generate_invite_id String               @db.Uuid
+
+   patient    Profile @relation(fields: [patient_id], references: [id])
+   patient_id String  @db.Uuid
 
    status SurveyInvitedStatus? @default(PENDING)
 
