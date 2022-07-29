@@ -15,9 +15,13 @@ import {
 	IonList,
 	IonItem,
 	useIonRouter,
-	IonIcon
+	IonIcon,
+	IonGrid,
+	IonRow,
+	IonFab,
+	IonFabButton
 } from '@ionic/react'
-import { eyeOutline, eyeOffOutline, close } from 'ionicons/icons'
+import { close } from 'ionicons/icons'
 import * as Yup from 'yup'
 
 import Lines from '../../../assets/Lines'
@@ -67,88 +71,86 @@ const Login = () => {
 
 	return (
 		<IonPage>
-			<IonContent className="ion-padding">
-				<div className="flex justify-end">
-					<div
-						onClick={() => router.push('/signinup')}
-						className="flex justify-center items-center bg-gray-200 rounded-full w-10 h-10"
-					>
-						<IonIcon className="h-6 w-6" src={close} />
-					</div>
-				</div>
-				<div className="relative w-full h-full flex flex-col justify-center overflow-hidden">
-					<Lines className="absolute top-0 right-[28%] rotate-[100deg] z-[-1] w-full" />
-					<div />
-					<IonText className="text-6xl font-bold text-black-200 mb-16">
-						Bem vindo <br /> de volta!
-					</IonText>
-					<form onSubmit={handleSubmit(handleLogin)}>
-						<IonList>
-							<IonItem lines="none">
-								<IonLabel position="stacked">
-									Usuário ou e-mail
-								</IonLabel>
-								<IonInput
-									placeholder="usuario@usuario.com"
-									type="email"
-									{...register('email', {
-										required: 'E-mail é obrigatório',
-										pattern: {
-											value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-											message: 'E-mail inválido'
-										}
-									})}
-								/>
-								<ErrorMessage
-									errors={errors}
-									name="email"
-									as={<div style={{ color: 'red' }} />}
-								/>
-							</IonItem>
-							<IonItem lines="none">
-								<IonLabel position="stacked">Senha</IonLabel>
-								<IonInput
-									placeholder="*********"
-									type={showPassword ? 'text' : 'password'}
-									{...register('password', {
-										required: 'Senha é obrigatória'
-									})}
-								/>
-								<Button
-									className="absolute top-[35px] right-2 w-max z-[3] text-2xl bg-transparent"
-									type="button"
-									onClick={() => {
-										showPassword
-											? setShowPassword(false)
-											: setShowPassword(true)
-									}}
-								>
-									<IonIcon
-										icon={showPassword ? eyeOffOutline : eyeOutline}
-										className="text-[#AC8FBF]"
-									/>
-								</Button>
-								<ErrorMessage
-									errors={errors}
-									name="password"
-									as={<div style={{ color: 'red' }} />}
-								/>
-							</IonItem>
-							<Button type="submit" className="bg-purple-100 py-5 my-6">
-								<IonText className="text-white text-lg">Entrar</IonText>
-							</Button>
-						</IonList>
-					</form>
-					<div className="flex justify-center">
-						<IonText className="font-medium">
-							Esqueceu a sua senha?
-							<Link to="/forgot-password">
-								<IonText className="text-purple-100 ml-2">
-									Vamos lá
+			<IonContent className="ion-padding relative bg-gray-500">
+				<Lines className="absolute top-0 right-[28%] rotate-[100deg] z-[-1] w-full" />
+				<div className="flex items-center h-full">
+					<IonFab slot="fixed" horizontal="end" vertical="top">
+						<IonFabButton onClick={() => router.goBack()}>
+							<IonIcon color="white" src={close} />
+						</IonFabButton>
+					</IonFab>
+					<IonGrid>
+						<IonRow className="mb-5">
+							<IonText className="text-6xl font-bold text-black-200">
+								Bem vindo <br /> de volta!
+							</IonText>
+						</IonRow>
+						<IonRow className="ion-justify-content-center">
+							<form
+								className="w-full"
+								onSubmit={handleSubmit(handleLogin)}
+							>
+								<IonList>
+									<IonItem lines="none">
+										<IonLabel position="stacked">
+											Usuário ou e-mail
+										</IonLabel>
+										<IonInput
+											placeholder="usuario@usuario.com"
+											type="email"
+											{...register('email', {
+												required: 'E-mail é obrigatório',
+												pattern: {
+													value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+													message: 'E-mail inválido'
+												}
+											})}
+										/>
+										<ErrorMessage
+											errors={errors}
+											name="email"
+											as={<div style={{ color: 'red' }} />}
+										/>
+									</IonItem>
+									<IonItem lines="none">
+										<IonLabel position="stacked">Senha</IonLabel>
+										<IonInput
+											placeholder="*********"
+											type={showPassword ? 'text' : 'password'}
+											{...register('password', {
+												required: 'Senha é obrigatória'
+											})}
+										/>
+										<ErrorMessage
+											errors={errors}
+											name="password"
+											as={<div style={{ color: 'red' }} />}
+										/>
+									</IonItem>
+									<Button
+										type="submit"
+										className="bg-purple-100 py-5 my-5"
+									>
+										<IonText className="text-white text-lg">
+											Entrar
+										</IonText>
+									</Button>
+								</IonList>
+							</form>
+						</IonRow>
+						<IonRow className="ion-justify-content-center">
+							<div className="flex justify-center">
+								<IonText className="font-medium">
+									Esqueceu a sua senha?
+									<Link to="/forgot-password">
+										<IonText className="text-purple-100 ml-2">
+											Vamos lá
+										</IonText>
+									</Link>
 								</IonText>
-							</Link>
-						</IonText>
-					</div>
+							</div>
+						</IonRow>
+					</IonGrid>
 				</div>
 			</IonContent>
 		</IonPage>

@@ -36,6 +36,7 @@ import { supabase } from '../../../utils/supabaseClient'
 import Avatar from '../../ui/Avatar'
 import Input from '../../ui/Input'
 import Modal from '../../ui/Modal/SheetBottom'
+import { createScheduledJob } from './../../../utils/createScheduleQStash'
 import Button from './../../ui/Button'
 import Card from './../../ui/Card'
 
@@ -58,6 +59,7 @@ const Quiz = () => {
 
 	const [invitedPatients, setInvitedPatients] = React.useState(null)
 	const [isInvitedLoading, setIsInvitedLoading] = React.useState(false)
+	const [schedule, setSchedule] = React.useState('* * * * *')
 
 	const [showPopOver, setShowPopOver] = React.useState({
 		open: false,
@@ -95,10 +97,12 @@ const Quiz = () => {
 						profiles:owner_id (nickname),
 						title,
 						description,
-						_survey_invited ( profiles ( * ) )
+						survey_generate_invite ( profiles ( * ) )
 					`
 					)
 					.eq('owner_id', user.id)
+
+				console.log(data)
 
 				if (data) {
 					setSurveys(data)
@@ -114,7 +118,7 @@ const Quiz = () => {
 							profiles:owner_id (nickname),
 							title,
 							description,
-							_survey_invited ( profiles ( * ) )
+							survey_generate_invite ( profiles ( * ) )
 						)
 					`
 					)
@@ -149,20 +153,30 @@ const Quiz = () => {
 		Object.values(dataForm).map(patient => {
 			if (patient) {
 				usersInvited.push({
-					A: patient,
-					B: surveySelectedToInvite
+					patient_id: patient,
+					survey_id: surveySelectedToInvite,
+					allow_reply_later: false,
+					schedule
 				})
 			}
 		})
 
 		const { data, error } = await supabase
-			.from('_survey_invited')
+			.from('survey_generate_invite')
 			.insert(usersInvited)
 
 		if (data) {
 			setIsInvitedLoading(false)
 			setSurveySelectedToInvite(null)
 			reset()
+
+			const invitedUsers = data.map(({ id, patient_id }) => ({
+				survey_generate_invite_id: id,
+				patient_id
+			}))
+
+			const response = await createScheduledJob(schedule, invitedUsers)
+			console.log('response', response)
 		}
 
 		if (error) {

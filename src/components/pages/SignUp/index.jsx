@@ -23,7 +23,8 @@ import {
 	IonButtons,
 	IonBackButton,
 	IonTitle,
-	IonList
+	IonList,
+	useIonRouter
 } from '@ionic/react'
 import { format, parseISO } from 'date-fns'
 import * as Yup from 'yup'
@@ -32,6 +33,9 @@ import { useAuth } from '../../../contexts/Auth'
 import Button from './../../ui/Button'
 const SignUp = () => {
 	const { signUp } = useAuth()
+
+	const router = useIonRouter()
+
 	const [cpfField, setCpfField] = React.useState()
 	const [showLoading, hideLoading] = useIonLoading()
 	const [showToast] = useIonToast()
@@ -130,10 +134,10 @@ const SignUp = () => {
 				}
 			)
 
-			await showToast({
-				message: 'Check your email for confirm register!',
+			showToast({
+				message: 'Um e-mail de confirmação foi enviado para você!',
 				duration: 1000
-			})
+			}).then(() => router.push('/login'))
 		} catch (e) {
 			await showToast({
 				message: e.error_description || e.message,
