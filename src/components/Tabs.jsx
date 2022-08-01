@@ -91,9 +91,7 @@ const Tabs = () => {
 				<IonTabButton
 					tab="tab4"
 					href={
-						professional
-							? '/app/all-chats'
-							: `/app/chat/${user.user_metadata.medic_id}`
+						professional ? '/app/all-chats' : `/app/chat/${user.medic_id}`
 					}
 				>
 					<IonIcon
@@ -120,7 +118,7 @@ const Tabs = () => {
 		// {
 		// 	path: professional
 		// 		? '/app/all-chats'
-		// 		: `/app/chat/${user.user_metadata.medic_id}`,
+		// 		: `/app/chat/${user.medic_id}`,
 		// 	icon: chatboxEllipsesOutline,
 		// 	iconStyle: isThereMessages
 		// 		? 'relative before:content-[attr(before)] before:absolute before:w-[9px] before:h-[9px] before:bg-red-500 before:top-0 before:right-0  before:rounded-full before:z-10 before:animate-ping'

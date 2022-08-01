@@ -20,7 +20,7 @@ import PrivateRoute from './PrivateRoute'
 import Tabs from './Tabs'
 
 const AppShell = () => {
-	const { user } = useAuth()
+	const { userSession, user } = useAuth()
 	return (
 		<IonApp>
 			<IonReactRouter>
@@ -28,7 +28,7 @@ const AppShell = () => {
 					<Route
 						path="/"
 						render={() => {
-							return user ? (
+							return userSession && user ? (
 								<Redirect to="/app/home" />
 							) : (
 								<Apresentation />

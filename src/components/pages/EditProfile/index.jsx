@@ -14,46 +14,34 @@ import {
 	IonDatetime,
 	IonLabel,
 	IonInput,
-	// IonRadioGroup,
-	// IonRadio,
-	// IonToggle,
-	// IonRange,
-	// IonCheckbox,
 	IonItem,
 	IonSelect,
 	IonSelectOption,
 	IonButton,
-	IonHeader,
-	IonToolbar,
 	IonButtons,
 	IonBackButton,
 	IonTitle,
 	IonList,
-	IonTextarea
+	IonTextarea,
+	IonAvatar
 } from '@ionic/react'
-import { format, parseISO } from 'date-fns'
-import { id } from 'date-fns/locale'
-import { calendar } from 'ionicons/icons'
+import Image from 'next/image'
 import styled from 'styled-components'
 import * as Yup from 'yup'
 
+import Profile from '../../../assets/Profile.png'
 import { useAuth } from '../../../contexts/Auth'
 import { supabase } from '../../../utils/supabaseClient'
-import Avatar from '../../ui/Avatar'
-import UploadAvatar from '../../UploadAvatar'
-
-const profileImage =
-	'https://i0.wp.com/www.kailagarcia.com/wp-content/uploads/2019/05/46846414_205184383758304_7255555943408505199_n.jpg?fit=1080%2C1350&ssl=1'
 
 const ContainerAvatar = styled.div`
 	::before {
 		content: '';
 		position: absolute;
-		bottom: calc(50% - 1px);
+		bottom: calc(50% - 5px);
 		left: -51px;
 		background-color: transparent;
 		width: 55px;
-		height: 55px;
+		height: 50px;
 		border-bottom-right-radius: 50%;
 		box-shadow: 10px 1px 0 0 rgb(244 244 244 / 1),
 			20px 1px 0 0 rgb(244 244 244 / 1);
@@ -62,11 +50,11 @@ const ContainerAvatar = styled.div`
 	::after {
 		content: '';
 		position: absolute;
-		bottom: calc(50% - 1px);
+		bottom: calc(50% - 5px);
 		right: -51px;
 		background-color: transparent;
 		width: 55px;
-		height: 55px;
+		height: 50px;
 		border-bottom-left-radius: 50%;
 		box-shadow: -10px 1px 0 0 rgb(244 244 244 / 1),
 			-20px 1px 0 0 rgb(244 244 244 / 1);
@@ -259,26 +247,17 @@ const EditProfile = () => {
 					</div>
 					<ContainerAvatar
 						className={`
-							absolute
-							top-[77px]
-							flex
-							items-center
-							justify-center
+								absolute
+								top-[80px]
+								flex
+								items-center
+								justify-center
 					`}
 					>
 						{/* <div className="absolute top-[65%] border-[15px] border-white-100 border-solid rounded-full" /> */}
-						<Avatar
-							background={profileImage}
-							hasBorder={false}
-							className={`
-								w-[100px]
-								h-[100px]
-								border-[15px]
-								border-white-100
-								border-solid
-								rounded-full
-							`}
-						/>
+						<IonAvatar className="flex items-center w-[100px] h-max border-[15px] border-white-100 border-solid rounded-full">
+							<Image src={Profile} alt="Foto de perfil" />
+						</IonAvatar>
 					</ContainerAvatar>
 				</div>
 				<form
