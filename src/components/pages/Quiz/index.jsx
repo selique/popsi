@@ -14,10 +14,9 @@ import {
 	IonBackButton,
 	IonButtons,
 	IonCheckbox,
-	IonRadioGroup,
 	IonItem,
-	IonRadio,
-	IonLabel
+	IonLabel,
+	useIonRouter
 } from '@ionic/react'
 import {
 	searchOutline,
@@ -40,6 +39,7 @@ const imageTemp2 =
 
 const Quiz = () => {
 	const { userSession, professional } = useAuth()
+	const router = useIonRouter()
 
 	const { control, handleSubmit, reset } = useForm({
 		mode: 'onChange'
@@ -52,7 +52,7 @@ const Quiz = () => {
 
 	const [invitedPatients, setInvitedPatients] = React.useState(null)
 	const [isInvitedLoading, setIsInvitedLoading] = React.useState(false)
-	const [schedule, setSchedule] = React.useState('0 12 * * 1-5')
+	const [schedule, setSchedule] = React.useState('* * * * *')
 
 	const daysOfTheWeek = [
 		'Domingo',
@@ -150,7 +150,7 @@ const Quiz = () => {
 				</div>
 				{professional && (
 					<IonFab vertical="bottom" horizontal="end" slot="fixed">
-						<IonFabButton href="/app/form">
+						<IonFabButton onClick={() => router.push('/app/form')}>
 							<IonIcon icon={addOutline} color="#fff" />
 						</IonFabButton>
 					</IonFab>

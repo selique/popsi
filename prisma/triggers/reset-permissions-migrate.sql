@@ -34,11 +34,11 @@ GRANT ALL ON TABLE public._survey_invited TO postgres;
 GRANT ALL ON TABLE public._survey_invited TO anon;
 GRANT ALL ON TABLE public._survey_invited TO service_role;
 
--- ALTER TABLE IF EXISTS public.survey_generate_invite OWNER to postgres;
--- GRANT ALL ON TABLE public.survey_generate_invite TO authenticated;
--- GRANT ALL ON TABLE public.survey_generate_invite TO postgres;
--- GRANT ALL ON TABLE public.survey_generate_invite TO anon;
--- GRANT ALL ON TABLE public.survey_generate_invite TO service_role;
+ALTER TABLE IF EXISTS public.survey_generate_invite OWNER to postgres;
+GRANT ALL ON TABLE public.survey_generate_invite TO authenticated;
+GRANT ALL ON TABLE public.survey_generate_invite TO postgres;
+GRANT ALL ON TABLE public.survey_generate_invite TO anon;
+GRANT ALL ON TABLE public.survey_generate_invite TO service_role;
 
 ALTER TABLE IF EXISTS public.messages OWNER to postgres;
 GRANT ALL ON TABLE public.messages TO authenticated;
