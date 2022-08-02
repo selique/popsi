@@ -14,6 +14,9 @@ import '@ionic/core/css/display.css'
 import '../styles/global.css'
 import '../styles/variables.css'
 
+import { AuthProvider } from '../contexts/Auth'
+import ChatNotificationsProvider from '../contexts/chatNotifications'
+
 function MyApp({ Component, pageProps }) {
 	React.useEffect(() => {
 		// window is accessible here.
@@ -21,15 +24,17 @@ function MyApp({ Component, pageProps }) {
 	}, [])
 
 	return (
-		<>
-			<Head>
-				<meta
-					name="viewport"
-					content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-				></meta>
-			</Head>
-			<Component {...pageProps} />
-		</>
+		<AuthProvider>
+			<ChatNotificationsProvider>
+				<Head>
+					<meta
+						name="viewport"
+						content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+					></meta>
+				</Head>
+				<Component {...pageProps} />
+			</ChatNotificationsProvider>
+		</AuthProvider>
 	)
 }
 

@@ -9,10 +9,10 @@ export const AuthProvider = ({ children }) => {
 	// create state values for user data and loading
 	const [userSession, setUserSession] = useState()
 	const [user, setUser] = useState()
-	const [loading, setLoading] = useState(true)
+	const [loading, setLoading] = useState(false)
 	const [professional, setProfessional] = useState(false)
 
-	const getUser = async () => {
+	const fetchUser = async () => {
 		try {
 			let { data, error, status } = await supabase
 				.from('profiles')
@@ -56,9 +56,10 @@ export const AuthProvider = ({ children }) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
-	useEffect(() => {
-		if (!!userSession) {
-			getUser()
+	React.useEffect(() => {
+		if (userSession) {
+			setLoading(true)
+			fetchUser()
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [userSession])

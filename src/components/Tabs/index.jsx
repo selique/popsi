@@ -1,6 +1,5 @@
 import * as React from 'react'
-import { Redirect, Route, useLocation } from 'react-router-dom'
-import { useHistory } from 'react-router-dom'
+import { Redirect, useLocation, useHistory } from 'react-router-dom'
 
 import {
 	IonRouterOutlet,
@@ -8,66 +7,40 @@ import {
 	IonTabBar,
 	IonTabButton,
 	IonIcon,
-	IonLabel,
-	useIonRouter
-	// useIonLoading,
-	// useIonToast
+	IonLabel
 } from '@ionic/react'
 import {
 	home,
 	list,
 	notificationsOutline,
 	fileTrayOutline,
-	chatboxEllipsesOutline,
-	peopleOutline
+	chatboxEllipsesOutline
 } from 'ionicons/icons'
 import { useRouter } from 'next/router'
 
-import { useAuth } from '../contexts/Auth'
-import { useChatNotifications } from '../contexts/chatNotifications'
-import AllChats from './pages/AllChats'
-import Chat from './pages/Chat'
-import EditProfile from './pages/EditProfile'
-import FormSurvey from './pages/FormSurvey'
-import HomeClient from './pages/HomeClient'
-import HomeProfessional from './pages/HomeProfessional'
-import Notification from './pages/Notification'
-import Patients from './pages/Patients'
-import PatientHistoric from './pages/Patients/Historic'
-import PatientOptions from './pages/Patients/Options'
-import PatientQuiz from './pages/Patients/Quiz'
-import Profile from './pages/Profile'
-import Quiz from './pages/Quiz'
+import { useAuth } from '../../contexts/Auth'
+import { useChatNotifications } from '../../contexts/chatNotifications'
+import AllChats from '../pages/AllChats'
+import Chat from '../pages/Chat'
+import EditProfile from '../pages/EditProfile'
+import FormSurvey from '../pages/FormSurvey'
+import HomeClient from '../pages/HomeClient'
+import HomeProfessional from '../pages/HomeProfessional'
+import Notification from '../pages/Notification'
+import Patients from '../pages/Patients'
+import PatientHistoric from '../pages/Patients/Historic'
+import PatientOptions from '../pages/Patients/Options'
+import PatientQuiz from '../pages/Patients/Quiz'
+import Profile from '../pages/Profile'
+import Quiz from '../pages/Quiz'
+import PrivateRoute from '../PrivateRoute'
 
 const Tabs = () => {
 	const { user, professional } = useAuth()
 
 	const { isThereMessages } = useChatNotifications()
 
-	const router = useRouter()
-	const history = useHistory()
-
 	const { pathname } = useLocation()
-
-	const hideTabBarFor = ['/app/chat/']
-
-	React.useEffect(() => {
-		// Function to check if the url is in the hideTabBarFor array
-		const hideTabBar = pathName => {
-			if (!!hideTabBarFor.find(url => pathName.includes(url))) {
-				document.querySelector('ion-tab-bar').style.display = 'none'
-			} else {
-				document.querySelector('ion-tab-bar').style.display = 'flex'
-			}
-		}
-
-		// Check the first render of the component
-		hideTabBar(router.asPath)
-
-		// Listen to the url changes and hide the tab bar if the url is in the hideTabBarFor array
-		return history.listen(location => hideTabBar(location.pathname))
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [history])
 
 	const tabButtons = [
 		{
@@ -91,7 +64,9 @@ const Tabs = () => {
 				<IonTabButton
 					tab="tab4"
 					href={
-						professional ? '/app/all-chats' : `/app/chat/${user.medic_id}`
+						professional
+							? '/app/all-chats'
+							: `/app/chat/${user?.medic_id}`
 					}
 				>
 					<IonIcon
@@ -135,45 +110,65 @@ const Tabs = () => {
 	return (
 		<IonTabs>
 			<IonRouterOutlet>
-				<Route
+				<PrivateRoute
 					path="/app"
 					render={() => <Redirect to="/app/home" />}
 					exact={true}
 				/>
-				<Route
+				<PrivateRoute
 					path="/app/home"
 					component={professional ? HomeProfessional : HomeClient}
 					exact={true}
 				/>
-				<Route path="/app/patients" component={Patients} exact={true} />
-				<Route
+				<PrivateRoute
+					path="/app/patients"
+					component={Patients}
+					exact={true}
+				/>
+				<PrivateRoute
 					path="/app/patients/quiz/:id"
 					component={PatientQuiz}
 					exact={true}
 				/>
-				<Route
+				<PrivateRoute
 					path="/app/patients/quiz/options/:id"
 					component={PatientOptions}
 					exact={true}
 				/>
-				<Route
+				<PrivateRoute
 					path="/app/patients/quiz/options/historic/:id"
 					component={PatientHistoric}
 					exact={true}
 				/>
-				<Route path="/app/quiz" component={Quiz} exact={true} />
-				<Route path="/app/chat/:id" component={Chat} exact={true} />
-				<Route path="/app/all-chats" component={AllChats} exact={true} />
-				<Route
+				<PrivateRoute path="/app/quiz" component={Quiz} exact={true} />
+				<PrivateRoute path="/app/chat/:id" component={Chat} exact={true} />
+				<PrivateRoute
+					path="/app/all-chats"
+					component={AllChats}
+					exact={true}
+				/>
+				<PrivateRoute
 					path="/app/notification"
 					component={Notification}
 					exact={true}
 				/>
-				<Route path="/app/profile" component={Profile} exact={true} />
-				<Route path="/app/form" component={FormSurvey} exact={true} />
-				<Route path="/app/edit" component={EditProfile} exact={true} />
+				<PrivateRoute
+					path="/app/profile"
+					component={Profile}
+					exact={true}
+				/>
+				<PrivateRoute
+					path="/app/form"
+					component={FormSurvey}
+					exact={true}
+				/>
+				<PrivateRoute
+					path="/app/edit"
+					component={EditProfile}
+					exact={true}
+				/>
 			</IonRouterOutlet>
-			<IonTabBar slot="bottom">
+			<IonTabBar slot="bottom" id="app-tab-bar">
 				{tabButtons.map(
 					(
 						{
