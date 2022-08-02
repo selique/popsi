@@ -1,42 +1,36 @@
-create or replace function handle_patient_survey_invite() returns trigger as $$
+-- Drop trigger
+DROP FUNCTION IF EXISTS handle_patient_survey_notification cascade;
+
+-- This procedure generate frequency of invite patient for survey
+create or replace function handle_patient_survey_notification() returns trigger as $$
   declare
+    s_id uuid;
     m_id uuid;
   begin
+    -- Get survey id
+    select survey_id
+    from survey_generate_invite
+    where id = new.survey_generate_invite_id into s_id;
+
+    -- Get medic ID from table surveys
     select owner_id
     from surveys
-    where id = new."B" into m_id;
+    where id = s_id into m_id;
 
-    select
-      cron.schedule(
-        concat(new.id, new.patient_id, new.survey_id),
-        new.schedule,
-        $$
-          insert into public._survey_invited(
-            survey_generate_invite_id,
-            patient_id,
-            created_at
-          ) value (
-            new.id,
-            new.patient_id,
-            current_timestamp
-          );
+    insert into public.surveys_notifications(
+      "for",
+      medic_id,
+      patient_id,
+      surveys_id,
+      created_at
+    ) values (
+      'PATIENT',
+      m_id,
+      new.patient_id,
+      s_id,
+      current_timestamp
+    );
 
-           insert into public.surveys_notifications(
-            "for",
-            medic_id,
-            patient_id,
-            surveys_id,
-            created_at
-          )
-          values (
-            'PATIENT',
-            m_id,
-            new.patient_id,
-            new.id,
-            current_timestamp
-          );
-        $$
-      );
-
+    return new;
   end;
 $$ language plpgsql;
