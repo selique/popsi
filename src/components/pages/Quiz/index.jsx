@@ -13,9 +13,17 @@ import {
 	IonTitle,
 	IonBackButton,
 	IonButtons,
-	IonCheckbox
+	IonCheckbox,
+	IonRadioGroup,
+	IonItem,
+	IonRadio,
+	IonLabel
 } from '@ionic/react'
-import { searchOutline, addOutline } from 'ionicons/icons'
+import {
+	searchOutline,
+	addOutline,
+	chevronForwardOutline
+} from 'ionicons/icons'
 
 import { useAuth } from '../../../contexts/Auth'
 import { supabase } from '../../../utils/supabaseClient'
@@ -25,6 +33,7 @@ import Modal from '../../ui/Modal/SheetBottom'
 import { createScheduledJob } from './../../../utils/createScheduleQStash'
 import Button from './../../ui/Button'
 import QuizList from './../../ui/QuizList'
+import FrequencyModal from './FrequencyModal'
 
 const imageTemp2 =
 	'https://pm1.narvii.com/6583/13022a93a381cddb0c98d4e0a813635bd1215d89_hq.jpg'
@@ -32,18 +41,28 @@ const imageTemp2 =
 const Quiz = () => {
 	const { userSession, professional } = useAuth()
 
-	const { register, control, handleSubmit, setValue, getValues, reset } =
-		useForm({
-			mode: 'onChange'
-		})
+	const { control, handleSubmit, reset } = useForm({
+		mode: 'onChange'
+	})
 
+	const [showFrequencyModal, setShowFrequencyModal] = React.useState(false)
 	const [surveySelectedToInvite, setSurveySelectedToInvite] =
 		React.useState(null)
 	const [searchSurvey, setSearchSurvey] = React.useState('')
 
 	const [invitedPatients, setInvitedPatients] = React.useState(null)
 	const [isInvitedLoading, setIsInvitedLoading] = React.useState(false)
-	const [schedule, setSchedule] = React.useState('* * * * *')
+	const [schedule, setSchedule] = React.useState('0 12 * * 1-5')
+
+	const daysOfTheWeek = [
+		'Domingo',
+		'Segunda-feira',
+		'Terça-feira',
+		'Quarta-feira',
+		'Quinta-feira',
+		'Sexta-feira',
+		'Sábado'
+	]
 
 	React.useEffect(() => {
 		const getInvitedPatients = async () => {
@@ -93,8 +112,7 @@ const Quiz = () => {
 				patient_id
 			}))
 
-			const response = await createScheduledJob(schedule, invitedUsers)
-			console.log('response', response)
+			await createScheduledJob(schedule, invitedUsers)
 		}
 
 		if (error) {
@@ -125,7 +143,10 @@ const Quiz = () => {
 				/>
 				<div>
 					<IonText>Recentes</IonText>
-					<QuizList searchSurvey={searchSurvey} />
+					<QuizList
+						searchSurvey={searchSurvey}
+						setSurveySelectedToInvite={setSurveySelectedToInvite}
+					/>
 				</div>
 				{professional && (
 					<IonFab vertical="bottom" horizontal="end" slot="fixed">
@@ -195,6 +216,25 @@ const Quiz = () => {
 						<div className="mt-7">
 							<IonText className="font-bold">Lista de Pacientes</IonText>
 							<div className="overflow-scroll h-[32vh]">
+								<IonItem
+									lines="none"
+									className="ion-justify-content-around ion-align-items-center"
+								>
+									<IonLabel className="font-bold">Frequência</IonLabel>
+
+									<div
+										onClick={() => {
+											setShowFrequencyModal(!showFrequencyModal)
+										}}
+										className="flex justify-center"
+									>
+										<IonLabel>{schedule}</IonLabel>
+										<IonIcon
+											className="h-6"
+											icon={chevronForwardOutline}
+										/>
+									</div>
+								</IonItem>
 								{invitedPatients ? (
 									invitedPatients.map((item, index) => {
 										// const validating = surveys
@@ -261,6 +301,15 @@ const Quiz = () => {
 						</Button>
 					</form>
 				</Modal>
+				{/* Frequency */}
+				{showFrequencyModal && (
+					<FrequencyModal
+						isOpen={showFrequencyModal}
+						setIsOpen={setShowFrequencyModal}
+						setSchedule={setSchedule}
+						daysOfTheWeek={daysOfTheWeek}
+					/>
+				)}
 			</IonContent>
 		</IonPage>
 	)

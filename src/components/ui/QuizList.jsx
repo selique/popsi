@@ -13,7 +13,7 @@ import { supabase } from '../../utils/supabaseClient'
 import { useAuth } from './../../contexts/Auth'
 import Card from './Card'
 
-const QuizList = ({ searchSurvey = '' }) => {
+const QuizList = ({ searchSurvey = '', setSurveySelectedToInvite }) => {
 	const { userSession, professional } = useAuth()
 
 	const [surveys, setSurveys] = React.useState(null)
