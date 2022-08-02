@@ -27,7 +27,6 @@ import QuizList from './../../ui/QuizList'
 const HomeClient = () => {
 	const router = useIonRouter()
 	const { user, loading } = useAuth()
-	const [avatarUrl, setAvatarUrl] = React.useState('')
 
 	React.useEffect(() => {
 		if (user) {
@@ -35,22 +34,6 @@ const HomeClient = () => {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [loading])
-
-	const downloadImage = async path => {
-		try {
-			const { data, error } = await supabase.storage
-				.from('avatars')
-				.download(path)
-
-			if (error) {
-				throw error
-			}
-			const url = URL.createObjectURL(data)
-			setAvatarUrl(url)
-		} catch (error) {
-			console.log('Error downloading image: ', error.message)
-		}
-	}
 
 	const handlePronoun = pronoun => {
 		switch (pronoun) {
@@ -81,7 +64,7 @@ const HomeClient = () => {
 									: 'Bem vindo(a)'}
 							</IonText>
 							<IonText className="text-black-200 text-2xl font-bold">
-								{user.nickname}
+								{user?.nickname}
 							</IonText>
 						</IonCol>
 						<IonCol className="ion-align-items-center ion-justify-content-end flex">
