@@ -7,16 +7,17 @@ const AuthContext = createContext()
 
 export const AuthProvider = ({ children }) => {
 	// create state values for user data and loading
+	const [userSession, setUserSession] = useState()
 	const [user, setUser] = useState()
-	const [loading, setLoading] = useState(true)
+	const [loading, setLoading] = useState(false)
 	const [professional, setProfessional] = useState(false)
 
-	const getRole = async () => {
+	const fetchUser = async () => {
 		try {
 			let { data, error, status } = await supabase
 				.from('profiles')
-				.select(`role`)
-				.eq('id', user?.id)
+				.select(`*`)
+				.eq('id', userSession?.id)
 				.single()
 
 			if (error && status !== 406) {
@@ -24,6 +25,7 @@ export const AuthProvider = ({ children }) => {
 			}
 
 			if (data) {
+				setUser(data)
 				setProfessional(data.role === 'MEDIC')
 			}
 		} catch (error) {
@@ -37,13 +39,13 @@ export const AuthProvider = ({ children }) => {
 		// Check active sessions and sets the user
 		const session = supabase.auth.session()
 
-		setUser(session?.user ?? null)
+		setUserSession(session?.user ?? null)
 		setLoading(false)
 
 		// Listen for changes on auth state (logged in, signed out, etc.)
 		const { data: listener } = supabase.auth.onAuthStateChange(
 			async (_, session) => {
-				setUser(session?.user ?? null)
+				setUserSession(session?.user ?? null)
 			}
 		)
 
@@ -54,12 +56,13 @@ export const AuthProvider = ({ children }) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
-	useEffect(() => {
-		if (!!user) {
-			getRole()
+	React.useEffect(() => {
+		if (userSession) {
+			setLoading(true)
+			fetchUser()
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [user])
+	}, [userSession])
 
 	// create signUp, signIn, signOut functions
 	const value = {
@@ -68,7 +71,8 @@ export const AuthProvider = ({ children }) => {
 		signOut: () => supabase.auth.signOut(),
 		loading,
 		professional,
-		user
+		user,
+		userSession
 	}
 
 	// use a provider to pass down the value

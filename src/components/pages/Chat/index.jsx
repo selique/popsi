@@ -15,7 +15,9 @@ import {
 	IonButton,
 	IonFooter,
 	IonFab,
-	IonFabButton
+	IonFabButton,
+	useIonViewWillEnter,
+	useIonViewDidLeave
 } from '@ionic/react'
 import {
 	attachOutline,
@@ -29,6 +31,7 @@ import {
 } from 'ionicons/icons'
 
 import { useAuth } from '../../../contexts/Auth'
+import { hideTabBar, showTabBar } from '../../Tabs/utils'
 import { supabase } from './../../../utils/supabaseClient'
 import { compareDates, translateMonthsToPortuguese } from './utils'
 
@@ -144,6 +147,14 @@ const Chat = ({ match }) => {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [chatData])
+
+	useIonViewWillEnter(() => {
+		hideTabBar()
+	})
+
+	useIonViewDidLeave(() => {
+		showTabBar()
+	})
 
 	const handleSendMessage = async () => {
 		const clearError = () =>

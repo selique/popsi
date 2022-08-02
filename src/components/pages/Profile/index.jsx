@@ -9,27 +9,27 @@ import {
 	useIonLoading,
 	useIonToast,
 	IonButtons,
-	IonBackButton
+	IonBackButton,
+	IonAvatar,
+	useIonRouter
 } from '@ionic/react'
+import Image from 'next/image'
 import styled from 'styled-components'
 
+import ProfileIcon from '../../../assets/Profile.png'
 import { useAuth } from '../../../contexts/Auth'
 import { supabase } from '../../../utils/supabaseClient'
-import Avatar from '../../ui/Avatar'
 import Button from '../../ui/Button'
-
-const profileImage =
-	'https://i0.wp.com/www.kailagarcia.com/wp-content/uploads/2019/05/46846414_205184383758304_7255555943408505199_n.jpg?fit=1080%2C1350&ssl=1'
 
 const ContainerAvatar = styled.div`
 	::before {
 		content: '';
 		position: absolute;
-		bottom: calc(50% - 1px);
+		bottom: calc(50% - 5px);
 		left: -51px;
 		background-color: transparent;
 		width: 55px;
-		height: 55px;
+		height: 50px;
 		border-bottom-right-radius: 50%;
 		box-shadow: 10px 1px 0 0 rgb(244 244 244 / 1),
 			20px 1px 0 0 rgb(244 244 244 / 1);
@@ -38,11 +38,11 @@ const ContainerAvatar = styled.div`
 	::after {
 		content: '';
 		position: absolute;
-		bottom: calc(50% - 1px);
+		bottom: calc(50% - 5px);
 		right: -51px;
 		background-color: transparent;
 		width: 55px;
-		height: 55px;
+		height: 50px;
 		border-bottom-left-radius: 50%;
 		box-shadow: -10px 1px 0 0 rgb(244 244 244 / 1),
 			-20px 1px 0 0 rgb(244 244 244 / 1);
@@ -51,7 +51,9 @@ const ContainerAvatar = styled.div`
 `
 
 const Profile = () => {
-	const { user, professional, loading } = useAuth()
+	const router = useIonRouter()
+
+	const { user, loading, signOut } = useAuth()
 
 	const [profile, setProfile] = useState({
 		full_name: '',
@@ -153,25 +155,16 @@ const Profile = () => {
 					<ContainerAvatar
 						className={`
 								absolute
-								top-[77px]
+								top-[80px]
 								flex
 								items-center
 								justify-center
 					`}
 					>
 						{/* <div className="absolute top-[65%] border-[15px] border-white-100 border-solid rounded-full" /> */}
-						<Avatar
-							background={profileImage}
-							hasBorder={false}
-							className={`
-								w-[100px]
-								h-[100px]
-								border-[15px]
-								border-white-100
-								border-solid
-								rounded-full
-							`}
-						/>
+						<IonAvatar className="flex items-center w-[100px] h-max border-[15px] border-white-100 border-solid rounded-full">
+							<Image src={ProfileIcon} alt="Foto de perfil" />
+						</IonAvatar>
 					</ContainerAvatar>
 				</div>
 				<div className="mt-[6vh] ion-padding">
@@ -225,6 +218,9 @@ const Profile = () => {
 							</p>
 						</Button>
 					</Link>
+					<Button className="bg-red-500 py-1 mt-3" onClick={signOut}>
+						<p className="text-white font-medium text-sm">Sair</p>
+					</Button>
 					{!user.professional && (
 						<div>
 							<p className="font-bold text-black text-lg">Conquistas</p>

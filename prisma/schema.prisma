@@ -36,7 +36,7 @@ model Profile {
 
    // Relation Self: Medic
    medic_id      String?  @unique @db.Uuid
-   medic         Profile? @relation("medic", fields: [medic_id], references: [id])
+   medic         Profile? @relation("medic", fields: [medic_id], references: [id], onDelete: Cascade)
    medicRelation Profile? @relation("medic")
 
    // Relation: Messages
@@ -49,7 +49,6 @@ model Profile {
 
    // Timestamp
    created_at    DateTime        @default(now()) @db.Timestamptz()
-   updated_at    DateTime?       @db.Timestamptz()
    SurveyInvited SurveyInvited[]
 
    @@map("profiles")
@@ -65,10 +64,10 @@ enum Role {
 model SurveyGenerateInvite {
    id String @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
-   patient    Profile @relation(fields: [patient_id], references: [id])
+   patient    Profile @relation(fields: [patient_id], references: [id], onDelete: Cascade)
    patient_id String  @db.Uuid
 
-   survey    Surveys @relation(fields: [survey_id], references: [id])
+   survey    Surveys @relation(fields: [survey_id], references: [id], onDelete: Cascade)
    survey_id String  @db.Uuid
 
    allow_reply_later Boolean @default(false)
@@ -87,15 +86,16 @@ model SurveyGenerateInvite {
 model SurveyInvited {
    id String @id @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
-   survey_generate_invite    SurveyGenerateInvite @relation(fields: [survey_generate_invite_id], references: [id])
+   survey_generate_invite    SurveyGenerateInvite @relation(fields: [survey_generate_invite_id], references: [id], onDelete: Cascade)
    survey_generate_invite_id String               @db.Uuid
 
-   patient    Profile @relation(fields: [patient_id], references: [id])
+   patient    Profile @relation(fields: [patient_id], references: [id], onDelete: Cascade)
    patient_id String  @db.Uuid
 
    status SurveyInvitedStatus? @default(PENDING)
 
    created_at DateTime @default(now()) @db.Timestamptz()
+   Answer     Answer[]
 
    @@map("_survey_invited")
 }
@@ -119,7 +119,7 @@ model Surveys {
    question    Question[]
 
    // Relation: Medic
-   Owner    Profile @relation("owner_id", fields: [owner_id], references: [id])
+   Owner    Profile @relation("owner_id", fields: [owner_id], references: [id], onDelete: Cascade)
    owner_id String  @db.Uuid
 
    // Relation: Patients
@@ -146,7 +146,7 @@ model Question {
    Answer Answer[]
 
    // Relation: Surveys
-   Surveys   Surveys? @relation(fields: [surveysId], references: [id])
+   Surveys   Surveys? @relation(fields: [surveysId], references: [id], onDelete: Cascade)
    surveysId String   @db.Uuid
 
    // Timestamp
@@ -172,16 +172,18 @@ model Answer {
    answer String[]
 
    // Relation: Profiles
-   Profile   Profile? @relation(fields: [profileId], references: [id])
+   Profile   Profile? @relation(fields: [profileId], references: [id], onDelete: Cascade)
    profileId String   @db.Uuid
 
    // Relation: Question
-   Question   Question @relation(fields: [questionId], references: [id])
+   Question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
    questionId String   @db.Uuid
 
+   invite    SurveyInvited @relation(fields: [invite_id], references: [id], onDelete: Cascade)
+   invite_id String        @db.Uuid
+
    // Timestamp
-   created_at DateTime  @default(now()) @db.Timestamptz()
-   updated_at DateTime? @db.Timestamptz()
+   created_at DateTime @default(now()) @db.Timestamptz()
 
    @@map("answers")
 }
@@ -195,14 +197,14 @@ model SurveysNotifications {
    for    SurveysNotificationFor     @default(PATIENT)
 
    // Relation: Profiles
-   Medic    Profile? @relation("medic_surveys_notifications", fields: [medic_id], references: [id])
+   Medic    Profile? @relation("medic_surveys_notifications", fields: [medic_id], references: [id], onDelete: Cascade)
    medic_id String?  @db.Uuid
 
-   Patient    Profile? @relation("patient_surveys_notifications", fields: [patient_id], references: [id])
+   Patient    Profile? @relation("patient_surveys_notifications", fields: [patient_id], references: [id], onDelete: Cascade)
    patient_id String?  @db.Uuid
 
    // Relation: Surveys
-   Surveys    Surveys? @relation(fields: [surveys_id], references: [id])
+   Surveys    Surveys? @relation(fields: [surveys_id], references: [id], onDelete: Cascade)
    surveys_id String   @db.Uuid
 
    // Timestamp
@@ -241,14 +243,14 @@ model Messages {
    status MessagesStatus @default(SENT)
 
    // Relation: Profiles
-   Sender    Profile? @relation("sender_user", fields: [sender_id], references: [id])
+   Sender    Profile? @relation("sender_user", fields: [sender_id], references: [id], onDelete: Cascade)
    sender_id String?  @db.Uuid
 
-   Receiver    Profile? @relation("receiver_user", fields: [receiver_id], references: [id])
+   Receiver    Profile? @relation("receiver_user", fields: [receiver_id], references: [id], onDelete: Cascade)
    receiver_id String?  @db.Uuid
 
    // Relation: Chats
-   Chat    Chats? @relation(fields: [chat_id], references: [id])
+   Chat    Chats? @relation(fields: [chat_id], references: [id], onDelete: Cascade)
    chat_id String @db.Uuid
 
    // Timestamp
@@ -273,10 +275,10 @@ model Chats {
    Messages Messages[]
 
    // Relation: Profiles
-   medic_chat Profile? @relation("medic_chat", fields: [medic_id], references: [id])
+   medic_chat Profile? @relation("medic_chat", fields: [medic_id], references: [id], onDelete: Cascade)
    medic_id   String   @db.Uuid
 
-   patient_chat Profile? @relation("patient_chat", fields: [patient_id], references: [id])
+   patient_chat Profile? @relation("patient_chat", fields: [patient_id], references: [id], onDelete: Cascade)
    patient_id   String   @db.Uuid
 
    @@map("chats")

@@ -83,7 +83,7 @@ const HomeProfessional = () => {
 							Bem vindo{'(a)'}
 						</IonText>
 						<IonText className="text-black-200 text-2xl font-bold">
-							{user.user_metadata.nickname}
+							{user.nickname}
 						</IonText>
 					</div>
 					<div className="flex items-center">
