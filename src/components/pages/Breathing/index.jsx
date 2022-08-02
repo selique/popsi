@@ -9,46 +9,64 @@ import {
 	IonBackButton,
 	IonTitle,
 	IonText,
-	IonModal
+	IonModal,
+	IonButton,
+	useIonRouter
 } from '@ionic/react'
 import Lottie from 'lottie-react'
-import Router from 'next/router'
+import styled from 'styled-components'
 
 import animation from '../../../assets/animations/breathing.json'
 import { useAuth } from '../../../contexts/Auth'
 import Button from '../../ui/Button'
 
+const BreathingCircleAnimate = styled.div`
+	width: 45%;
+	height: 45%;
+	border-radius: 50%;
+	position: absolute;
+	background-color: #ac8fbf;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	animation: breathing 10s ease-in-out infinite;
+
+	@keyframes breathing {
+		0% {
+			transform: scale(0.5);
+		}
+		25% {
+			transform: scale(1);
+		}
+		50% {
+			transform: scale(1);
+		}
+		75% {
+			transform: scale(0.5);
+		}
+		100% {
+			transform: scale(0.5);
+		}
+	}
+`
+
 const Breathing = () => {
+	const router = useIonRouter()
+
 	const [showModal, setShowModal] = React.useState(false)
-	const [count, setCount] = React.useState(5)
 	const [breathe, setBreath] = React.useState(true)
 
-	const { user, loading } = useAuth()
+	const { user } = useAuth()
 
 	React.useEffect(() => {
-		if (showModal && count > 0) {
-			setTimeout(() => {
-				setCount(count - 1)
-			}, 1000)
-		}
-	}, [count, showModal])
-
-	React.useEffect(() => {
-		if (showModal && count === 0) {
+		if (showModal) {
 			setTimeout(() => {
 				setBreath(!breathe)
 			}, 5000)
+		} else {
+			setBreath(true)
 		}
-	}, [breathe, count, showModal])
-
-	const defaultOptions = {
-		loop: true,
-		autoplay: true,
-		animationData: animation,
-		rendererSettings: {
-			preserveAspectRatio: 'xMidYMid slice'
-		}
-	}
+	}, [breathe, showModal])
 
 	return (
 		<IonPage>
@@ -64,7 +82,7 @@ const Breathing = () => {
 				<div className="h-[75vh] flex items-center">
 					<div className="flex flex-col">
 						<IonText className="text-xl mb-8 font-medium">
-							Bem vindo, {user.user_metadata.nickname}
+							Bem vindo, {user.nickname}
 						</IonText>
 						<IonText className="text-xl text-gray-900">
 							A respiração profunda guiada pode ajudá-lo a se sentir mais
@@ -85,34 +103,31 @@ const Breathing = () => {
 			</IonContent>
 			<IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)}>
 				<div className="h-[100vh] flex flex-col items-center justify-center">
-					{count > 0 ? (
-						<div className="flex flex-col items-center">
-							<IonText className="text-[150px] text-bold mb-10">
-								{count}
-							</IonText>
-							<IonText className="text-3xl font-light text-center px-4">
-								Aguarde a contagem regressiva para iniciar
-							</IonText>
-						</div>
-					) : (
-						<div className="flex flex-col items-center">
-							<IonText className="text-black text-xl">
-								Dê um tempo e respire fundo
-							</IonText>
-							<div className="relative flex justify-center items-center">
-								<Lottie animationData={defaultOptions} />
-								<IonText className="absolute text-xl font-semibold text-white">
-									{breathe ? 'Respire' : 'Inspire'}
-								</IonText>
-							</div>
-							<IonText
-								onClick={() => Router.back()}
-								className="text-red font-bold text-xl"
-							>
-								Cancelar
+					<div className="flex flex-col items-center">
+						<IonText className="text-black text-xl">
+							Dê um tempo e respire fundo
+						</IonText>
+						<div className="relative flex justify-center items-center">
+							<Lottie
+								animationData={animation}
+								rendererSettings={{
+									preserveAspectRatio: 'xMidYMid slice'
+								}}
+								autoplay={true}
+								loop={true}
+							/>
+							<BreathingCircleAnimate />
+							<IonText className="absolute text-xl font-semibold text-white">
+								{breathe ? 'Respire' : 'Inspire'}
 							</IonText>
 						</div>
-					)}
+						<IonText
+							onClick={() => router.goBack()}
+							className="text-l cursor-pointer text-red-500"
+						>
+							Cancelar
+						</IonText>
+					</div>
 				</div>
 			</IonModal>
 		</IonPage>
