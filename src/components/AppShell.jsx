@@ -1,9 +1,6 @@
-import { Route, Redirect } from 'react-router-dom'
-
 import { IonApp, IonRouterOutlet } from '@ionic/react'
 import { IonReactRouter } from '@ionic/react-router'
 
-import { useAuth } from '../contexts/Auth'
 import Apresentation from './pages/Apresentation'
 import Breathing from './pages/Breathing'
 import ForgotPassword from './pages/ForgotPassword'
@@ -17,73 +14,55 @@ import Signinup from './pages/Signinup'
 import SignUp from './pages/SignUp'
 import YouAre from './pages/YouAre'
 import PrivateRoute from './PrivateRoute'
+import PublicRoute from './PublicRoute'
 import Tabs from './Tabs'
 
 const AppShell = () => {
-	const { userSession, user } = useAuth()
 	return (
 		<IonApp>
 			<IonReactRouter>
 				<IonRouterOutlet>
-					<Route
-						path="/"
-						render={() => {
-							return userSession && user ? (
-								<Redirect to="/app/home" />
-							) : (
-								<Apresentation />
-							)
-						}}
-						exact={true}
-					/>
-					<Route
+					<PublicRoute path="/" component={Apresentation} exact={true} />
+					<PublicRoute
 						path="/last-apresentation"
-						component={() => <LastApresentation />}
+						component={LastApresentation}
 						exact={true}
 					/>
-					<Route
+					<PublicRoute
 						path="/signinup"
-						component={() => <Signinup />}
+						component={Signinup}
 						exact={true}
 					/>
-					<Route
-						path="/sign-up"
-						component={() => <SignUp />}
-						exact={true}
-					/>
-					<Route path="/login" component={() => <Login />} exact={true} />
-					<Route
+					<PublicRoute path="/sign-up" component={SignUp} exact={true} />
+					<PublicRoute path="/login" component={Login} exact={true} />
+					<PublicRoute
 						path="/forgot-password"
-						component={() => <ForgotPassword />}
+						component={ForgotPassword}
 						exact={true}
 					/>
-					<Route
+					<PublicRoute
 						path="/redefine-password"
-						component={() => <RedefinePassword />}
+						component={RedefinePassword}
 						exact={true}
 					/>
-					<Route
-						path="/you-are"
-						component={() => <YouAre />}
-						exact={true}
-					/>
-					<PrivateRoute
+					<PublicRoute path="/you-are" component={YouAre} exact={true} />
+					<PublicRoute
 						path="/scheduling"
-						component={() => <Scheduling />}
+						component={Scheduling}
 						exact={true}
 					/>
-					<PrivateRoute
+					<PublicRoute
 						path="/form/:id"
-						component={() => <FormSurvey />}
+						component={FormSurvey}
 						exact={true}
 					/>
-					<PrivateRoute
+					<PublicRoute
 						path="/form/answers/:id"
-						component={() => <FormAnswers />}
+						component={FormAnswers}
 						exact={true}
 					/>
-					<PrivateRoute path="/app" render={() => <Tabs />} />
-					<PrivateRoute path="/breathing" render={() => <Breathing />} />
+					<PrivateRoute path="/breathing" component={Breathing} />
+					<PrivateRoute path="/app" component={Tabs} />
 				</IonRouterOutlet>
 			</IonReactRouter>
 		</IonApp>

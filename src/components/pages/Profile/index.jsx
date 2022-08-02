@@ -10,7 +10,8 @@ import {
 	useIonToast,
 	IonButtons,
 	IonBackButton,
-	IonAvatar
+	IonAvatar,
+	useIonRouter
 } from '@ionic/react'
 import Image from 'next/image'
 import styled from 'styled-components'
@@ -18,7 +19,6 @@ import styled from 'styled-components'
 import ProfileIcon from '../../../assets/Profile.png'
 import { useAuth } from '../../../contexts/Auth'
 import { supabase } from '../../../utils/supabaseClient'
-import Avatar from '../../ui/Avatar'
 import Button from '../../ui/Button'
 
 const ContainerAvatar = styled.div`
@@ -51,7 +51,9 @@ const ContainerAvatar = styled.div`
 `
 
 const Profile = () => {
-	const { user, professional, loading } = useAuth()
+	const router = useIonRouter()
+
+	const { user, loading, signOut } = useAuth()
 
 	const [profile, setProfile] = useState({
 		full_name: '',
@@ -216,6 +218,9 @@ const Profile = () => {
 							</p>
 						</Button>
 					</Link>
+					<Button className="bg-red-500 py-1 mt-3" onClick={signOut}>
+						<p className="text-white font-medium text-sm">Sair</p>
+					</Button>
 					{!user.professional && (
 						<div>
 							<p className="font-bold text-black text-lg">Conquistas</p>

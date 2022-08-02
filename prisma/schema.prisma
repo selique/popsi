@@ -95,6 +95,7 @@ model SurveyInvited {
    status SurveyInvitedStatus? @default(PENDING)
 
    created_at DateTime @default(now()) @db.Timestamptz()
+   Answer     Answer[]
 
    @@map("_survey_invited")
 }
@@ -177,6 +178,9 @@ model Answer {
    // Relation: Question
    Question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
    questionId String   @db.Uuid
+
+   invite    SurveyInvited @relation(fields: [invite_id], references: [id], onDelete: Cascade)
+   invite_id String        @db.Uuid
 
    // Timestamp
    created_at DateTime @default(now()) @db.Timestamptz()
