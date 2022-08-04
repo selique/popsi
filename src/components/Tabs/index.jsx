@@ -16,7 +16,6 @@ import {
 	fileTrayOutline,
 	chatboxEllipsesOutline
 } from 'ionicons/icons'
-import { useRouter } from 'next/router'
 
 import { useAuth } from '../../contexts/Auth'
 import { useChatNotifications } from '../../contexts/chatNotifications'
@@ -33,7 +32,7 @@ import PatientOptions from '../pages/Patients/Options'
 import PatientQuiz from '../pages/Patients/Quiz'
 import Profile from '../pages/Profile'
 import Quiz from '../pages/Quiz'
-import PrivateRoute from '../PrivateRoute'
+import Route from '../Route'
 
 const Tabs = () => {
 	const { user, professional } = useAuth()
@@ -110,59 +109,59 @@ const Tabs = () => {
 	return (
 		<IonTabs>
 			<IonRouterOutlet>
-				<PrivateRoute
+				<Route.Private
 					path="/app"
 					render={() => <Redirect to="/app/home" />}
 					exact={true}
 				/>
-				<PrivateRoute
+				<Route.Private
 					path="/app/home"
 					component={professional ? HomeProfessional : HomeClient}
 					exact={true}
 				/>
-				<PrivateRoute
+				<Route.Private
 					path="/app/patients"
 					component={Patients}
 					exact={true}
 				/>
-				<PrivateRoute
+				<Route.Private
 					path="/app/patients/quiz/:id"
 					component={PatientQuiz}
 					exact={true}
 				/>
-				<PrivateRoute
+				<Route.Private
 					path="/app/patients/quiz/options/:id"
 					component={PatientOptions}
 					exact={true}
 				/>
-				<PrivateRoute
+				<Route.Private
 					path="/app/patients/quiz/options/historic/:id"
 					component={PatientHistoric}
 					exact={true}
 				/>
-				<PrivateRoute path="/app/quiz" component={Quiz} exact={true} />
-				<PrivateRoute path="/app/chat/:id" component={Chat} exact={true} />
-				<PrivateRoute
+				<Route.Private path="/app/quiz" component={Quiz} exact={true} />
+				<Route.Private path="/app/chat/:id" component={Chat} exact={true} />
+				<Route.Private
 					path="/app/all-chats"
 					component={AllChats}
 					exact={true}
 				/>
-				<PrivateRoute
+				<Route.Private
 					path="/app/notification"
 					component={Notification}
 					exact={true}
 				/>
-				<PrivateRoute
+				<Route.Private
 					path="/app/profile"
 					component={Profile}
 					exact={true}
 				/>
-				<PrivateRoute
+				<Route.Private
 					path="/app/form"
 					component={FormSurvey}
 					exact={true}
 				/>
-				<PrivateRoute
+				<Route.Private
 					path="/app/edit"
 					component={EditProfile}
 					exact={true}

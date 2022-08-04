@@ -48,7 +48,7 @@ const ForgotPassword = () => {
 		try {
 			let { data: passwordResetData, error } =
 				await supabase.auth.api.resetPasswordForEmail(data.email, {
-					redirectTo: `${process.env.SITE_URL}/redefine-password`
+					redirectTo: `${process.env.SITE_URL}/reset-password`
 				})
 
 			if (passwordResetData) {

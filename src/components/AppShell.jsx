@@ -13,8 +13,7 @@ import Scheduling from './pages/Scheduling'
 import Signinup from './pages/Signinup'
 import SignUp from './pages/SignUp'
 import YouAre from './pages/YouAre'
-import PrivateRoute from './PrivateRoute'
-import PublicRoute from './PublicRoute'
+import Route from './Route'
 import Tabs from './Tabs'
 
 const AppShell = () => {
@@ -22,47 +21,47 @@ const AppShell = () => {
 		<IonApp>
 			<IonReactRouter>
 				<IonRouterOutlet>
-					<PublicRoute path="/" component={Apresentation} exact={true} />
-					<PublicRoute
+					<Route.Public path="/" component={Apresentation} exact={true} />
+					<Route.Public
 						path="/last-apresentation"
 						component={LastApresentation}
 						exact={true}
 					/>
-					<PublicRoute
+					<Route.Public
 						path="/signinup"
 						component={Signinup}
 						exact={true}
 					/>
-					<PublicRoute path="/sign-up" component={SignUp} exact={true} />
-					<PublicRoute path="/login" component={Login} exact={true} />
-					<PublicRoute
+					<Route.Public path="/sign-up" component={SignUp} exact={true} />
+					<Route.Public path="/login" component={Login} exact={true} />
+					<Route.Hibrid
 						path="/forgot-password"
 						component={ForgotPassword}
 						exact={true}
 					/>
-					<PublicRoute
-						path="/redefine-password"
+					<Route.Hibrid
+						path="/reset-password"
 						component={RedefinePassword}
 						exact={true}
 					/>
-					<PublicRoute path="/you-are" component={YouAre} exact={true} />
-					<PublicRoute
+					<Route.Public path="/you-are" component={YouAre} exact={true} />
+					<Route.Private
 						path="/scheduling"
 						component={Scheduling}
 						exact={true}
 					/>
-					<PublicRoute
+					<Route.Private
 						path="/form/:id"
 						component={FormSurvey}
 						exact={true}
 					/>
-					<PublicRoute
+					<Route.Private
 						path="/form/answers/:id"
 						component={FormAnswers}
 						exact={true}
 					/>
-					<PrivateRoute path="/breathing" component={Breathing} />
-					<PrivateRoute path="/app" component={Tabs} />
+					<Route.Private path="/breathing" component={Breathing} />
+					<Route.Private path="/app" component={Tabs} />
 				</IonRouterOutlet>
 			</IonReactRouter>
 		</IonApp>
