@@ -5,31 +5,29 @@ import {
 	IonContent,
 	IonIcon,
 	IonPage,
-	IonSlide,
-	IonSlides,
 	IonText,
-	IonHeader,
+	IonAvatar,
 	IonToolbar,
 	IonTitle,
 	useIonLoading,
 	useIonToast,
-	IonSearchbar,
 	IonItem,
-	IonAvatar
+	useIonRouter,
+	IonHeader
 } from '@ionic/react'
 import { filterOutline, addOutline, searchOutline } from 'ionicons/icons'
 import Image from 'next/image'
 
+import Profile from '../../../assets/Profile.png'
 import { useAuth } from '../../../contexts/Auth'
 import { supabase } from '../../../utils/supabaseClient'
 import Avatar from '../../ui/Avatar'
 import Card from '../../ui/Card'
 import Input from './../../ui/Input'
 
-const imageTemp =
-	'https://i0.wp.com/www.kailagarcia.com/wp-content/uploads/2019/05/46846414_205184383758304_7255555943408505199_n.jpg?fit=1080%2C1350&ssl=1'
-
 const Patients = () => {
+	const router = useIonRouter()
+
 	const [showLoading, hideLoading] = useIonLoading()
 	const [showToast] = useIonToast()
 	const { user, loading } = useAuth()
@@ -70,23 +68,6 @@ const Patients = () => {
 			})
 		} finally {
 			await hideLoading()
-		}
-	}
-
-	const downloadImage = async path => {
-		try {
-			const { data, error } = await supabase.storage
-				.from('avatars')
-				.download(path)
-
-			if (error) {
-				throw error
-			}
-			const url = URL.createObjectURL(data)
-			return url
-		} catch (error) {
-			console.log('Error downloading image: ', error.message)
-			return imageTemp
 		}
 	}
 
@@ -197,13 +178,19 @@ const Patients = () => {
 														hasBorder={false}
 													/>
 												) : (
-													<Avatar
-														width="50px"
-														height="50px"
-														hasBorder={false}
-													/>
+													<IonAvatar
+														className="flex items-center w-[50px] h-max"
+														onClick={() =>
+															router.push('/app/profile')
+														}
+													>
+														<Image
+															src={Profile}
+															alt="Foto de perfil"
+														/>
+													</IonAvatar>
 												)}
-												<IonText className="font-semibold ml-3 text-md">
+												<IonText className="font-semibold ml-3">
 													{full_name}
 												</IonText>
 											</IonItem>

@@ -1,3 +1,5 @@
+import { Redirect } from 'react-router-dom'
+
 import { IonApp, IonRouterOutlet } from '@ionic/react'
 import { IonReactRouter } from '@ionic/react-router'
 
@@ -21,7 +23,8 @@ const AppShell = () => {
 		<IonApp>
 			<IonReactRouter>
 				<IonRouterOutlet>
-					<Route.Public path="/" component={Apresentation} exact={true} />
+					{/* <Route.Public path="/" component={Apresentation} exact={true} /> */}
+					<Route.Public path="/" redirectTo="/signinup" exact={true} />
 					<Route.Public
 						path="/last-apresentation"
 						component={LastApresentation}
