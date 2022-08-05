@@ -14,6 +14,7 @@ import {
 	useIonRouter
 } from '@ionic/react'
 import dayjs from 'dayjs'
+import 'dayjs/locale/pt-br'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import {
 	arrowForward,
@@ -29,6 +30,7 @@ import { supabase } from './../../../utils/supabaseClient'
 import Button from './../../ui/Button'
 
 dayjs.extend(relativeTime)
+dayjs.locale('pt-br')
 
 const Line = styled.div`
 	border-bottom: 1px solid #e6e6e6;
@@ -95,7 +97,7 @@ const Notification = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
-	const handleRedirectToSurvey = async surveys_id => {
+	const handleRedirectToSurvey = async (surveys_id, invite_id) => {
 		setDisableNotification(true)
 
 		const { data } = await supabase
@@ -106,7 +108,8 @@ const Notification = () => {
 			.match({
 				surveys_id,
 				for: professional ? 'MEDIC' : 'PATIENT',
-				[professional ? 'medic_id' : 'patient_id']: user.id
+				[professional ? 'medic_id' : 'patient_id']: user.id,
+				invite_id
 			})
 
 		if (data) {
@@ -184,8 +187,12 @@ const Notification = () => {
 											<Button
 												disabled={disableNotification}
 												onClick={() =>
+													['RECEIVED', 'IN_PROGRESS'].includes(
+														notification.status
+													) &&
 													handleRedirectToSurvey(
-														notification.surveys_id
+														notification.surveys_id,
+														notification.invite_id
 													)
 												}
 											>
