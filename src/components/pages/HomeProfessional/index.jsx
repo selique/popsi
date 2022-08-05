@@ -2,6 +2,7 @@ import * as React from 'react'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
 
+import 'swiper/css'
 import { Clipboard } from '@capacitor/clipboard'
 import { Share } from '@capacitor/share'
 import {
@@ -29,10 +30,12 @@ import {
 import { notificationsOutline } from 'ionicons/icons'
 import Image from 'next/image'
 import styled from 'styled-components'
+import { Swiper, SwiperSlide } from 'swiper/react'
 
 import Letter from '../../../assets/icons/Letter'
 import Profile from '../../../assets/Profile.png'
 import { useAuth } from '../../../contexts/Auth'
+import handlePronoun from '../../../utils/pronoun'
 import Button from '../../ui/Button'
 import Card from '../../ui/Card'
 import ModalSheet from '../../ui/Modal/SheetBottom'
@@ -77,34 +80,34 @@ const HomeProfessional = () => {
 	return (
 		<IonPage>
 			<IonContent className="ion-padding bg-white-100" fullscreen>
-				<div className="flex justify-between">
-					<div className="flex flex-col">
-						<IonText className="text-sm text-gray-900 mb-1 font-light">
-							Bem vindo{'(a)'}
-						</IonText>
-						<IonText className="text-black-200 text-2xl font-bold">
-							{user.nickname}
-						</IonText>
-					</div>
-					<div className="flex items-center">
-						<Link to="/app/notification">
-							<Button className="mr-2 rounded-full w-max px-3">
-								<IonIcon
-									icon={notificationsOutline}
-									className="text-xl"
-								/>
-							</Button>
-						</Link>
-						<IonAvatar
-							className="flex items-center w-[50px] h-max"
-							onClick={() => router.push('/app/profile')}
-						>
-							<Image src={Profile} alt="Foto de perfil" />
-						</IonAvatar>
-					</div>
-				</div>
-				<Slide options={slideOpts} className="mt-2 mb-3">
-					<IonSlide className="h-full">
+				<IonGrid>
+					<IonRow>
+						<IonCol className="flex flex-col w-[calc(100%-50px)]">
+							<IonText className="text-sm text-gray-900 mb-1 font-light">
+								{user?.pronoun
+									? handlePronoun(user?.pronoun) === 'n'
+										? 'Bem vindo(a)'
+										: handlePronoun(user?.pronoun) === 'm'
+										? 'Bem vindo'
+										: 'Bem vinda'
+									: 'Bem vindo(a)'}
+							</IonText>
+							<IonText className="text-black-200 text-2xl font-bold truncate">
+								{user?.nickname}
+							</IonText>
+						</IonCol>
+						<IonCol className="ion-align-items-center ion-justify-content-end flex">
+							<IonAvatar
+								className="flex items-center w-[50px] h-max"
+								onClick={() => router.push('/app/profile')}
+							>
+								<Image src={Profile} alt="Foto de perfil" />
+							</IonAvatar>
+						</IonCol>
+					</IonRow>
+				</IonGrid>
+				<Swiper spaceBetween={50} slidesPerView={3} className="my-3">
+					<SwiperSlide>
 						<ShortcutCard
 							type="button"
 							onClick={() => setModalInviteUserOpen(true)}
@@ -115,11 +118,11 @@ const HomeProfessional = () => {
 								Convite
 							</IonText>
 							<IonText className="text-white text-left text-xsm">
-								Convide seus paciêntes, convide seus paciêntes
+								Convide seus paciêntes para fazer parte da Popsi.
 							</IonText>
 						</ShortcutCard>
-					</IonSlide>
-					<IonSlide>
+					</SwiperSlide>
+					{/* <SwiperSlide>
 						<ShortcutCard>
 							<Letter color="#7A7A7A" />
 							<IonText className="font-bold mt-4 mb-2 text-gray-900">
@@ -129,19 +132,8 @@ const HomeProfessional = () => {
 								Agende horarios de consultas.
 							</IonText>
 						</ShortcutCard>
-					</IonSlide>
-					<IonSlide>
-						<ShortcutCard>
-							<Letter color="#7A7A7A" />
-							<IonText className="font-bold mt-4 mb-2 text-gray-900">
-								Agenda
-							</IonText>
-							<IonText className="text-left text-xsm text-gray-900">
-								Agende horarios de consultas.
-							</IonText>
-						</ShortcutCard>
-					</IonSlide>
-				</Slide>
+					</SwiperSlide> */}
+				</Swiper>
 				<Card>
 					<IonText className="font-semibold text-gray-900 text-xl leading-5">
 						Questionários respondidos recentemente

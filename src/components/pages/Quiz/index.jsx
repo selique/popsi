@@ -16,26 +16,53 @@ import {
 	IonCheckbox,
 	IonItem,
 	IonLabel,
-	useIonRouter
+	useIonRouter,
+	createGesture
 } from '@ionic/react'
 import {
 	searchOutline,
 	addOutline,
-	chevronForwardOutline
+	chevronForwardOutline,
+	moveOutline
 } from 'ionicons/icons'
+import styled, { css } from 'styled-components'
 
 import { useAuth } from '../../../contexts/Auth'
 import { supabase } from '../../../utils/supabaseClient'
 import Avatar from '../../ui/Avatar'
 import Input from '../../ui/Input'
 import Modal from '../../ui/Modal/SheetBottom'
+import QuizList from '../../ui/QuizList'
 import { createScheduledJob } from './../../../utils/createScheduleQStash'
 import Button from './../../ui/Button'
-import QuizList from './../../ui/QuizList'
 import FrequencyModal from './FrequencyModal'
 
 const imageTemp2 =
 	'https://pm1.narvii.com/6583/13022a93a381cddb0c98d4e0a813635bd1215d89_hq.jpg'
+
+const GridWrapper = styled.div`
+	display: flex;
+	height: 100%;
+	width: 100%;
+	overflow-y: hidden;
+`
+
+const Grid = styled.div`
+	width: 100%;
+	display: grid;
+	grid-template-rows: repeat(2, min-content) 1fr;
+	overflow: hidden;
+`
+
+const GridRow = styled.div`
+	grid-area: ${({ area }) => area};
+
+	${({ scrollable }) =>
+		scrollable &&
+		css`
+			overflow-y: scroll;
+		`}
+`
 
 const Quiz = () => {
 	const { userSession, professional } = useAuth()
@@ -52,7 +79,9 @@ const Quiz = () => {
 
 	const [invitedPatients, setInvitedPatients] = React.useState(null)
 	const [isInvitedLoading, setIsInvitedLoading] = React.useState(false)
-	const [schedule, setSchedule] = React.useState('* * * * *')
+	const [schedule, setSchedule] = React.useState('0 * * * *')
+
+	const buttonAddSurveyRef = React.useRef(null)
 
 	const daysOfTheWeek = [
 		'Domingo',
@@ -121,6 +150,58 @@ const Quiz = () => {
 		}
 	}
 
+	React.useEffect(() => {
+		// Gesture from ionic => https://ionicframework.com/docs/utilities/gestures
+		const gesture = createGesture({
+			el: buttonAddSurveyRef.current,
+			onMove: detail => {
+				const { innerWidth: screenWidth, innerHeight: screenHeight } =
+					window
+
+				// Calculate X and Y position to sync with the mouse position
+				const currentX = detail.currentX - screenWidth + 50
+				const currentY = detail.currentY - screenHeight + 100
+
+				// Positioning X and delimiting the screen range
+				const positioningX =
+					currentX > 0
+						? 0
+						: currentX < -screenWidth + 73
+						? -screenWidth + 73
+						: currentX
+
+				// Positioning Y and delimiting the screen range
+				const positioningY =
+					currentY > 0
+						? 0
+						: currentY < -screenHeight + 225
+						? -screenHeight + 225
+						: currentY
+
+				// Set position for the element
+				buttonAddSurveyRef.current.style.transform = `translate(${positioningX}px, ${positioningY}px)`
+			}
+		})
+
+		const resetPostionOnResize = () =>
+			(buttonAddSurveyRef.current.style.transform = '')
+
+		if (buttonAddSurveyRef.current) {
+			// Add gesture event from ionic to move the element
+			gesture.enable()
+
+			// Add resize event from javascript to reset the position when resize screen
+			window.addEventListener('resize', resetPostionOnResize)
+		}
+
+		return () => {
+			// Remove events when component unmount
+			gesture.destroy()
+			window.removeEventListener('resize', resetPostionOnResize)
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [buttonAddSurveyRef])
+
 	return (
 		<IonPage>
 			<IonHeader>
@@ -133,28 +214,41 @@ const Quiz = () => {
 					</IonTitle>
 				</IonToolbar>
 			</IonHeader>
-			<IonContent className="ion-padding" fullscreen>
-				<Input
-					icon={<IonIcon src={searchOutline} />}
-					onChange={e => setSearchSurvey(e.target.value)}
-					placeholder="Pesquisar"
-					background="bg-white"
-					classContent="mb-6"
-				/>
-				<div>
-					<IonText>Recentes</IonText>
-					<QuizList
-						searchSurvey={searchSurvey}
-						setSurveySelectedToInvite={setSurveySelectedToInvite}
-					/>
-				</div>
+			<IonContent
+				className="ion-padding relative overflow-y-hidden"
+				fullscreen
+			>
 				{professional && (
-					<IonFab vertical="bottom" horizontal="end" slot="fixed">
-						<IonFabButton onClick={() => router.push('/app/form')}>
-							<IonIcon icon={addOutline} color="#fff" />
-						</IonFabButton>
-					</IonFab>
+					<IonFabButton
+						className="absolute right-[10px] bottom-[70px] z-10"
+						ref={buttonAddSurveyRef}
+						onClick={() => router.push('/app/form')}
+					>
+						<IonIcon icon={addOutline} color="#fff" />
+					</IonFabButton>
 				)}
+				<GridWrapper>
+					<Grid>
+						<GridRow area="1 / 1 / 2 / 2">
+							<Input
+								icon={<IonIcon src={searchOutline} />}
+								onChange={e => setSearchSurvey(e.target.value)}
+								placeholder="Pesquisar"
+								background="bg-white"
+								classContent="mb-6"
+							/>
+						</GridRow>
+						<GridRow area="2 / 1 / 3 / 2">
+							<IonText>Recentes</IonText>
+						</GridRow>
+						<GridRow area="3 / 1 / 4 / 2" scrollable={true}>
+							<QuizList
+								searchSurvey={searchSurvey}
+								setSurveySelectedToInvite={setSurveySelectedToInvite}
+							/>
+						</GridRow>
+					</Grid>
+				</GridWrapper>
 				<Modal
 					isOpen={!!surveySelectedToInvite}
 					onDidDismiss={() => {

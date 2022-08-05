@@ -79,7 +79,10 @@ const AllChats = () => {
 									className="flex items-center justify-between"
 								>
 									<div className="flex items-center">
-										<IonAvatar slot="start">
+										<IonAvatar
+											slot="start"
+											className="w-[50px] h-max mr-3"
+										>
 											<Image src={Profile} alt="Foto de perfil" />
 										</IonAvatar>
 										<IonText className="font-semibold">

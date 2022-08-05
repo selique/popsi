@@ -22,7 +22,7 @@ const Signinup = () => {
 									Cadastre-se agora
 								</Button>
 							</Link>
-							<Button className="bg-white shadow-md">
+							{/* <Button className="bg-white shadow-md">
 								<Google />
 								<IonText className="ml-2 text-md">Google</IonText>
 							</Button>
@@ -31,7 +31,7 @@ const Signinup = () => {
 								<IonText className="ml-2 text-white text-md">
 									Facebook
 								</IonText>
-							</Button>
+							</Button> */}
 							<IonText>Já tenho cadastro</IonText>
 							<Link to="/login">
 								<Button className="bg-purple-100 mt-6 text-white text-md">

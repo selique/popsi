@@ -60,33 +60,35 @@ const RedefinePassword = () => {
 
 	const handleNewPassword = async data => {
 		await showLoading()
-		try {
-			const { data: updateUserData, error } =
-				await supabase.auth.api.updateUser(getAcessToken, {
-					password: data.password
-				})
-			if (updateUserData) {
-				await showToast({
-					message: 'Senha alterada com sucesso',
-					duration: 2000
-				})
-				router.push('/login')
-			}
-
-			if (error) {
-				await showToast({
-					message: error.message,
-					duration: 2000
-				})
-			}
-		} catch (e) {
-			await showToast({
-				message: e.error_description || e.message,
-				duration: 2000
+		const { data: updateUserData, error } =
+			await supabase.auth.api.updateUser(getAcessToken, {
+				password: data.password
 			})
-		} finally {
-			await hideLoading()
+		if (updateUserData) {
+			router.push('/login')
+			showToast({
+				header: 'Sucesso',
+				message: 'Senha alterada com sucesso',
+				position: 'top',
+				color: 'purple',
+				cssClass: 'text-white',
+				duration: 5000,
+				animated: true
+			})
 		}
+
+		if (error) {
+			showToast({
+				header: 'Erro',
+				message: error.message,
+				position: 'top',
+				color: 'purple',
+				cssClass: 'text-white',
+				duration: 5000,
+				animated: true
+			})
+		}
+		await hideLoading()
 	}
 
 	return (

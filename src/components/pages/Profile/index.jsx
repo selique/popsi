@@ -4,14 +4,11 @@ import { Link } from 'react-router-dom'
 import {
 	IonContent,
 	IonPage,
-	IonSlide,
-	IonSlides,
 	useIonLoading,
 	useIonToast,
 	IonButtons,
 	IonBackButton,
-	IonAvatar,
-	useIonRouter
+	IonAvatar
 } from '@ionic/react'
 import Image from 'next/image'
 import styled from 'styled-components'
@@ -51,9 +48,7 @@ const ContainerAvatar = styled.div`
 `
 
 const Profile = () => {
-	const router = useIonRouter()
-
-	const { user, loading, signOut } = useAuth()
+	const { user, loading, signOut, professional } = useAuth()
 
 	const [profile, setProfile] = useState({
 		full_name: '',
@@ -110,7 +105,15 @@ const Profile = () => {
 				})
 			}
 		} catch (error) {
-			showToast({ message: error.message, duration: 5000 })
+			showToast({
+				header: 'Erro',
+				message: error.message,
+				position: 'top',
+				color: 'purple',
+				cssClass: 'text-white',
+				duration: 5000,
+				animated: true
+			})
 		} finally {
 			await hideLoading()
 		}
@@ -171,10 +174,14 @@ const Profile = () => {
 					<p className="text-center font-bold text-black text-xl capitalize">
 						{profile.full_name}
 					</p>
-					<p className="text-center font-bold text-black text-md capitalize">
-						Biografia:
-					</p>
-					<p className="text-sm text-center">{profile.bio}</p>
+					{profile.bio && (
+						<>
+							<p className="text-center font-bold text-black text-md capitalize">
+								Biografia:
+							</p>
+							<p className="text-sm text-center">{profile.bio}</p>
+						</>
+					)}
 					{/* {professional ? (
 						<p className="text-center text-gray-900 text-lg capitalize">
 							Especialidades
@@ -221,7 +228,7 @@ const Profile = () => {
 					<Button className="bg-red-500 py-1 mt-3" onClick={signOut}>
 						<p className="text-white font-medium text-sm">Sair</p>
 					</Button>
-					{!user.professional && (
+					{/* {!professional && (
 						<div>
 							<p className="font-bold text-black text-lg">Conquistas</p>
 							<IonSlides options={slideOpts} className="w-full">
@@ -248,7 +255,7 @@ const Profile = () => {
 								</IonSlide>
 							</IonSlides>
 						</div>
-					)}
+					)} */}
 				</div>
 			</IonContent>
 		</IonPage>
