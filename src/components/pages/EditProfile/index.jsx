@@ -63,7 +63,7 @@ const ContainerAvatar = styled.div`
 `
 
 const EditProfile = () => {
-	const { user } = useAuth()
+	const { userSession } = useAuth()
 	const [showLoading, hideLoading] = useIonLoading()
 	const [showToast] = useIonToast()
 
@@ -73,7 +73,7 @@ const EditProfile = () => {
 	useEffect(() => {
 		getProfile()
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [user])
+	}, [userSession])
 
 	const schema = Yup.object().shape(
 		{
@@ -129,7 +129,7 @@ const EditProfile = () => {
 				birth_date
 			`
 				)
-				.eq('id', user?.id)
+				.eq('id', userSession?.id)
 				.single()
 
 			if (error && status !== 406) {
@@ -138,13 +138,16 @@ const EditProfile = () => {
 
 			if (data) {
 				setProfile(data)
-				setValue('email', user.email)
+				setValue('email', userSession.email)
 				setValue('full_name', data.full_name || undefined)
 				setValue('bio', data.bio || undefined)
 				setValue('nickname', data.nickname || undefined)
 				setValue('pronoun', data.pronoun || undefined)
 				setValue('gender_identity', data.gender_identity || undefined)
+
 				setValue('cpf', data.cpf || undefined)
+				setCpfField(data.cpf || '')
+
 				setValue('birth_date', data.birth_date || undefined)
 			}
 		} catch (error) {
@@ -166,7 +169,7 @@ const EditProfile = () => {
 		await showLoading()
 
 		try {
-			if (data.email !== user?.email) {
+			if (data.email !== userSession?.email) {
 				const { error } = await supabase.auth.update({
 					email: data.email
 				})
@@ -217,7 +220,7 @@ const EditProfile = () => {
 					.update(fieldsToUpdate, {
 						returning: 'minimal' // Don't return the value after inserting
 					})
-					.eq('id', user?.id)
+					.eq('id', userSession?.id)
 
 				if (error) {
 					throw error

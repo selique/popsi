@@ -79,7 +79,7 @@ const Quiz = () => {
 
 	const [invitedPatients, setInvitedPatients] = React.useState(null)
 	const [isInvitedLoading, setIsInvitedLoading] = React.useState(false)
-	const [schedule, setSchedule] = React.useState('* * * * *')
+	const [schedule, setSchedule] = React.useState('0 * * * *')
 
 	const buttonAddSurveyRef = React.useRef(null)
 
