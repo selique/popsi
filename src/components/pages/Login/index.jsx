@@ -60,9 +60,14 @@ const Login = () => {
 				router.push('/app/home')
 			})
 		} catch (e) {
-			await showToast({
+			showToast({
+				header: 'Erro',
 				message: e.error_description || e.message,
-				duration: 1000
+				position: 'top',
+				color: 'purple',
+				cssClass: 'text-white',
+				duration: 5000,
+				animated: true
 			})
 		} finally {
 			await hideLoading()

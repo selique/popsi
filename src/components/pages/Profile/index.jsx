@@ -110,7 +110,15 @@ const Profile = () => {
 				})
 			}
 		} catch (error) {
-			showToast({ message: error.message, duration: 5000 })
+			showToast({
+				header: 'Erro',
+				message: error.message,
+				position: 'top',
+				color: 'purple',
+				cssClass: 'text-white',
+				duration: 5000,
+				animated: true
+			})
 		} finally {
 			await hideLoading()
 		}

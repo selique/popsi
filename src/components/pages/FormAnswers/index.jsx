@@ -54,7 +54,15 @@ const FormAnswers = () => {
 					setQuestions(data)
 				}
 			} catch (error) {
-				showToast({ message: error.message, duration: 5000 })
+				showToast({
+					header: 'Erro',
+					message: error.message,
+					position: 'top',
+					color: 'purple',
+					cssClass: 'text-white',
+					duration: 5000,
+					animated: true
+				})
 			} finally {
 				await hideLoading()
 			}
@@ -90,12 +98,41 @@ const FormAnswers = () => {
 		}
 
 		if (answers.length + 1 === questions.length) {
-			console.log([...answers, ...data])
-			const { data: dataAnswer } = await supabase
+			const { data: dataAnswer, error: errorAnswer } = await supabase
 				.from('answers')
 				.insert([...answers, ...data])
 
-			if (dataAnswer) Router.back()
+			const { data: dataInvite, error: errorInvite } = await supabase
+				.from('_survey_invited')
+				.update({ status: 'FINISHED' })
+				.eq('id', locationState.id)
+
+			if (dataAnswer && dataInvite) {
+				Router.back()
+				showToast({
+					header: 'Finalizado',
+					message: 'Respostas enviadas com sucesso.',
+					position: 'top',
+					color: 'purple',
+					cssClass: 'text-white',
+					duration: 5000,
+					animated: true
+				})
+			}
+
+			if (errorAnswer || errorInvite) {
+				Router.back()
+				showToast({
+					header: 'Error',
+					message:
+						'Algo deu errado tente novamente, caso o erro persistir contate o suporte.',
+					position: 'top',
+					color: 'purple',
+					cssClass: 'text-white',
+					duration: 5000,
+					animated: true
+				})
+			}
 		} else if (dataForm && idQuiz + 1 < questions.length) {
 			setIdQuiz(idQuiz + 1)
 		}

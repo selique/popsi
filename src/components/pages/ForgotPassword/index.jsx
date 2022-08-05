@@ -45,49 +45,50 @@ const ForgotPassword = () => {
 
 	const handleForgotPass = async data => {
 		await showLoading()
-		try {
-			let { data: passwordResetData, error } =
-				await supabase.auth.api.resetPasswordForEmail(data.email, {
-					redirectTo: `${process.env.SITE_URL}/reset-password`
-				})
-
-			if (passwordResetData) {
-				await showToast({
-					message: 'E-mail de recuperação enviado',
-					duration: 2000
-				})
-			}
-
-			if (error && error.status === 404) {
-				await showToast({
-					message: 'E-mail não cadastrado',
-					duration: 2000
-				})
-			} else if (error && error.status === 422) {
-				await showToast({
-					message: 'E-mail inválido',
-					duration: 2000
-				})
-			} else if (error && error.status === 429) {
-				await showToast({
-					message:
-						'E-mail de recuperação já enviado, aguarde 60 segundos para solicitar outro',
-					duration: 2000
-				})
-			} else if (error) {
-				await showToast({
-					message: error.message,
-					duration: 2000
-				})
-			}
-		} catch (error) {
-			await showToast({
-				message: error.message,
-				duration: 2000
+		let { data: passwordResetData, error } =
+			await supabase.auth.api.resetPasswordForEmail(data.email, {
+				redirectTo: `${process.env.SITE_URL}/reset-password`
 			})
-		} finally {
-			await hideLoading()
+
+		if (passwordResetData) {
+			showToast({
+				header: 'Erro',
+				message: 'E-mail de recuperação enviado',
+				position: 'top',
+				color: 'purple',
+				cssClass: 'text-white',
+				duration: 5000,
+				animated: true
+			})
 		}
+
+		if (error) {
+			const getErrorByStatus = status => {
+				switch (status) {
+					case 404:
+						return 'E-mail não cadastrado'
+					case 422:
+						return 'E-mail inválido'
+					case 429:
+						return 'E-mail de recuperação já enviado, aguarde 60 segundos para solicitar outro'
+					case 429:
+						return 'E-mail de recuperação já enviado, aguarde 60 segundos para solicitar outro'
+					default:
+						return 'Algo deu errado, tente novamente mais tarde! Caso o erro persistir contate o suporte.'
+				}
+			}
+
+			showToast({
+				header: 'Erro',
+				message: getErrorByStatus(error.status),
+				position: 'top',
+				color: 'purple',
+				cssClass: 'text-white',
+				duration: 5000,
+				animated: true
+			})
+		}
+		await hideLoading()
 	}
 
 	return (

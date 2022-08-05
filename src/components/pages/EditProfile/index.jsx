@@ -148,7 +148,15 @@ const EditProfile = () => {
 				setValue('birth_date', data.birth_date || undefined)
 			}
 		} catch (error) {
-			showToast({ message: error.message, duration: 5000 })
+			showToast({
+				header: 'Erro',
+				message: error.message,
+				position: 'top',
+				color: 'purple',
+				cssClass: 'text-white',
+				duration: 5000,
+				animated: true
+			})
 		} finally {
 			await hideLoading()
 		}
@@ -164,12 +172,25 @@ const EditProfile = () => {
 				})
 
 				if (error) {
-					showToast({ message: error.message, duration: 5000 })
+					showToast({
+						header: 'Erro',
+						message: error.message,
+						position: 'top',
+						color: 'purple',
+						cssClass: 'text-white',
+						duration: 5000,
+						animated: true
+					})
 				} else {
 					showToast({
+						header: 'Sucesso',
 						message:
 							'Foi enviado um e-mail de confirmação para o novo endereço.',
-						duration: 5000
+						position: 'top',
+						color: 'purple',
+						cssClass: 'text-white',
+						duration: 5000,
+						animated: true
 					})
 				}
 			}
@@ -202,13 +223,26 @@ const EditProfile = () => {
 					throw error
 				} else {
 					showToast({
+						header: 'Sucesso',
 						message: 'Perfil atualizado com sucesso.',
-						duration: 5000
+						position: 'top',
+						color: 'purple',
+						cssClass: 'text-white',
+						duration: 5000,
+						animated: true
 					})
 				}
 			}
 		} catch (error) {
-			showToast({ message: error.message, duration: 5000 })
+			showToast({
+				header: 'Erro',
+				message: error.message,
+				position: 'top',
+				color: 'purple',
+				cssClass: 'text-white',
+				duration: 5000,
+				animated: true
+			})
 		} finally {
 			await hideLoading()
 		}

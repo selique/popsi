@@ -102,7 +102,7 @@ const Tabs = () => {
 		{
 			path: '/app/notification',
 			icon: notificationsOutline,
-			label: 'Notifications'
+			label: 'Notificações'
 		}
 	]
 
