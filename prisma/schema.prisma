@@ -94,8 +94,9 @@ model SurveyInvited {
 
    status SurveyInvitedStatus? @default(PENDING)
 
-   created_at DateTime @default(now()) @db.Timestamptz()
-   Answer     Answer[]
+   created_at           DateTime               @default(now()) @db.Timestamptz()
+   Answer               Answer[]
+   SurveysNotifications SurveysNotifications[]
 
    @@map("_survey_invited")
 }
@@ -206,6 +207,9 @@ model SurveysNotifications {
    // Relation: Surveys
    Surveys    Surveys? @relation(fields: [surveys_id], references: [id], onDelete: Cascade)
    surveys_id String   @db.Uuid
+
+   invite    SurveyInvited? @relation(fields: [invite_id], references: [id], onDelete: Cascade)
+   invite_id String?        @db.Uuid
 
    // Timestamp
    updated_at DateTime? @db.Timestamptz()
