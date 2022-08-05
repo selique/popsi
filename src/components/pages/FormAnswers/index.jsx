@@ -205,8 +205,6 @@ const FormAnswers = () => {
 
 	return questions.length === 0 ? (
 		<div>Carregando</div>
-	) : professional ? (
-		<span>n é pra vc estar aqui</span>
 	) : (
 		<IonPage>
 			<IonHeader>
