@@ -11,7 +11,8 @@ import {
 	IonButtons,
 	IonIcon,
 	IonTitle,
-	useIonRouter
+	useIonRouter,
+	IonAvatar
 } from '@ionic/react'
 import dayjs from 'dayjs'
 import 'dayjs/locale/pt-br'
@@ -22,9 +23,10 @@ import {
 	arrowBack,
 	alertCircleOutline
 } from 'ionicons/icons'
+import Image from 'next/image'
 import styled from 'styled-components'
 
-import Avatar from '../../ui/Avatar'
+import Profile from '../../../assets/Profile.png'
 import { useAuth } from './../../../contexts/Auth'
 import { supabase } from './../../../utils/supabaseClient'
 import Button from './../../ui/Button'
@@ -164,11 +166,12 @@ const Notification = () => {
 						notifications.map((notification, index) => (
 							<React.Fragment key={index}>
 								<div className="flex items-center px-4">
-									<Avatar
-										background={imageTemp}
-										width="70px"
-										height="70px"
-									/>
+									<IonAvatar
+										slot="start"
+										className="w-[70px] h-max mr-3"
+									>
+										<Image src={Profile} alt="Foto de perfil" />
+									</IonAvatar>
 									<div className="flex flex-col my-10 w-3/5">
 										{notification.content ? (
 											<IonText className="text-black font-light mb-1 text-sm">

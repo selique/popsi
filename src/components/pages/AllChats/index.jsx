@@ -22,10 +22,8 @@ import { searchOutline } from 'ionicons/icons'
 import Image from 'next/image'
 
 import Profile from '../../../assets/Profile.png'
-import { supabase } from '../../../utils/supabaseClient'
 import Card from '../../ui/Card'
 import Input from '../../ui/Input'
-import { useAuth } from './../../../contexts/Auth'
 import { useChatNotifications } from './../../../contexts/chatNotifications'
 
 const AllChats = () => {
