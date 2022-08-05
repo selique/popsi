@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useForm, Controller } from 'react-hook-form'
-import { useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 
 import {
 	IonText,
@@ -32,10 +32,12 @@ const FormAnswers = () => {
 	const [showLoading, hideLoading] = useIonLoading()
 	const [showToast] = useIonToast()
 	const { id } = useParams()
-	const { user } = useAuth()
+	const { user, professional } = useAuth()
 	const { register, control, handleSubmit, setValue, getValues } = useForm({
 		mode: 'onChange'
 	})
+
+	const { state: locationState } = useLocation()
 
 	React.useEffect(() => {
 		const getAnswers = async () => {
@@ -82,13 +84,15 @@ const FormAnswers = () => {
 				data.push({
 					answer: array,
 					profileId: user.id,
-					questionId: questions[idQuiz].id
+					questionId: questions[idQuiz].id,
+					invite_id: locationState.id
 				})
 			} else {
 				data.push({
 					answer: [dataForm[`answers${idQuiz}`]],
 					profileId: user.id,
-					questionId: questions[idQuiz].id
+					questionId: questions[idQuiz].id,
+					invite_id: locationState.id
 				})
 			}
 
@@ -201,6 +205,8 @@ const FormAnswers = () => {
 
 	return questions.length === 0 ? (
 		<div>Carregando</div>
+	) : professional ? (
+		<span>n é pra vc estar aqui</span>
 	) : (
 		<IonPage>
 			<IonHeader>
