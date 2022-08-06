@@ -10,6 +10,19 @@ const nextConfig = {
 }
 
 module.exports = {
+	async redirects() {
+		return [
+			{
+				source: '/(.*)',
+				destination: '/index.html'
+			},
+			{
+				source: '/app/:slug*',
+				destination: '/app/:slug*',
+				permanent: true
+			}
+		]
+	},
 	env: {
 		SITE_URL: process.env.SITE_URL,
 		QSTASH_URL: process.env.QSTASH_URL,
