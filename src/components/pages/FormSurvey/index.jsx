@@ -151,7 +151,6 @@ const FormProfessional = ({ idForm }) => {
 	}, [idForm])
 
 	const onSubmit = async data => {
-		console.log(data)
 		const { data: dataSurveys } = await supabase
 			.from('surveys')
 			.insert([

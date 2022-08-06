@@ -5,8 +5,6 @@ import {
 	IonPage,
 	IonContent,
 	IonText,
-	useIonToast,
-	useIonLoading,
 	IonAvatar,
 	useIonRouter,
 	IonGrid,
@@ -19,10 +17,10 @@ import Profile from '../../../assets/Profile.png'
 import Running from '../../../assets/Running.png'
 import Yoga from '../../../assets/Yoga.png'
 import { useAuth } from '../../../contexts/Auth'
-import { supabase } from '../../../utils/supabaseClient'
 import Card from '../../ui/Card'
+import QuizList from '../../ui/QuizList'
 import ShortcutCard from '../../ui/ShortcutCard'
-import QuizList from './../../ui/QuizList'
+import handlePronoun from './../../../utils/pronoun'
 
 const HomeClient = () => {
 	const router = useIonRouter()
@@ -34,19 +32,6 @@ const HomeClient = () => {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [loading])
-
-	const handlePronoun = pronoun => {
-		switch (pronoun) {
-			case 'ele/dele':
-				return 'm'
-			case 'ela/dela':
-				return 'f'
-			case 'elu/delu':
-				return 'n'
-			default:
-				return 'n'
-		}
-	}
 
 	return (
 		<IonPage>
@@ -88,14 +73,14 @@ const HomeClient = () => {
 							</div>
 						</ShortcutCard>
 					</Link>
-					<div className="bg-white flex justify-between items-center shadow-md p-4 rounded-2xl">
+					{/* <div className="bg-white flex justify-between items-center shadow-md p-4 rounded-2xl">
 						<div className="w-[50px] h-[50px] bg-gray-900 rounded-full" />
 						<p className="w-[70%] font-bold">
 							Como você esta se sentindo hoje?
 						</p>
-					</div>
+					</div> */}
 				</div>
-				<Card classContainer="mb-2">
+				{/* <Card classContainer="mb-2">
 					<p className="font-bold text-xl leading-[1px]">Minhas metas</p>
 					<p className="leading-[1px] text-xsm">Hoje, 27 abril,2022</p>
 					<div className="grid grid-cols-4 grid-rows-[70px] gap-4 mt-6">
@@ -112,9 +97,9 @@ const HomeClient = () => {
 							<Image src={Running} alt="icone de corrida" />
 						</div>
 					</div>
-				</Card>
+				</Card> */}
 				<IonText className="font-semibold">Questionários</IonText>
-				<QuizList />
+				<QuizList style={{ height: '350px' }} />
 			</IonContent>
 		</IonPage>
 	)
