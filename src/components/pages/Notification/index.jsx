@@ -11,9 +11,11 @@ import {
 	IonButtons,
 	IonIcon,
 	IonTitle,
-	useIonRouter
+	useIonRouter,
+	IonAvatar
 } from '@ionic/react'
 import dayjs from 'dayjs'
+import 'dayjs/locale/pt-br'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import {
 	arrowForward,
@@ -21,14 +23,16 @@ import {
 	arrowBack,
 	alertCircleOutline
 } from 'ionicons/icons'
+import Image from 'next/image'
 import styled from 'styled-components'
 
-import Avatar from '../../ui/Avatar'
+import Profile from '../../../assets/Profile.png'
 import { useAuth } from './../../../contexts/Auth'
 import { supabase } from './../../../utils/supabaseClient'
 import Button from './../../ui/Button'
 
 dayjs.extend(relativeTime)
+dayjs.locale('pt-br')
 
 const Line = styled.div`
 	border-bottom: 1px solid #e6e6e6;
@@ -95,7 +99,7 @@ const Notification = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
-	const handleRedirectToSurvey = async surveys_id => {
+	const handleRedirectToSurvey = async (surveys_id, invite_id) => {
 		setDisableNotification(true)
 
 		const { data } = await supabase
@@ -106,7 +110,8 @@ const Notification = () => {
 			.match({
 				surveys_id,
 				for: professional ? 'MEDIC' : 'PATIENT',
-				[professional ? 'medic_id' : 'patient_id']: user.id
+				[professional ? 'medic_id' : 'patient_id']: user.id,
+				invite_id
 			})
 
 		if (data) {
@@ -161,11 +166,12 @@ const Notification = () => {
 						notifications.map((notification, index) => (
 							<React.Fragment key={index}>
 								<div className="flex items-center px-4">
-									<Avatar
-										background={imageTemp}
-										width="70px"
-										height="70px"
-									/>
+									<IonAvatar
+										slot="start"
+										className="w-[70px] h-max mr-3"
+									>
+										<Image src={Profile} alt="Foto de perfil" />
+									</IonAvatar>
 									<div className="flex flex-col my-10 w-3/5">
 										{notification.content ? (
 											<IonText className="text-black font-light mb-1 text-sm">
@@ -184,8 +190,12 @@ const Notification = () => {
 											<Button
 												disabled={disableNotification}
 												onClick={() =>
+													['RECEIVED', 'IN_PROGRESS'].includes(
+														notification.status
+													) &&
 													handleRedirectToSurvey(
-														notification.surveys_id
+														notification.surveys_id,
+														notification.invite_id
 													)
 												}
 											>

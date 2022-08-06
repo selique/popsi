@@ -22,8 +22,7 @@ import {
 import {
 	searchOutline,
 	addOutline,
-	chevronForwardOutline,
-	moveOutline
+	chevronForwardOutline
 } from 'ionicons/icons'
 import styled, { css } from 'styled-components'
 
