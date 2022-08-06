@@ -14,11 +14,12 @@ module.exports = {
 		return [
 			{
 				source: '/(.*)',
-				destination: '/index.html'
+				destination: '/index.html',
+				permanent: true
 			},
 			{
-				source: '/app/:slug*',
-				destination: '/app/:slug*',
+				source: '/app/:path*',
+				destination: '/index.html',
 				permanent: true
 			}
 		]
