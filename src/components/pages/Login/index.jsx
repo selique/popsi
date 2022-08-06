@@ -80,7 +80,7 @@ const Login = () => {
 				<Lines className="absolute top-0 right-[28%] rotate-[100deg] z-[-1] w-full" />
 				<div className="flex items-center h-full">
 					<IonFab slot="fixed" horizontal="end" vertical="top">
-						<IonFabButton onClick={() => router.goBack()}>
+						<IonFabButton onClick={() => router.push('/signinup')}>
 							<IonIcon color="white" src={close} />
 						</IonFabButton>
 					</IonFab>
