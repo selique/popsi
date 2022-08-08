@@ -55,23 +55,20 @@ const Login = () => {
 
 	const handleLogin = async data => {
 		await showLoading()
-		try {
-			await signIn(data).then(() => {
-				router.push('/app/home')
-			})
-		} catch (e) {
+		const { error } = await signIn(data)
+
+		if (error) {
 			showToast({
 				header: 'Erro',
-				message: e.error_description || e.message,
+				message:
+					'Verifique seu usuário e senha e tente novamente! Se o erro persistir contate o suporte.',
 				position: 'top',
-				color: 'purple',
-				cssClass: 'text-white',
+				color: 'warning',
 				duration: 5000,
 				animated: true
 			})
-		} finally {
-			await hideLoading()
 		}
+		await hideLoading()
 	}
 
 	return (
