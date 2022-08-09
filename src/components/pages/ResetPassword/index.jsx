@@ -27,18 +27,20 @@ import * as Yup from 'yup'
 import { supabase } from '../../../utils/supabaseClient'
 import Button from '../../ui/Button'
 
-const RedefinePassword = () => {
+const ResetPassword = () => {
 	const [showNewPassword, setShowNewPassword] = React.useState(false)
 	const [showRepeatNewPassword, setShowRepeatNewPassword] =
 		React.useState(false)
+
+	const [hash, setHash] = React.useState(null)
 
 	const router = useIonRouter()
 	const [showLoading, hideLoading] = useIonLoading()
 	const [showToast] = useIonToast()
 
-	const getAcessToken = JSON.parse(
-		window.localStorage.getItem('supabase.auth.token')
-	)?.currentSession?.access_token
+	React.useEffect(() => {
+		setHash(window.location.hash)
+	}, [])
 
 	const schema = Yup.object().shape({
 		password: Yup.string()
@@ -60,10 +62,55 @@ const RedefinePassword = () => {
 
 	const handleNewPassword = async data => {
 		await showLoading()
+
+		if (!hash) {
+			return showToast({
+				header: 'Sucesso',
+				message: 'Token inválido.',
+				position: 'top',
+				color: 'warning',
+				cssClass: 'text-white',
+				duration: 5000,
+				animated: true
+			})
+		} else if (hash) {
+			const hashArr = hash
+				.substring(1)
+				.split('&')
+				.map(param => param.split('='))
+
+			var type
+			var accessToken
+			for (const [key, value] of hashArr) {
+				if (key === 'type') {
+					type = value
+				} else if (key === 'access_token') {
+					accessToken = value
+				}
+			}
+		}
+
+		if (
+			type !== 'recovery' ||
+			!accessToken ||
+			typeof accessToken === 'object'
+		) {
+			return showToast({
+				header: 'Sucesso',
+				message: 'Token ou tipo inválido.',
+				position: 'top',
+				color: 'warning',
+				cssClass: 'text-white',
+				duration: 5000,
+				animated: true
+			})
+		}
+
 		const { data: updateUserData, error } =
-			await supabase.auth.api.updateUser(getAcessToken, {
+			await supabase.auth.api.updateUser(accessToken, {
 				password: data.password
 			})
+
 		if (updateUserData) {
 			router.push('/login')
 			showToast({
@@ -183,4 +230,4 @@ const RedefinePassword = () => {
 	)
 }
 
-export default RedefinePassword
+export default ResetPassword

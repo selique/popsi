@@ -10,7 +10,7 @@ import FormAnswers from './pages/FormAnswers'
 import FormSurvey from './pages/FormSurvey'
 import LastApresentation from './pages/LastApresentation'
 import Login from './pages/Login'
-import RedefinePassword from './pages/RedefinePassword'
+import ResetPassword from './pages/ResetPassword'
 import Scheduling from './pages/Scheduling'
 import Signinup from './pages/Signinup'
 import SignUp from './pages/SignUp'
@@ -44,7 +44,7 @@ const AppShell = () => {
 					/>
 					<Route.Hibrid
 						path="/reset-password"
-						component={RedefinePassword}
+						component={ResetPassword}
 						exact={true}
 					/>
 					<Route.Public path="/you-are" component={YouAre} exact={true} />

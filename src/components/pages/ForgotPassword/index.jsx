@@ -1,5 +1,5 @@
+import * as React from 'react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
 
 import { ErrorMessage } from '@hookform/error-message'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -17,16 +17,18 @@ import {
 	IonTitle,
 	IonToolbar,
 	useIonLoading,
+	useIonRouter,
 	useIonToast
 } from '@ionic/react'
 import * as Yup from 'yup'
 
 import { supabase } from '../../../utils/supabaseClient'
 import Button from '../../ui/Button'
-
 const ForgotPassword = () => {
 	const [showLoading, hideLoading] = useIonLoading()
 	const [showToast] = useIonToast()
+
+	const router = useIonRouter()
 
 	const schema = Yup.object().shape({
 		email: Yup.string()
@@ -37,6 +39,7 @@ const ForgotPassword = () => {
 	const {
 		handleSubmit,
 		register,
+		reset,
 		formState: { errors }
 	} = useForm({
 		mode: 'onChange',
@@ -71,8 +74,6 @@ const ForgotPassword = () => {
 						return 'E-mail inválido'
 					case 429:
 						return 'E-mail de recuperação já enviado, aguarde 60 segundos para solicitar outro'
-					case 429:
-						return 'E-mail de recuperação já enviado, aguarde 60 segundos para solicitar outro'
 					default:
 						return 'Algo deu errado, tente novamente mais tarde! Caso o erro persistir contate o suporte.'
 				}
@@ -89,6 +90,11 @@ const ForgotPassword = () => {
 			})
 		}
 		await hideLoading()
+	}
+
+	const handleCancel = () => {
+		reset()
+		router.push('/')
 	}
 
 	return (
@@ -122,18 +128,14 @@ const ForgotPassword = () => {
 							/>
 						</IonItem>
 
-						<Button
-							type="submit"
-							className="bg-purple-100 py-5 my-6 mt-16"
-						>
+						<Button type="submit" className="bg-purple-100 py-5 mt-16">
 							<IonText className="text-white text-lg">Próximo</IonText>
-						</Button>
-
-						<Button className="bg-danger py-5 my-6">
-							<IonText className="text-white text-lg">Cancelar</IonText>
 						</Button>
 					</IonList>
 				</form>
+				<Button className="bg-danger py-5 my-6" onClick={handleCancel}>
+					<IonText className="text-white text-lg">Cancelar</IonText>
+				</Button>
 			</IonContent>
 		</IonPage>
 	)
