@@ -1,11 +1,9 @@
 import { Link } from 'react-router-dom'
 
-import { IonContent, IonPage, IonText } from '@ionic/react'
-import Image from 'next/image'
+import { IonContent, IonPage, IonText, IonImg } from '@ionic/react'
 
 import Facebook from '../../../assets/Facebook'
 import Google from '../../../assets/Google'
-import Logo from '../../../assets/logo.png'
 import Button from '../../ui/Button'
 
 const Signinup = () => {
@@ -14,7 +12,7 @@ const Signinup = () => {
 			<IonContent fullscreen>
 				<div className="w-full h-full flex flex-col justify-center items-center">
 					<div className="w-[80%] flex flex-col items-center">
-						<Image src={Logo} alt="POPSI" />
+						<IonImg src={'/img/logo.png'} alt="POPSI" />
 						<div className="text-center w-full mt-12">
 							<IonText>Não tem cadastro ainda ? </IonText>
 							<Link to="/you-are">

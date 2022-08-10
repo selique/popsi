@@ -13,12 +13,11 @@ import {
 	useIonToast,
 	IonItem,
 	useIonRouter,
-	IonHeader
+	IonHeader,
+	IonImg
 } from '@ionic/react'
 import { filterOutline, addOutline, searchOutline } from 'ionicons/icons'
-import Image from 'next/image'
 
-import Profile from '../../../assets/Profile.png'
 import { useAuth } from '../../../contexts/Auth'
 import { supabase } from '../../../utils/supabaseClient'
 import Avatar from '../../ui/Avatar'
@@ -184,8 +183,8 @@ const Patients = () => {
 															router.push('/app/profile')
 														}
 													>
-														<Image
-															src={Profile}
+														<IonImg
+															src={'/img/Profile.png'}
 															alt="Foto de perfil"
 														/>
 													</IonAvatar>

@@ -15,13 +15,12 @@ import {
 	IonAvatar,
 	IonText,
 	IonFab,
-	IonFabButton
+	IonFabButton,
+	IonImg
 } from '@ionic/react'
 import { addOutline } from 'ionicons/icons'
 import { searchOutline } from 'ionicons/icons'
-import Image from 'next/image'
 
-import Profile from '../../../assets/Profile.png'
 import Card from '../../ui/Card'
 import Input from '../../ui/Input'
 import { useChatNotifications } from './../../../contexts/chatNotifications'
@@ -81,7 +80,10 @@ const AllChats = () => {
 											slot="start"
 											className="w-[50px] h-max mr-3"
 										>
-											<Image src={Profile} alt="Foto de perfil" />
+											<IonImg
+												src={'/img/Profile.png'}
+												alt="Foto de perfil"
+											/>
 										</IonAvatar>
 										<IonText className="font-semibold">
 											{full_name}

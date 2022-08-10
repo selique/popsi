@@ -8,12 +8,11 @@ import {
 	useIonToast,
 	IonButtons,
 	IonBackButton,
-	IonAvatar
+	IonAvatar,
+	IonImg
 } from '@ionic/react'
-import Image from 'next/image'
 import styled from 'styled-components'
 
-import ProfileIcon from '../../../assets/Profile.png'
 import { useAuth } from '../../../contexts/Auth'
 import { supabase } from '../../../utils/supabaseClient'
 import Button from '../../ui/Button'
@@ -166,7 +165,7 @@ const Profile = () => {
 					>
 						{/* <div className="absolute top-[65%] border-[15px] border-white-100 border-solid rounded-full" /> */}
 						<IonAvatar className="flex items-center w-[100px] h-max border-[15px] border-white-100 border-solid rounded-full">
-							<Image src={ProfileIcon} alt="Foto de perfil" />
+							<IonImg src={'/img/Profile.png'} alt="Foto de perfil" />
 						</IonAvatar>
 					</ContainerAvatar>
 				</div>

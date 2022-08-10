@@ -4454,11 +4454,6 @@ react-router@5.3.3:
     tiny-invariant "^1.0.2"
     tiny-warning "^1.0.0"
 
-react-use-gesture@9.1.3:
-  version "9.1.3"
-  resolved "https://registry.npmjs.org/react-use-gesture/-/react-use-gesture-9.1.3.tgz"
-  integrity sha512-CdqA2SmS/fj3kkS2W8ZU8wjTbVBAIwDWaRprX7OKaj7HlGwBasGEFggmk5qNklknqk9zK/h8D355bEJFTpqEMg==
-
 react-virtuoso@^2.16.1:
   version "2.16.1"
   resolved "https://registry.npmjs.org/react-virtuoso/-/react-virtuoso-2.16.1.tgz"
