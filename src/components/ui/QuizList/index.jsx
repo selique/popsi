@@ -1,12 +1,25 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 
-import { IonIcon, IonItem, IonPopover, IonText } from '@ionic/react'
+import {
+	IonIcon,
+	IonItem,
+	IonPopover,
+	IonText,
+	useIonToast,
+	useIonLoading,
+	IonLabel,
+	IonList,
+	useIonPopover,
+	IonContent
+} from '@ionic/react'
 import {
 	shareSocialOutline,
 	documentTextOutline,
 	ellipsisHorizontalOutline,
-	createOutline
+	createOutline,
+	trashOutline,
+	eyeOutline
 } from 'ionicons/icons'
 
 import { useAuth } from '../../../contexts/Auth'
@@ -14,15 +27,20 @@ import { supabase } from '../../../utils/supabaseClient'
 import Card from '../Card'
 import SurveyStatus from './surveyStatus'
 
-const QuizList = ({ searchSurvey = '', setSurveySelectedToInvite, style }) => {
+const QuizList = ({
+	searchSurvey = '',
+	setSurveySelectedToInvite,
+	isTherePatients
+}) => {
 	const { userSession, user, professional } = useAuth()
-
+	const [showLoading, hideLoading] = useIonLoading()
+	const [showToast] = useIonToast()
 	const [surveys, setSurveys] = React.useState(null)
 	const [surveysFiltered, setSurveysFiltered] = React.useState(null)
 
-	const [showPopOver, setShowPopOver] = React.useState({
-		open: false,
-		event: null
+	const [popoverState, setShowPopover] = React.useState({
+		showPopover: false,
+		event: undefined
 	})
 
 	const fetchProfessionalSurveys = async () => {
@@ -71,6 +89,53 @@ const QuizList = ({ searchSurvey = '', setSurveySelectedToInvite, style }) => {
 					survey: item.survey_generate_invite.surveys
 				}))
 			)
+		}
+	}
+
+	const deleteSurvey = async id => {
+		await showLoading()
+		try {
+			let { data, error, status } = await supabase
+				.from('surveys')
+				.delete()
+				.eq('id', id)
+
+			if (error) {
+				showToast({
+					header: 'Erro',
+					message: error.message,
+					position: 'top',
+					color: 'danger',
+					cssClass: 'text-white',
+					duration: 3000,
+					animated: true
+				})
+				throw error
+			}
+
+			if (data) {
+				await fetchProfessionalSurveys()
+				showToast({
+					message: 'Questionario deletado com sucesso',
+					position: 'top',
+					color: 'success',
+					cssClass: 'text-white',
+					duration: 3000,
+					animated: true
+				})
+			}
+		} catch (error) {
+			showToast({
+				header: 'Erro',
+				message: error.message,
+				position: 'top',
+				color: 'danger',
+				cssClass: 'text-white',
+				duration: 3000,
+				animated: true
+			})
+		} finally {
+			await hideLoading()
 		}
 	}
 
@@ -123,6 +188,27 @@ const QuizList = ({ searchSurvey = '', setSurveySelectedToInvite, style }) => {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, professional])
+
+	const handleInvitePatientModal = survey_id => {
+		if (isTherePatients) {
+			setSurveySelectedToInvite(survey_id)
+		} else {
+			showToast({
+				header: 'Erro',
+				message:
+					'Você precisa ter pelo menos um pacientes para usar essa função.',
+				position: 'top',
+				color: 'danger',
+				cssClass: 'text-white',
+				duration: 3000,
+				animated: true
+			})
+		}
+		setShowPopover({
+			showPopover: false,
+			event: undefined
+		})
+	}
 
 	return (
 		<>
@@ -177,70 +263,74 @@ const QuizList = ({ searchSurvey = '', setSurveySelectedToInvite, style }) => {
 									)}
 								</Link>
 								{professional && (
-									<>
-										<IonIcon
-											icon={ellipsisHorizontalOutline}
-											className="text-2xl"
-											slot="end"
-											onClick={e =>
-												setShowPopOver({
-													open: true,
-													event: e
-												})
-											}
-										/>
-										<IonPopover
-											isOpen={showPopOver.open}
-											event={showPopOver.event}
-											onDidDismiss={() =>
-												setShowPopOver({
-													open: false,
-													event: undefined
-												})
+									<IonIcon
+										icon={ellipsisHorizontalOutline}
+										className="text-2xl"
+										slot="end"
+										onClick={e => {
+											e.persist()
+											setShowPopover({ showPopover: true, event: e })
+										}}
+									/>
+								)}
+
+								<IonPopover
+									event={popoverState.event}
+									isOpen={popoverState.showPopover}
+									onDidDismiss={() =>
+										setShowPopover({
+											showPopover: false,
+											event: undefined
+										})
+									}
+								>
+									<IonList>
+										<IonItem
+											button
+											onClick={() =>
+												handleInvitePatientModal(survey.id)
 											}
 										>
-											<div className="flex flex-col p-2 bg-white">
-												<div
-													className="flex items-center py-2"
-													onClick={e => {
-														e.preventDefault()
-														setShowPopOver({
-															open: false,
-															event: undefined
-														})
-														setSurveySelectedToInvite(survey.id)
-													}}
-												>
-													<IonIcon
-														icon={shareSocialOutline}
-														className="text-md mr-2"
-													/>
-													<IonText className="text-md">
-														Convidar Paciente
-													</IonText>
-												</div>
-												<div
-													className="flex items-center py-2"
-													onClick={e => {
-														e.preventDefault()
-														setShowPopOver({
-															open: false,
-															event: undefined
-														})
-													}}
-												>
-													<IonIcon
-														icon={createOutline}
-														className="text-md mr-2"
-													/>
-													<IonText className="text-md">
-														Editar formulário
-													</IonText>
-												</div>
-											</div>
-										</IonPopover>
-									</>
-								)}
+											<IonIcon
+												icon={shareSocialOutline}
+												className="px-2"
+											/>
+											<IonLabel>Convidar Paciente</IonLabel>
+										</IonItem>
+										{/* <IonItem
+											button
+											onClick={() => {
+												console.log('editar')
+												setShowPopover({
+													showPopover: false,
+													event: undefined
+												})
+											}}
+										>
+											<IonIcon
+												icon={createOutline}
+												className="px-2"
+											/>
+											<IonLabel>Editar Formulário</IonLabel>
+										</IonItem> */}
+										<IonItem
+											button
+											onClick={() => {
+												deleteSurvey(survey.id)
+												setShowPopover({
+													showPopover: false,
+													event: undefined
+												})
+											}}
+										>
+											<IonIcon
+												icon={trashOutline}
+												className="px-2"
+											/>
+											<IonLabel>Deletar Formulário</IonLabel>
+										</IonItem>
+									</IonList>
+								</IonPopover>
 							</IonItem>
 						</Card>
 					)
