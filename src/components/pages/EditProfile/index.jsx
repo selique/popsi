@@ -20,18 +20,16 @@ import {
 	IonButton,
 	IonButtons,
 	IonBackButton,
-	IonTitle,
 	IonList,
 	IonTextarea,
 	IonAvatar
 } from '@ionic/react'
-import Image from 'next/image'
 import styled from 'styled-components'
 import * as Yup from 'yup'
 
-import Profile from '../../../assets/Profile.png'
 import { useAuth } from '../../../contexts/Auth'
 import { supabase } from '../../../utils/supabaseClient'
+import UploadAvatar from '../../UploadAvatar'
 
 const ContainerAvatar = styled.div`
 	::before {
@@ -120,14 +118,14 @@ const EditProfile = () => {
 				.from('profiles')
 				.select(
 					`
-				full_name,
-				bio,
-				nickname,
-				pronoun,
-				gender_identity,
-				cpf,
-				birth_date
-			`
+					full_name,
+					bio,
+					nickname,
+					pronoun,
+					gender_identity,
+					cpf,
+					birth_date
+				`
 				)
 				.eq('id', userSession?.id)
 				.single()
@@ -292,8 +290,8 @@ const EditProfile = () => {
 					`}
 					>
 						{/* <div className="absolute top-[65%] border-[15px] border-white-100 border-solid rounded-full" /> */}
-						<IonAvatar className="flex items-center w-[100px] h-max border-[15px] border-white-100 border-solid rounded-full">
-							<Image src={Profile} alt="Foto de perfil" />
+						<IonAvatar className="flex items-center w-[100px] h-[100px] border-[15px] border-white-100 border-solid rounded-full">
+							<UploadAvatar alt="Foto de perfil" />
 						</IonAvatar>
 					</ContainerAvatar>
 				</div>

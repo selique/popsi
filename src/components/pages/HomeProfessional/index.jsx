@@ -25,21 +25,21 @@ import {
 	IonItem,
 	IonLabel,
 	IonTextarea,
-	IonIcon
+	IonIcon,
+	IonImg
 } from '@ionic/react'
 import { notificationsOutline } from 'ionicons/icons'
-import Image from 'next/image'
 import styled from 'styled-components'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
 import Letter from '../../../assets/icons/Letter'
-import Profile from '../../../assets/Profile.png'
 import { useAuth } from '../../../contexts/Auth'
 import handlePronoun from '../../../utils/pronoun'
 import Button from '../../ui/Button'
 import Card from '../../ui/Card'
 import ModalSheet from '../../ui/Modal/SheetBottom'
 import ShortcutCard from '../../ui/ShortcutCard'
+import UploadAvatar from '../../UploadAvatar'
 
 const Slide = styled(IonSlides)`
 	ion-slide {
@@ -98,10 +98,10 @@ const HomeProfessional = () => {
 						</IonCol>
 						<IonCol className="ion-align-items-center ion-justify-content-end flex">
 							<IonAvatar
-								className="flex items-center w-[50px] h-max"
+								className="flex items-center w-[50px] h-[50px]"
 								onClick={() => router.push('/app/profile')}
 							>
-								<Image src={Profile} alt="Foto de perfil" />
+								<UploadAvatar disabledUpload alt="Foto de perfil" />
 							</IonAvatar>
 						</IonCol>
 					</IonRow>
@@ -143,7 +143,10 @@ const HomeProfessional = () => {
 							<IonList key={index}>
 								<IonItem lines={index === 5 && 'none'}>
 									<IonAvatar slot="start">
-										<Image src={Profile} alt="Foto de perfil" />
+										<IonImg
+											src={'/img/Profile.png'}
+											alt="Foto de perfil"
+										/>
 									</IonAvatar>
 									<div className="flex flex-col">
 										<IonText className="font-semibold">

@@ -1,14 +1,12 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Fragment } from 'react'
 
 import { Camera, CameraResultType } from '@capacitor/camera'
-import { IonDatetime, IonIcon, useIonLoading, useIonToast } from '@ionic/react'
-import { person } from 'ionicons/icons'
-import styled from 'styled-components'
+import { useIonLoading, useIonToast, IonImg } from '@ionic/react'
 
 import { useAuth } from '../contexts/Auth'
 import { supabase } from '../utils/supabaseClient'
-import Avatar from './ui/Avatar'
-export default function UploadAvatar() {
+
+export default function UploadAvatar({ _avatarUrl, disabledUpload, ...props }) {
 	const [avatarUrl, setAvatarUrl] = useState('')
 	const [showLoading, hideLoading] = useIonLoading()
 	const [showToast] = useIonToast()
@@ -45,8 +43,13 @@ export default function UploadAvatar() {
 	}
 
 	useEffect(() => {
-		getAvatarProfile()
-	}, [])
+		if (_avatarUrl) {
+			console.log('_avatarUrl', _avatarUrl)
+			setAvatarUrl(_avatarUrl)
+		} else if (user) {
+			getAvatarProfile()
+		}
+	}, [user, _avatarUrl])
 
 	useEffect(() => {
 		if (avatarUrl) {
@@ -129,24 +132,17 @@ export default function UploadAvatar() {
 		}
 	}
 
-	const AvatarWrapper = styled.div`
-		display: flex;
-		flex-wrap: nowrap;
-		align-content: center;
-		justify-content: center;
-		align-items: flex-start;
-		transform: translatey(-10vh);
-		height: 70px;
-	`
-	return (
-		<AvatarWrapper>
-			<div className="avatar_wrapper" onClick={uploadAvatar}>
-				{avatarUrl ? (
-					<Avatar background={avatarUrl} />
-				) : (
-					<IonIcon icon={person} className="no-avatar" />
-				)}
-			</div>
-		</AvatarWrapper>
+	return avatarUrl ? (
+		<IonImg
+			src={avatarUrl}
+			onClick={() => !disabledUpload && uploadAvatar()}
+			{...props}
+		/>
+	) : (
+		<IonImg
+			src={'/img/Profile.png'}
+			onClick={() => !disabledUpload && uploadAvatar()}
+			{...props}
+		/>
 	)
 }

@@ -9,29 +9,20 @@ import {
 	useIonRouter,
 	IonGrid,
 	IonRow,
-	IonCol
+	IonCol,
+	IonImg
 } from '@ionic/react'
-import Image from 'next/image'
 
-import Profile from '../../../assets/Profile.png'
-import Running from '../../../assets/Running.png'
-import Yoga from '../../../assets/Yoga.png'
 import { useAuth } from '../../../contexts/Auth'
 import Card from '../../ui/Card'
 import QuizList from '../../ui/QuizList'
 import ShortcutCard from '../../ui/ShortcutCard'
+import UploadAvatar from '../../UploadAvatar'
 import handlePronoun from './../../../utils/pronoun'
 
 const HomeClient = () => {
 	const router = useIonRouter()
 	const { user, loading } = useAuth()
-
-	React.useEffect(() => {
-		if (user) {
-			user.avatar_url && downloadImage(user.avatar_url)
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [loading])
 
 	return (
 		<IonPage>
@@ -54,10 +45,10 @@ const HomeClient = () => {
 						</IonCol>
 						<IonCol className="ion-align-items-center ion-justify-content-end flex">
 							<IonAvatar
-								className="flex items-center w-[50px] h-max"
+								className="flex items-center w-[50px] h-[50px]"
 								onClick={() => router.push('/app/profile')}
 							>
-								<Image src={Profile} alt="Foto de perfil" />
+								<UploadAvatar disabledUpload alt="Foto de perfil" />
 							</IonAvatar>
 						</IonCol>
 					</IonRow>
@@ -66,7 +57,7 @@ const HomeClient = () => {
 					<Link to="/breathing">
 						<ShortcutCard background="bg-purple-100 w-auto p-3 py-5">
 							<div className="flex flex-col justify-center items-center h-full">
-								<Image src={Yoga} alt="Yoga image" />
+								<IonImg src={'/img/Yoga.png'} alt="Yoga image" />
 								<p className="text-white text-sm text-center font-bold">
 									Controle de respiração
 								</p>
@@ -85,16 +76,16 @@ const HomeClient = () => {
 					<p className="leading-[1px] text-xsm">Hoje, 27 abril,2022</p>
 					<div className="grid grid-cols-4 grid-rows-[70px] gap-4 mt-6">
 						<div className="flex justify-center items-center w-full h-full border-dashed border-2 border-gray-900 rounded-full">
-							<Image src={Running} alt="icone de corrida" />
+							<IonImg src={'/img/Running.png'} alt="icone de corrida" />
 						</div>
 						<div className="flex justify-center items-center w-full h-full border-dashed border-2 border-gray-900 rounded-full">
-							<Image src={Running} alt="icone de corrida" />
+							<IonImg src={'/img/Running.png'} alt="icone de corrida" />
 						</div>
 						<div className="flex justify-center items-center w-full h-full border-dashed border-2 border-gray-900 rounded-full">
-							<Image src={Running} alt="icone de corrida" />
+							<IonImg src={'/img/Running.png'} alt="icone de corrida" />
 						</div>
 						<div className="flex justify-center items-center w-full h-full border-dashed border-2 border-gray-900 rounded-full">
-							<Image src={Running} alt="icone de corrida" />
+							<IonImg src={'/img/Running.png'} alt="icone de corrida" />
 						</div>
 					</div>
 				</Card> */}

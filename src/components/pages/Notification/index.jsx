@@ -12,7 +12,8 @@ import {
 	IonIcon,
 	IonTitle,
 	useIonRouter,
-	IonAvatar
+	IonAvatar,
+	IonImg
 } from '@ionic/react'
 import dayjs from 'dayjs'
 import 'dayjs/locale/pt-br'
@@ -23,10 +24,8 @@ import {
 	arrowBack,
 	alertCircleOutline
 } from 'ionicons/icons'
-import Image from 'next/image'
 import styled from 'styled-components'
 
-import Profile from '../../../assets/Profile.png'
 import { useAuth } from './../../../contexts/Auth'
 import { supabase } from './../../../utils/supabaseClient'
 import Button from './../../ui/Button'
@@ -170,7 +169,10 @@ const Notification = () => {
 										slot="start"
 										className="w-[70px] h-max mr-3"
 									>
-										<Image src={Profile} alt="Foto de perfil" />
+										<IonImg
+											src={'/img/Profile.png'}
+											alt="Foto de perfil"
+										/>
 									</IonAvatar>
 									<div className="flex flex-col my-10 w-3/5">
 										{notification.content ? (

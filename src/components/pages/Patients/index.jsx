@@ -13,16 +13,15 @@ import {
 	useIonToast,
 	IonItem,
 	useIonRouter,
-	IonHeader
+	IonHeader,
+	IonImg
 } from '@ionic/react'
 import { filterOutline, addOutline, searchOutline } from 'ionicons/icons'
-import Image from 'next/image'
 
-import Profile from '../../../assets/Profile.png'
 import { useAuth } from '../../../contexts/Auth'
 import { supabase } from '../../../utils/supabaseClient'
-import Avatar from '../../ui/Avatar'
 import Card from '../../ui/Card'
+import UploadAvatar from '../../UploadAvatar'
 import Input from './../../ui/Input'
 
 const Patients = () => {
@@ -164,29 +163,30 @@ const Patients = () => {
 											// 	to={`/app/patients/quiz/${id}`}
 											// >
 											<IonItem
-												key={index}
+												key={id}
 												lines={
 													index + 1 === patientsFiltered.length &&
 													'none'
 												}
 											>
 												{avatar_url ? (
-													<Avatar
-														width="50px"
-														height="50px"
-														background={avatar_url}
-														hasBorder={false}
-													/>
+													<IonAvatar className="flex items-center w-[50px] h-[50px]">
+														<UploadAvatar
+															_avatarUrl={avatar_url}
+															disabledUpload
+															alt="Foto de perfil"
+														/>
+													</IonAvatar>
 												) : (
 													<IonAvatar
-														className="flex items-center w-[50px] h-max"
+														className="flex items-center w-[50px] h-[50px]"
 														onClick={() =>
 															router.push('/app/profile')
 														}
 													>
-														<Image
-															src={Profile}
-															alt="Foto de perfil"
+														<IonImg
+															src={'/img/Profile.png'}
+															alt={full_name}
 														/>
 													</IonAvatar>
 												)}
