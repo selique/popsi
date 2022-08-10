@@ -27,7 +27,11 @@ import { supabase } from '../../../utils/supabaseClient'
 import Card from '../Card'
 import SurveyStatus from './surveyStatus'
 
-const QuizList = ({ searchSurvey = '', setSurveySelectedToInvite, style }) => {
+const QuizList = ({
+	searchSurvey = '',
+	setSurveySelectedToInvite,
+	isTherePatients
+}) => {
 	const { userSession, user, professional } = useAuth()
 	const [showLoading, hideLoading] = useIonLoading()
 	const [showToast] = useIonToast()
@@ -185,6 +189,27 @@ const QuizList = ({ searchSurvey = '', setSurveySelectedToInvite, style }) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, professional])
 
+	const handleInvitePatientModal = survey_id => {
+		if (isTherePatients) {
+			setSurveySelectedToInvite(survey_id)
+		} else {
+			showToast({
+				header: 'Erro',
+				message:
+					'Você precisa ter pelo menos um pacientes para usar essa função.',
+				position: 'top',
+				color: 'danger',
+				cssClass: 'text-white',
+				duration: 3000,
+				animated: true
+			})
+		}
+		setShowPopover({
+			showPopover: false,
+			event: undefined
+		})
+	}
+
 	return (
 		<>
 			{!surveysFiltered || surveysFiltered.length === 0 ? (
@@ -262,13 +287,9 @@ const QuizList = ({ searchSurvey = '', setSurveySelectedToInvite, style }) => {
 									<IonList>
 										<IonItem
 											button
-											onClick={() => {
-												setSurveySelectedToInvite(survey.id)
-												setShowPopover({
-													showPopover: false,
-													event: undefined
-												})
-											}}
+											onClick={() =>
+												handleInvitePatientModal(survey.id)
+											}
 										>
 											<IonIcon
 												icon={shareSocialOutline}

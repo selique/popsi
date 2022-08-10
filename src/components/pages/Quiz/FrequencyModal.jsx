@@ -10,7 +10,8 @@ import {
 	IonRadioGroup,
 	IonSelect,
 	IonSelectOption,
-	IonText
+	IonText,
+	useIonToast
 } from '@ionic/react'
 import { format, parseISO } from 'date-fns'
 
@@ -21,6 +22,8 @@ const FrequencyModal = ({ isOpen, setIsOpen, setSchedule, daysOfTheWeek }) => {
 	const { control, handleSubmit, watch, unregister, reset } = useForm({
 		mode: 'onChange'
 	})
+
+	const [showToast] = useIonToast()
 
 	React.useEffect(() => {
 		switch (watch('frequency')) {
@@ -60,9 +63,21 @@ const FrequencyModal = ({ isOpen, setIsOpen, setSchedule, daysOfTheWeek }) => {
 		const getHours = format(parseISO(dataForm.hours), 'HH')
 		const getMinutes = format(parseISO(dataForm.hours), 'mm')
 
-		const multWeekDays = dataForm.multWeekDays.filter(
+		const multWeekDays = dataForm.multWeekDays?.filter(
 			item => item !== undefined
 		)
+
+		if (dataForm.frequency === 'custom' && !dataForm.monthDays) {
+			showToast({
+				header: 'Erro',
+				message: 'Selecione pelo menos um dia do mês.',
+				position: 'top',
+				color: 'warning',
+				duration: 5000,
+				animated: true
+			})
+			return
+		}
 
 		switch (dataForm.frequency) {
 			case 'daily':
