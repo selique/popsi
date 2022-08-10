@@ -9,7 +9,6 @@ const Public = ({
 	...rest
 }) => {
 	const { userSession } = useAuth()
-
 	return redirectTo ? (
 		<RouteDom
 			{...rest}
@@ -33,13 +32,17 @@ const Public = ({
 
 const Private = ({ component: Component, redirectTo, ...rest }) => {
 	const { userSession } = useAuth()
-
 	return redirectTo ? (
-		userSession ? (
-			<Component {...props} />
-		) : (
-			<RouteDom {...rest} render={() => <Redirect to={redirectTo} />} />
-		)
+		<RouteDom
+			{...rest}
+			render={() =>
+				userSession ? (
+					<Redirect to={redirectTo} />
+				) : (
+					<Redirect to="/signinup" />
+				)
+			}
+		/>
 	) : (
 		<RouteDom
 			{...rest}
@@ -51,10 +54,13 @@ const Private = ({ component: Component, redirectTo, ...rest }) => {
 }
 
 const Hibrid = ({ component: Component, redirectTo, ...rest }) => {
-	return redirectTo ? (
-		<RouteDom {...rest} render={() => <Redirect to={redirectTo} />} />
-	) : (
-		<RouteDom {...rest} render={props => <Component {...props} />} />
+	return (
+		<RouteDom
+			{...rest}
+			render={props =>
+				redirectTo ? <Redirect to={redirectTo} /> : <Component {...props} />
+			}
+		/>
 	)
 }
 

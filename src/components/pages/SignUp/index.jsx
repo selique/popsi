@@ -130,7 +130,7 @@ const SignUp = () => {
 				},
 				{
 					data: signUpData,
-					redirectTo: 'http://localhost:3000/login'
+					redirectTo: `${process.env.SITE_URL}/login`
 				}
 			)
 
