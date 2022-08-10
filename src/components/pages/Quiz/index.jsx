@@ -17,7 +17,10 @@ import {
 	IonItem,
 	IonLabel,
 	useIonRouter,
-	createGesture
+	createGesture,
+	IonAvatar,
+	useIonToast,
+	IonList
 } from '@ionic/react'
 import {
 	searchOutline,
@@ -34,6 +37,7 @@ import Modal from '../../ui/Modal/SheetBottom'
 import QuizList from '../../ui/QuizList'
 import { createScheduledJob } from './../../../utils/createScheduleQStash'
 import Button from './../../ui/Button'
+import UploadAvatar from './../../UploadAvatar'
 import FrequencyModal from './FrequencyModal'
 
 const imageTemp2 =
@@ -67,7 +71,9 @@ const Quiz = () => {
 	const { userSession, professional } = useAuth()
 	const router = useIonRouter()
 
-	const { control, handleSubmit, reset } = useForm({
+	const [showToast] = useIonToast()
+
+	const { control, handleSubmit, reset, setValue } = useForm({
 		mode: 'onChange'
 	})
 
@@ -78,7 +84,7 @@ const Quiz = () => {
 
 	const [invitedPatients, setInvitedPatients] = React.useState(null)
 	const [isInvitedLoading, setIsInvitedLoading] = React.useState(false)
-	const [schedule, setSchedule] = React.useState('0 * * * *')
+	const [schedule, setSchedule] = React.useState('0 12 * * *')
 
 	const buttonAddSurveyRef = React.useRef(null)
 
@@ -113,6 +119,17 @@ const Quiz = () => {
 	}, [])
 
 	const handleInvited = async dataForm => {
+		if (!dataForm.envited0) {
+			return showToast({
+				header: 'Erro',
+				message: 'Selecione pelo menos um paciente para convidar.',
+				position: 'top',
+				color: 'danger',
+				cssClass: 'text-white',
+				duration: 5000,
+				animated: true
+			})
+		}
 		setIsInvitedLoading(true)
 		let usersInvited = []
 		Object.values(dataForm).map(patient => {
@@ -144,7 +161,15 @@ const Quiz = () => {
 		}
 
 		if (error) {
-			console.log(error)
+			showToast({
+				header: 'Erro',
+				message: error.message,
+				position: 'top',
+				color: 'danger',
+				cssClass: 'text-white',
+				duration: 5000,
+				animated: true
+			})
 			setIsInvitedLoading(false)
 		}
 	}
@@ -201,6 +226,62 @@ const Quiz = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [buttonAddSurveyRef])
 
+	const translateCronExpression = expression => {
+		const splitExpression = expression.split(' ')
+		var minutes = splitExpression[0]
+		var hours = splitExpression[1]
+		var weekDays = splitExpression[4]
+		var monthDays = splitExpression[2]
+
+		const translateWeekDays = {
+			0: 'Dom',
+			1: 'Seg',
+			2: 'Ter',
+			3: 'Qua',
+			4: 'Qui',
+			5: 'Sex',
+			6: 'Sab'
+		}
+
+		if (weekDays !== '*') {
+			if (weekDays.length > 1) {
+				weekDays = weekDays
+					.split(',')
+					.map(day => translateWeekDays[day])
+					.join(', ')
+			} else {
+				weekDays = translateWeekDays[weekDays]
+			}
+		}
+
+		const replaceLastComma = string => {
+			if (!string.includes(',')) {
+				return string
+			}
+			const lastComma = string.lastIndexOf(',')
+			return (
+				string.substring(0, lastComma) +
+				' e ' +
+				string.substring(lastComma + 1)
+			)
+		}
+
+		const monthDaysText =
+			monthDays !== '*' &&
+			`Todo dia ${replaceLastComma(monthDays.replaceAll(',', ', '))} do mês`
+
+		const weekDaysText = weekDays !== '*' && replaceLastComma(weekDays)
+
+		const hoursText = hours < 10 ? `0${hours}` : hours
+		const minutesText = minutes < 10 ? `0${minutes}` : minutes
+
+		const translatedExpression = `${
+			monthDaysText || weekDaysText || 'Todo dia'
+		} as ${hoursText}:${minutesText}`
+
+		return translatedExpression
+	}
+
 	return (
 		<IonPage>
 			<IonHeader>
@@ -244,6 +325,9 @@ const Quiz = () => {
 							<QuizList
 								searchSurvey={searchSurvey}
 								setSurveySelectedToInvite={setSurveySelectedToInvite}
+								isTherePatients={
+									invitedPatients && invitedPatients.length > 0
+								}
 							/>
 						</GridRow>
 					</Grid>
@@ -308,78 +392,69 @@ const Quiz = () => {
 						</div>
 						<div className="mt-7">
 							<IonText className="font-bold">Lista de Pacientes</IonText>
-							<div className="overflow-scroll h-[32vh]">
+							<IonList>
 								<IonItem
 									lines="none"
-									className="ion-justify-content-around ion-align-items-center"
+									className="ion-justify-content-around ion-align-items-center ion-margin-bottom"
 								>
-									<IonLabel className="font-bold">Frequência</IonLabel>
-
-									<div
+									<IonText className="font-bold w-[100px]">
+										Frequência
+									</IonText>
+									<IonText
+										slot="end"
 										onClick={() => {
 											setShowFrequencyModal(!showFrequencyModal)
 										}}
 										className="flex justify-center"
 									>
-										<IonLabel>{schedule}</IonLabel>
+										{translateCronExpression(schedule)}
 										<IonIcon
 											className="h-6"
 											icon={chevronForwardOutline}
 										/>
-									</div>
+									</IonText>
 								</IonItem>
 								{invitedPatients ? (
-									invitedPatients.map((item, index) => {
-										// const validating = surveys
-										// 	.filter(
-										// 		survey =>
-										// 			survey.id === surveySelectedToInvite
-										// 	)[0]
-										// 	?._survey_invited?.find(
-										// 		patient => patient.id === item.id
-										// 	)
-
-										// console.log(item.id)
-										// console.log(!!validating)
-										return (
-											<div
-												key={index}
-												className="grid grid-cols-[auto_1fr_auto] gap-4 items-center mt-4"
-											>
-												<Avatar
-													background={
-														item.avatar_url ?? imageTemp2
-													}
-													hasBorder={false}
-													width="70px"
-													height="70px"
-												/>
+									invitedPatients.map((item, index) => (
+										<IonItem lines="none" key={index}>
+											<div className="flex items-center gap-5">
+												<IonAvatar className="flex items-center w-[50px] h-[50px]">
+													<UploadAvatar
+														_avatarUrl={item.avatar_url}
+														disabledUpload
+														alt="Foto de perfil"
+													/>
+												</IonAvatar>
 												<IonText className="font-bold">
 													{item.nickname}
 												</IonText>
-												<Controller
-													control={control}
-													name={`envited${index}`}
-													render={({ field: { onChange } }) => (
-														<IonCheckbox
-															value={item.id}
-															disabled={isInvitedLoading}
-															onIonChange={() =>
-																!isInvitedLoading &&
+											</div>
+											<Controller
+												control={control}
+												name={`envited${index}`}
+												render={({
+													field: { value, onChange }
+												}) => (
+													<IonCheckbox
+														value={value}
+														disabled={isInvitedLoading}
+														slot="end"
+														onIonChange={() => {
+															if (!isInvitedLoading) {
 																onChange(item.id)
 															}
-														/>
-													)}
-												/>
-											</div>
-										)
-									})
+														}}
+													/>
+												)}
+											/>
+										</IonItem>
+									))
 								) : (
 									<IonText className="font-bold">
 										Nenhum paciente encontrado.
 									</IonText>
 								)}
-							</div>
+							</IonList>
 						</div>
 						<Button
 							className={`${
