@@ -255,6 +255,9 @@ const Quiz = () => {
 		}
 
 		const replaceLastComma = string => {
+			if (!string.includes(',')) {
+				return string
+			}
 			const lastComma = string.lastIndexOf(',')
 			return (
 				string.substring(0, lastComma) +
@@ -266,6 +269,7 @@ const Quiz = () => {
 		const monthDaysText =
 			monthDays !== '*' &&
 			`Todo dia ${replaceLastComma(monthDays.replaceAll(',', ', '))} do mês`
+
 		const weekDaysText = weekDays !== '*' && replaceLastComma(weekDays)
 
 		const hoursText = hours < 10 ? `0${hours}` : hours
