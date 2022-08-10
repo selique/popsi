@@ -17,18 +17,12 @@ import { useAuth } from '../../../contexts/Auth'
 import Card from '../../ui/Card'
 import QuizList from '../../ui/QuizList'
 import ShortcutCard from '../../ui/ShortcutCard'
+import UploadAvatar from '../../UploadAvatar'
 import handlePronoun from './../../../utils/pronoun'
 
 const HomeClient = () => {
 	const router = useIonRouter()
 	const { user, loading } = useAuth()
-
-	React.useEffect(() => {
-		if (user) {
-			user.avatar_url && downloadImage(user.avatar_url)
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [loading])
 
 	return (
 		<IonPage>
@@ -51,10 +45,10 @@ const HomeClient = () => {
 						</IonCol>
 						<IonCol className="ion-align-items-center ion-justify-content-end flex">
 							<IonAvatar
-								className="flex items-center w-[50px] h-max"
+								className="flex items-center w-[50px] h-[50px]"
 								onClick={() => router.push('/app/profile')}
 							>
-								<IonImg src={'/img/Profile.png'} alt="Foto de perfil" />
+								<UploadAvatar disabledUpload alt="Foto de perfil" />
 							</IonAvatar>
 						</IonCol>
 					</IonRow>

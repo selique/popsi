@@ -39,6 +39,7 @@ import Button from '../../ui/Button'
 import Card from '../../ui/Card'
 import ModalSheet from '../../ui/Modal/SheetBottom'
 import ShortcutCard from '../../ui/ShortcutCard'
+import UploadAvatar from '../../UploadAvatar'
 
 const Slide = styled(IonSlides)`
 	ion-slide {
@@ -97,10 +98,10 @@ const HomeProfessional = () => {
 						</IonCol>
 						<IonCol className="ion-align-items-center ion-justify-content-end flex">
 							<IonAvatar
-								className="flex items-center w-[50px] h-max"
+								className="flex items-center w-[50px] h-[50px]"
 								onClick={() => router.push('/app/profile')}
 							>
-								<IonImg src={'/img/Profile.png'} alt="Foto de perfil" />
+								<UploadAvatar disabledUpload alt="Foto de perfil" />
 							</IonAvatar>
 						</IonCol>
 					</IonRow>

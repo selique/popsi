@@ -16,6 +16,7 @@ import styled from 'styled-components'
 import { useAuth } from '../../../contexts/Auth'
 import { supabase } from '../../../utils/supabaseClient'
 import Button from '../../ui/Button'
+import UploadAvatar from '../../UploadAvatar'
 
 const ContainerAvatar = styled.div`
 	::before {
@@ -164,8 +165,8 @@ const Profile = () => {
 					`}
 					>
 						{/* <div className="absolute top-[65%] border-[15px] border-white-100 border-solid rounded-full" /> */}
-						<IonAvatar className="flex items-center w-[100px] h-max border-[15px] border-white-100 border-solid rounded-full">
-							<IonImg src={'/img/Profile.png'} alt="Foto de perfil" />
+						<IonAvatar className="flex items-center w-[100px] h-[100px] border-[15px] border-white-100 border-solid rounded-full">
+							<UploadAvatar disabledUpload alt="Foto de perfil" />
 						</IonAvatar>
 					</ContainerAvatar>
 				</div>
