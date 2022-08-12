@@ -10,7 +10,6 @@ import {
 	useIonLoading,
 	IonLabel,
 	IonList,
-	useIonPopover,
 	IonContent
 } from '@ionic/react'
 import {
@@ -37,10 +36,10 @@ const QuizList = ({
 	const [showToast] = useIonToast()
 	const [surveys, setSurveys] = React.useState(null)
 	const [surveysFiltered, setSurveysFiltered] = React.useState(null)
-
 	const [popoverState, setShowPopover] = React.useState({
 		showPopover: false,
-		event: undefined
+		event: undefined,
+		id: null
 	})
 
 	const fetchProfessionalSurveys = async () => {
@@ -204,10 +203,6 @@ const QuizList = ({
 				animated: true
 			})
 		}
-		setShowPopover({
-			showPopover: false,
-			event: undefined
-		})
 	}
 
 	return (
@@ -223,7 +218,7 @@ const QuizList = ({
 
 					return (
 						<Card
-							key={index}
+							key={survey.id}
 							classContainer={`${
 								index + 1 < surveysFiltered.length
 									? 'my-3'
@@ -269,27 +264,41 @@ const QuizList = ({
 										slot="end"
 										onClick={e => {
 											e.persist()
-											setShowPopover({ showPopover: true, event: e })
+											setShowPopover({
+												showPopover: true,
+												event: e,
+												id: survey.id
+											})
 										}}
 									/>
 								)}
 
 								<IonPopover
 									event={popoverState.event}
-									isOpen={popoverState.showPopover}
+									id={survey.id}
+									isOpen={
+										popoverState.showPopover &&
+										survey.id === popoverState.id
+									}
 									onDidDismiss={() =>
 										setShowPopover({
 											showPopover: false,
-											event: undefined
+											event: undefined,
+											id: survey.id
 										})
 									}
 								>
 									<IonList>
 										<IonItem
 											button
-											onClick={() =>
+											onClick={() => {
 												handleInvitePatientModal(survey.id)
-											}
+												setShowPopover({
+													showPopover: false,
+													event: undefined,
+													id: survey.id
+												})
+											}}
 										>
 											<IonIcon
 												icon={shareSocialOutline}
@@ -303,7 +312,8 @@ const QuizList = ({
 												console.log('editar')
 												setShowPopover({
 													showPopover: false,
-													event: undefined
+													event: undefined,
+													id: survey.id
 												})
 											}}
 										>
@@ -319,7 +329,8 @@ const QuizList = ({
 												deleteSurvey(survey.id)
 												setShowPopover({
 													showPopover: false,
-													event: undefined
+													event: undefined,
+													id: survey.id
 												})
 											}}
 										>
@@ -327,7 +338,7 @@ const QuizList = ({
 												icon={trashOutline}
 												className="px-2"
 											/>
-											<IonLabel>Deletar Formulário</IonLabel>
+											<IonLabel>Deletar Questionario</IonLabel>
 										</IonItem>
 									</IonList>
 								</IonPopover>
