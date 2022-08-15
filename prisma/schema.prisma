@@ -94,7 +94,9 @@ model SurveyInvited {
 
    status SurveyInvitedStatus? @default(PENDING)
 
-   created_at           DateTime               @default(now()) @db.Timestamptz()
+   created_at DateTime  @default(now()) @db.Timestamptz()
+   updated_at DateTime? @db.Timestamptz()
+
    Answer               Answer[]
    SurveysNotifications SurveysNotifications[]
 

@@ -60,7 +60,7 @@ const FormAnswers = () => {
 					header: 'Erro',
 					message: error.message,
 					position: 'top',
-					color: 'purple',
+					color: 'danger',
 					cssClass: 'text-white',
 					duration: 5000,
 					animated: true
@@ -117,7 +117,7 @@ const FormAnswers = () => {
 					header: 'Finalizado',
 					message: 'Respostas enviadas com sucesso.',
 					position: 'top',
-					color: 'purple',
+					color: 'success',
 					cssClass: 'text-white',
 					duration: 5000,
 					animated: true
@@ -127,11 +127,11 @@ const FormAnswers = () => {
 			if (errorAnswer || errorInvite) {
 				Router.back()
 				showToast({
-					header: 'Error',
+					header: 'Erro',
 					message:
 						'Algo deu errado tente novamente, caso o erro persistir contate o suporte.',
 					position: 'top',
-					color: 'purple',
+					color: 'danger',
 					cssClass: 'text-white',
 					duration: 5000,
 					animated: true

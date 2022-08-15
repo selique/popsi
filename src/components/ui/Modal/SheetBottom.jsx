@@ -35,28 +35,26 @@ const Modal = ({
 			swipeToClose={swipeToClose}
 			backdropDismiss={true}
 		>
-			<div className="h-[100vh]">
-				<div
-					className={`w-full`}
-					style={{ height: heightBackdrop + 'vh' }}
-					onClick={onDidDismiss}
-				/>
-				<div
-					className={`bg-white rounded-t-2xl p-4`}
-					style={{ height: height + 'vh' }}
-				>
-					{title && (
-						<div className="w-full flex justify-between items-center mb-3">
-							<IonText className="text-xl font-bold">{title}</IonText>
-							<IonIcon
-								icon={closeOutline}
-								className="text-2xl"
-								onClick={onDidDismiss}
-							/>
-						</div>
-					)}
-					{children}
-				</div>
+			<div
+				className={`w-full`}
+				style={{ height: heightBackdrop + 'vh' }}
+				onClick={onDidDismiss}
+			/>
+			<div
+				className={`bg-white rounded-t-2xl p-4`}
+				style={{ height: height + 'vh' }}
+			>
+				{title && (
+					<div className="w-full flex justify-between items-center mb-3">
+						<IonText className="text-xl font-bold">{title}</IonText>
+						<IonIcon
+							icon={closeOutline}
+							className="text-2xl"
+							onClick={onDidDismiss}
+						/>
+					</div>
+				)}
+				{children}
 			</div>
 		</CustomModal>
 	)
