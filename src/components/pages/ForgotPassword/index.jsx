@@ -58,7 +58,7 @@ const ForgotPassword = () => {
 				header: 'Erro',
 				message: 'E-mail de recuperação enviado',
 				position: 'top',
-				color: 'purple',
+				color: 'danger',
 				cssClass: 'text-white',
 				duration: 5000,
 				animated: true
@@ -83,7 +83,7 @@ const ForgotPassword = () => {
 				header: 'Erro',
 				message: getErrorByStatus(error.status),
 				position: 'top',
-				color: 'purple',
+				color: 'danger',
 				cssClass: 'text-white',
 				duration: 5000,
 				animated: true

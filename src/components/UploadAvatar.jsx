@@ -32,7 +32,7 @@ export default function UploadAvatar({ _avatarUrl, disabledUpload, ...props }) {
 				header: 'Erro',
 				message: error.message,
 				position: 'top',
-				color: 'purple',
+				color: 'danger',
 				cssClass: 'text-white',
 				duration: 5000,
 				animated: true
@@ -44,11 +44,11 @@ export default function UploadAvatar({ _avatarUrl, disabledUpload, ...props }) {
 
 	useEffect(() => {
 		if (_avatarUrl) {
-			console.log('_avatarUrl', _avatarUrl)
 			setAvatarUrl(_avatarUrl)
 		} else if (user) {
 			getAvatarProfile()
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, _avatarUrl])
 
 	useEffect(() => {

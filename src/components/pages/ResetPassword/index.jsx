@@ -68,7 +68,7 @@ const ResetPassword = () => {
 				header: 'Sucesso',
 				message: 'Token inválido.',
 				position: 'top',
-				color: 'warning',
+				color: 'success',
 				cssClass: 'text-white',
 				duration: 5000,
 				animated: true
@@ -99,7 +99,7 @@ const ResetPassword = () => {
 				header: 'Sucesso',
 				message: 'Token ou tipo inválido.',
 				position: 'top',
-				color: 'warning',
+				color: 'success',
 				cssClass: 'text-white',
 				duration: 5000,
 				animated: true
@@ -117,7 +117,7 @@ const ResetPassword = () => {
 				header: 'Sucesso',
 				message: 'Senha alterada com sucesso',
 				position: 'top',
-				color: 'purple',
+				color: 'success',
 				cssClass: 'text-white',
 				duration: 5000,
 				animated: true
@@ -129,7 +129,7 @@ const ResetPassword = () => {
 				header: 'Erro',
 				message: error.message,
 				position: 'top',
-				color: 'purple',
+				color: 'danger',
 				cssClass: 'text-white',
 				duration: 5000,
 				animated: true

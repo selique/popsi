@@ -139,7 +139,7 @@ const SignUp = () => {
 				header: 'Sucesso',
 				message: 'Um e-mail de confirmação foi enviado para você!',
 				position: 'top',
-				color: 'purple',
+				color: 'success',
 				cssClass: 'text-white',
 				duration: 5000,
 				animated: true
@@ -149,7 +149,7 @@ const SignUp = () => {
 				header: 'Erro',
 				message: e.error_description || e.message,
 				position: 'top',
-				color: 'purple',
+				color: 'danger',
 				cssClass: 'text-white',
 				duration: 5000,
 				animated: true

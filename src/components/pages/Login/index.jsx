@@ -63,7 +63,7 @@ const Login = () => {
 				message:
 					'Verifique seu usuário e senha e tente novamente! Se o erro persistir contate o suporte.',
 				position: 'top',
-				color: 'warning',
+				color: 'danger',
 				duration: 5000,
 				animated: true
 			})
