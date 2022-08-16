@@ -37,10 +37,10 @@ const AnswaredSurveys = () => {
 					id,
 					status,
 					updated_at,
-					survey_generate_invite:survey_generate_invite_id (
-						surveys:survey_id ( * )
+					survey_generate_invite!inner(
+						surveys!inner(*)
 					),
-					profiles:patient_id ( * )
+					profiles:patient_id(*)
 				`
 				)
 				.eq('survey_generate_invite.surveys.owner_id', userSession.id)
@@ -84,7 +84,7 @@ const AnswaredSurveys = () => {
 				Questionários respondidos recentemente
 			</IonText>
 			<div className="my-4">
-				{!surveys ? (
+				{surveys.length === 0 ? (
 					<IonText>Nenhum questionário encontrado</IonText>
 				) : (
 					surveys.map(({ survey, updated_at, user }, index) => (
@@ -92,17 +92,17 @@ const AnswaredSurveys = () => {
 							<IonItem lines={index + 1 === surveys.length && 'none'}>
 								<IonAvatar className="flex items-center w-[50px] h-[50px] mr-5">
 									<UploadAvatar
-										_avatarUrl={user.avatar}
+										_avatarUrl={user?.avatar}
 										disabledUpload
 										alt="Foto de perfil"
 									/>
 								</IonAvatar>
 								<div className="flex flex-col">
 									<IonText className="font-semibold">
-										{user.name}
+										{user?.name}
 									</IonText>
 									<IonText className="text-gray-900">
-										{survey.title}
+										{survey?.title}
 									</IonText>
 								</div>
 								<IonNote slot="end">
