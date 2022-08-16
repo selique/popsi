@@ -14,7 +14,9 @@ import {
 	IonSelectOption,
 	IonReorderGroup,
 	IonReorder,
-	IonTextarea
+	IonTextarea,
+	useIonToast,
+	useIonLoading
 } from '@ionic/react'
 import {
 	shareSocialOutline,
@@ -24,6 +26,7 @@ import {
 import Router from 'next/router'
 
 import { useAuth } from '../../../contexts/Auth'
+import replaceLastComma from '../../../utils/replaceLastComma'
 import { supabase } from '../../../utils/supabaseClient'
 
 const MultipleChoiceFieldArray = ({ nestIndex, control, register }) => {
@@ -32,9 +35,16 @@ const MultipleChoiceFieldArray = ({ nestIndex, control, register }) => {
 		name: `questions[${nestIndex}].multiple_choice`
 	})
 
+	React.useEffect(() => {
+		if (fields.length === 0) {
+			append('')
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [fields])
+
 	return (
 		<div>
-			{fields.map((item, k) => {
+			{fields.map((item, index) => {
 				return (
 					<div
 						key={item.id}
@@ -44,24 +54,26 @@ const MultipleChoiceFieldArray = ({ nestIndex, control, register }) => {
 							placeholder="Titulo da Pergunta"
 							className="mb-2 h-max"
 							{...register(
-								`questions[${nestIndex}].multiple_choice[${k}]`
+								`questions[${nestIndex}].multiple_choice[${index}]`
 							)}
 						/>
-						<IonButton
-							onClick={() => remove(k)}
-							size="small"
-							color="danger"
-							slot="end"
-							className="p-0"
-						>
-							<IonIcon icon={trashOutline} />
-						</IonButton>
+						{fields.length > 1 && (
+							<IonButton
+								onClick={() => remove(index)}
+								size="small"
+								color="danger"
+								slot="end"
+								className="p-0"
+							>
+								<IonIcon icon={trashOutline} />
+							</IonButton>
+						)}
 					</div>
 				)
 			})}
-			<IonButton color="blue" onClick={() => append()}>
+			<IonButton color="blue" onClick={() => append('')}>
 				<IonText className="text-white font-medium">
-					Adicionar Pergunta
+					Adicionar escolha
 				</IonText>
 			</IonButton>
 		</div>
@@ -74,9 +86,16 @@ const SingleChoiceFieldArray = ({ nestIndex, control, register }) => {
 		name: `questions[${nestIndex}].single_choice`
 	})
 
+	React.useEffect(() => {
+		if (fields.length === 0) {
+			append('')
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [fields])
+
 	return (
 		<div>
-			{fields.map((item, k) => {
+			{fields.map((item, index) => {
 				return (
 					<div
 						key={item.id}
@@ -86,24 +105,26 @@ const SingleChoiceFieldArray = ({ nestIndex, control, register }) => {
 							placeholder="Titulo da Pergunta"
 							className="mb-2 h-max"
 							{...register(
-								`questions[${nestIndex}].single_choice[${k}]`
+								`questions[${nestIndex}].single_choice[${index}]`
 							)}
 						/>
-						<IonButton
-							onClick={() => remove(k)}
-							size="small"
-							color="danger"
-							slot="end"
-							className="p-0"
-						>
-							<IonIcon icon={trashOutline} />
-						</IonButton>
+						{fields.length > 1 && (
+							<IonButton
+								onClick={() => remove(index)}
+								size="small"
+								color="danger"
+								slot="end"
+								className="p-0"
+							>
+								<IonIcon icon={trashOutline} />
+							</IonButton>
+						)}
 					</div>
 				)
 			})}
-			<IonButton color="blue" onClick={() => append()}>
+			<IonButton color="blue" onClick={() => append('')}>
 				<IonText className="text-white font-medium">
-					Adicionar Pergunta
+					Adicionar Escolha
 				</IonText>
 			</IonButton>
 		</div>
@@ -123,6 +144,9 @@ const FormProfessional = ({ idForm }) => {
 			name: 'questions'
 		})
 
+	const [showToast, dimissToast] = useIonToast()
+	const [showLoading, hideLoading] = useIonLoading()
+
 	React.useEffect(() => {
 		if (idForm) {
 			const getQuestions = async () => {
@@ -131,7 +155,7 @@ const FormProfessional = ({ idForm }) => {
 					.select('*')
 					.eq('surveysId', idForm)
 
-				console.log(data)
+				console.log('questions', data)
 			}
 
 			const getDataForm = async () => {
@@ -151,6 +175,107 @@ const FormProfessional = ({ idForm }) => {
 	}, [idForm])
 
 	const onSubmit = async data => {
+		await dimissToast()
+		// If survey doesn't have a title show a warning and don't create the survey
+		if (!data.title) {
+			return showToast({
+				header: 'Aviso',
+				message: 'Adicione um titulo para o questionário.',
+				position: 'top',
+				color: 'warning',
+				duration: 5000,
+				animated: true
+			})
+		}
+
+		// Creating questions array
+		let dataQuestion = []
+		data.questions.map(question => {
+			// Default question object
+			const defaultData = {
+				question: question.title,
+				type: question.type,
+				description: question.description
+			}
+
+			if (
+				question.type !== 'MULTIPLE_CHOICE' &&
+				question.type !== 'SINGLE_CHOICE'
+			) {
+				dataQuestion.push(defaultData)
+			} else {
+				// Set alternatives for "MULTIPLE_CHOICE" and "SINGLE_CHOICE" question type
+				dataQuestion.push({
+					...defaultData,
+					alternatives:
+						question.type === 'MULTIPLE_CHOICE'
+							? question.multiple_choice
+							: question.single_choice
+				})
+			}
+		})
+
+		const findEmptyTitles = []
+		const findEmptyMultipleOptions = []
+
+		dataQuestion.map((quest, index) => {
+			if (quest.question === '') {
+				findEmptyTitles.push(index + 1)
+			}
+
+			if (['MULTIPLE_CHOICE', 'SINGLE_CHOICE'].includes(quest.type)) {
+				const findEmptyAlternative = quest.alternatives.some(
+					alternative => alternative === ''
+				)
+
+				if (findEmptyAlternative) {
+					findEmptyMultipleOptions.push(index + 1)
+				}
+			}
+		})
+
+		const countEmptyTitles = findEmptyTitles.length
+
+		// If some question doesn't have a title show a warning and don't create the survey
+		if (countEmptyTitles > 0) {
+			const emptyTitlesText = replaceLastComma(findEmptyTitles.join(', '))
+			return showToast({
+				header: 'Aviso',
+				message: `Preencha o titulo ${
+					countEmptyTitles === 1 ? 'da' : 'das'
+				} ${
+					countEmptyTitles === 1 ? 'pergunta' : 'perguntas'
+				} ${emptyTitlesText}.`,
+				position: 'top',
+				color: 'warning',
+				duration: 5000,
+				animated: true
+			})
+		}
+
+		const countEmptyMultipleOptions = findEmptyMultipleOptions.length
+
+		if (countEmptyMultipleOptions > 0) {
+			const emptyMultipleOptionsText = replaceLastComma(
+				findEmptyMultipleOptions.join(', ')
+			)
+
+			return showToast({
+				header: 'Aviso',
+				message: `Preencha todas as multiplas escolhas ${
+					countEmptyMultipleOptions === 1 ? 'da' : 'das'
+				} ${
+					countEmptyMultipleOptions === 1 ? 'pergunta' : 'perguntas'
+				} ${emptyMultipleOptionsText}.`,
+				position: 'top',
+				color: 'warning',
+				duration: 5000,
+				animated: true
+			})
+		}
+
+		await showLoading()
+
 		const { data: dataSurveys } = await supabase
 			.from('surveys')
 			.insert([
@@ -163,36 +288,27 @@ const FormProfessional = ({ idForm }) => {
 			.single()
 
 		if (!!data && !!data.questions && dataSurveys) {
-			let dataQuestion = []
-			data.questions.map(question => {
-				const defaultData = {
-					question: question.title,
-					type: question.type,
-					surveysId: dataSurveys.id
-				}
-
-				if (
-					question.type !== 'MULTIPLE_CHOICE' &&
-					question.type !== 'SINGLE_CHOICE'
-				) {
-					dataQuestion.push(defaultData)
-				} else {
-					dataQuestion.push({
-						...defaultData,
-						alternatives:
-							question.type === 'MULTIPLE_CHOICE'
-								? question.multiple_choice
-								: question.single_choice
-					})
-				}
-			})
-
 			const { data: dataQuestions } = await supabase
 				.from('questions')
-				.insert(dataQuestion)
-
-			if (dataQuestions) Router.back()
+				.insert(
+					dataQuestion.map(question => ({
+						...question,
+						surveysId: dataSurveys.id
+					}))
+				)
+			if (dataQuestions) {
+				Router.back()
+				showToast({
+					header: 'Sucesso',
+					message: 'Questionário criado.',
+					position: 'top',
+					color: 'success',
+					duration: 5000,
+					animated: true
+				})
+			}
 		}
+		await hideLoading()
 	}
 
 	// if you want to control your fields with watch
@@ -224,14 +340,14 @@ const FormProfessional = ({ idForm }) => {
 			<div className="bg-purple-100 p-4">
 				<div className="flex justify-between items-center">
 					<IonBackButton defaultHref="/app/quiz" className="text-white" />
-					<div className="flex text-2xl text-white">
+					{/* <div className="flex text-2xl text-white">
 						<IonIcon
 							src={shareSocialOutline}
 							color="#ffffff"
 							className="mr-3"
 						/>
 						<IonIcon src={settingsOutline} color="#ffffff" />
-					</div>
+					</div> */}
 				</div>
 				<input
 					placeholder="Título"
@@ -265,6 +381,10 @@ const FormProfessional = ({ idForm }) => {
 								className="mb-2"
 								{...register(`questions.${index}.title`)}
 							/>
+							<IonTextarea
+								placeholder="descrição da pergunta..."
+								{...register(`questions.${index}.description`)}
+							/>
 							<Controller
 								name={`questions.${index}.type`}
 								control={control}
@@ -272,7 +392,7 @@ const FormProfessional = ({ idForm }) => {
 									<IonSelect
 										placeholder="Tipo de resposta"
 										value={field.value}
-										className="mb-2"
+										className="my-2"
 										onIonChange={e => {
 											if (
 												e.detail.value !== 'MULTIPLE_CHOICE' ||
@@ -297,7 +417,7 @@ const FormProfessional = ({ idForm }) => {
 										<IonSelectOption value="TEXT">{`Texto`}</IonSelectOption>
 										<IonSelectOption value="MULTIPLE_CHOICE">{`Multipla escolha`}</IonSelectOption>
 										<IonSelectOption value="SINGLE_CHOICE">{`Escolha Única`}</IonSelectOption>
-										<IonSelectOption value="SCALE">{`Escala`}</IonSelectOption>
+										{/* <IonSelectOption value="SCALE">{`Escala`}</IonSelectOption> */}
 									</IonSelect>
 								)}
 							/>
@@ -317,11 +437,6 @@ const FormProfessional = ({ idForm }) => {
 									{...{ control, register }}
 								/>
 							)}
-							<IonTextarea
-								placeholder="descrição da pergunta..."
-								className="mb-2"
-								{...register(`questions.${index}.description`)}
-							/>
 						</div>
 					)
 				})}
@@ -331,7 +446,7 @@ const FormProfessional = ({ idForm }) => {
 				shape="round"
 				color="blue"
 				onClick={() => {
-					append()
+					append({ title: '', type: 'TEXT', description: '' })
 				}}
 			>
 				<IonText className="text-white font-medium">
