@@ -115,6 +115,7 @@ const QuizList = ({
 			if (data) {
 				await fetchProfessionalSurveys()
 				showToast({
+					header: 'Sucesso',
 					message: 'Questionario deletado com sucesso',
 					position: 'top',
 					color: 'success',
@@ -218,7 +219,7 @@ const QuizList = ({
 
 					return (
 						<Card
-							key={survey.id}
+							key={index}
 							classContainer={`${
 								index + 1 < surveysFiltered.length
 									? 'my-3'

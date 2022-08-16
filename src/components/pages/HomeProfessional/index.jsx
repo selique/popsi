@@ -1,69 +1,26 @@
 import * as React from 'react'
-import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
 
 import 'swiper/css'
 import { Clipboard } from '@capacitor/clipboard'
 import { Share } from '@capacitor/share'
-import {
-	IonAvatar,
-	IonCol,
-	IonGrid,
-	IonList,
-	IonNote,
-	IonRow,
-	isPlatform,
-	useIonRouter
-} from '@ionic/react'
-import {
-	IonPage,
-	IonContent,
-	IonText,
-	IonSlides,
-	IonSlide,
-	IonInput,
-	IonItem,
-	IonLabel,
-	IonTextarea,
-	IonIcon,
-	IonImg
-} from '@ionic/react'
-import { notificationsOutline } from 'ionicons/icons'
-import styled from 'styled-components'
+import { IonAvatar, IonCol, IonGrid, IonRow, useIonRouter } from '@ionic/react'
+import { IonPage, IonContent, IonText, IonItem, IonLabel } from '@ionic/react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
 import Letter from '../../../assets/icons/Letter'
 import { useAuth } from '../../../contexts/Auth'
 import handlePronoun from '../../../utils/pronoun'
 import Button from '../../ui/Button'
-import Card from '../../ui/Card'
-import ModalSheet from '../../ui/Modal/SheetBottom'
+import Modal from '../../ui/Modal/SheetBottom'
 import ShortcutCard from '../../ui/ShortcutCard'
 import UploadAvatar from '../../UploadAvatar'
-
-const Slide = styled(IonSlides)`
-	ion-slide {
-		height: 100% !important;
-		padding: 30px 0;
-
-		& > div {
-			height: -webkit-fill-available !important;
-		}
-	}
-`
+import AnswaredSurveys from './AswaredSurveys'
 
 const HomeProfessional = () => {
 	const [modalInviteUserOpen, setModalInviteUserOpen] = React.useState(false)
 	const { user } = useAuth()
 
 	const router = useIonRouter()
-
-	const slideOpts = {
-		slidesPerView: 2.6,
-		spaceBetween: 5,
-		speed: 400,
-		autoHeight: true
-	}
 
 	const handleShareUrl = async () => {
 		try {
@@ -134,35 +91,8 @@ const HomeProfessional = () => {
 						</ShortcutCard>
 					</SwiperSlide> */}
 				</Swiper>
-				<Card>
-					<IonText className="font-semibold text-gray-900 text-xl leading-5">
-						Questionários respondidos recentemente
-					</IonText>
-					<div className="my-4">
-						{[...Array(6)].map((_, index) => (
-							<IonList key={index}>
-								<IonItem lines={index === 5 && 'none'}>
-									<IonAvatar slot="start">
-										<IonImg
-											src={'/img/Profile.png'}
-											alt="Foto de perfil"
-										/>
-									</IonAvatar>
-									<div className="flex flex-col">
-										<IonText className="font-semibold">
-											Ana Lisa
-										</IonText>
-										<IonText className="text-gray-900">
-											Questionario 1
-										</IonText>
-									</div>
-									<IonNote slot="end">10:30 am</IonNote>
-								</IonItem>
-							</IonList>
-						))}
-					</div>
-				</Card>
-				<ModalSheet
+				<AnswaredSurveys />
+				<Modal
 					title="Convidar paciênte"
 					isOpen={modalInviteUserOpen}
 					onDidDismiss={() => setModalInviteUserOpen(false)}
@@ -209,7 +139,7 @@ const HomeProfessional = () => {
 							</IonCol>
 						</IonRow>
 					</IonGrid>
-				</ModalSheet>
+				</Modal>
 			</IonContent>
 		</IonPage>
 	)

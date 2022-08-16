@@ -109,7 +109,7 @@ const Profile = () => {
 				header: 'Erro',
 				message: error.message,
 				position: 'top',
-				color: 'purple',
+				color: 'danger',
 				cssClass: 'text-white',
 				duration: 5000,
 				animated: true

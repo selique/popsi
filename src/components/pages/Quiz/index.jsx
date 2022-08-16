@@ -30,6 +30,7 @@ import {
 import styled, { css } from 'styled-components'
 
 import { useAuth } from '../../../contexts/Auth'
+import replaceLastComma from '../../../utils/replaceLastComma'
 import { supabase } from '../../../utils/supabaseClient'
 import Avatar from '../../ui/Avatar'
 import Input from '../../ui/Input'
@@ -252,18 +253,6 @@ const Quiz = () => {
 			} else {
 				weekDays = translateWeekDays[weekDays]
 			}
-		}
-
-		const replaceLastComma = string => {
-			if (!string.includes(',')) {
-				return string
-			}
-			const lastComma = string.lastIndexOf(',')
-			return (
-				string.substring(0, lastComma) +
-				' e ' +
-				string.substring(lastComma + 1)
-			)
 		}
 
 		const monthDaysText =

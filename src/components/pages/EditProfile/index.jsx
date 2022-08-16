@@ -153,7 +153,7 @@ const EditProfile = () => {
 				header: 'Erro',
 				message: error.message,
 				position: 'top',
-				color: 'purple',
+				color: 'danger',
 				cssClass: 'text-white',
 				duration: 5000,
 				animated: true
@@ -177,7 +177,7 @@ const EditProfile = () => {
 						header: 'Erro',
 						message: error.message,
 						position: 'top',
-						color: 'purple',
+						color: 'denger',
 						cssClass: 'text-white',
 						duration: 5000,
 						animated: true
@@ -188,7 +188,7 @@ const EditProfile = () => {
 						message:
 							'Foi enviado um e-mail de confirmação para o novo endereço.',
 						position: 'top',
-						color: 'purple',
+						color: 'success',
 						cssClass: 'text-white',
 						duration: 5000,
 						animated: true
@@ -227,7 +227,7 @@ const EditProfile = () => {
 						header: 'Sucesso',
 						message: 'Perfil atualizado com sucesso.',
 						position: 'top',
-						color: 'purple',
+						color: 'success',
 						cssClass: 'text-white',
 						duration: 5000,
 						animated: true
@@ -239,7 +239,7 @@ const EditProfile = () => {
 				header: 'Erro',
 				message: error.message,
 				position: 'top',
-				color: 'purple',
+				color: 'danger',
 				cssClass: 'text-white',
 				duration: 5000,
 				animated: true

@@ -72,7 +72,7 @@ const FrequencyModal = ({ isOpen, setIsOpen, setSchedule, daysOfTheWeek }) => {
 				header: 'Erro',
 				message: 'Selecione pelo menos um dia do mês.',
 				position: 'top',
-				color: 'warning',
+				color: 'danger',
 				duration: 5000,
 				animated: true
 			})
