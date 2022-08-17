@@ -72,7 +72,7 @@ const Quiz = () => {
 	const { userSession, professional } = useAuth()
 	const router = useIonRouter()
 
-	const [showToast] = useIonToast()
+	const [showToast, dimissToast] = useIonToast()
 
 	const { control, handleSubmit, reset, setValue } = useForm({
 		mode: 'onChange'
@@ -86,6 +86,7 @@ const Quiz = () => {
 	const [invitedPatients, setInvitedPatients] = React.useState(null)
 	const [isInvitedLoading, setIsInvitedLoading] = React.useState(false)
 	const [schedule, setSchedule] = React.useState('0 12 * * *')
+	const [immediateInvitation, setImmediateInvitation] = React.useState(true)
 
 	const buttonAddSurveyRef = React.useRef(null)
 
@@ -158,10 +159,42 @@ const Quiz = () => {
 				patient_id
 			}))
 
+			if (immediateInvitation) {
+				const { error } = await supabase
+					.from('_survey_invited')
+					.insert(invitedUsers)
+
+				showToast({
+					header: 'Secesso',
+					message: 'Convite enviado.',
+					position: 'top',
+					color: 'success',
+					cssClass: 'text-white',
+					duration: 5000,
+					animated: true
+				})
+
+				if (error) {
+					await dimissToast()
+					showToast({
+						header: 'Erro',
+						message:
+							'Algo deu errado no convite imediato, tente novamente e caso o erro persistir contate o suporte.',
+						position: 'top',
+						color: 'danger',
+						cssClass: 'text-white',
+						duration: 5000,
+						animated: true
+					})
+					console.error(error.message)
+				}
+			}
+
 			await createScheduledJob(schedule, invitedUsers)
 		}
 
 		if (error) {
+			await dimissToast()
 			showToast({
 				header: 'Erro',
 				message: error.message,
@@ -465,6 +498,8 @@ const Quiz = () => {
 						setIsOpen={setShowFrequencyModal}
 						setSchedule={setSchedule}
 						daysOfTheWeek={daysOfTheWeek}
+						immediateInvitation={immediateInvitation}
+						setImmediateInvitation={setImmediateInvitation}
 					/>
 				)}
 			</IonContent>
