@@ -52,70 +52,71 @@ const ChatNotificationsProvider = ({ children }) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, professional])
 
-	React.useEffect(() => {
-		let subscription
-		if (user) {
-			if (professional) {
-				subscription = supabase
-					.from(`messages:receiver_id=eq.${user.id}`)
-					.on('INSERT', payload => {
-						setIsThereMessages(payload.new.status === 'SENT')
-						if (professional) {
-							setPatients(prev => {
-								const getPatient = prev.find(
-									patient => patient.id === payload.new.sender_id
-								)
-								const newMessages = getPatient.messages.concat(
-									payload.new
-								)
-								return prev.map(patient =>
-									patient.id === payload.new.sender_id
-										? { ...patient, messages: newMessages }
-										: patient
-								)
-							})
-						}
-					})
-					.on('UPDATE', payload => {
-						setIsThereMessages(payload.new.status === 'SENT')
-						if (professional) {
-							setPatients(prev => {
-								const getPatient = prev.find(
-									patient => patient.id === payload.new.sender_id
-								)
-								const updatedMessages = getPatient.messages.map(
-									message =>
-										message.id === payload.new.id
-											? payload.new
-											: message
-								)
-								return prev.map(patient =>
-									patient.id === payload.new.sender_id
-										? { ...patient, messages: updatedMessages }
-										: patient
-								)
-							})
-						}
-					})
-					.subscribe()
+	// TODO: chat notification new message
+	// React.useEffect(() => {
+	// 	let subscription
+	// 	if (user) {
+	// 		if (professional) {
+	// 			subscription = supabase
+	// 				.from(`messages:receiver_id=eq.${user.id}`)
+	// 				.on('INSERT', payload => {
+	// 					setIsThereMessages(payload.new.status === 'SENT')
+	// 					if (professional) {
+	// 						setPatients(prev => {
+	// 							const getPatient = prev.find(
+	// 								patient => patient.id === payload.new.sender_id
+	// 							)
+	// 							const newMessages = getPatient.messages.concat(
+	// 								payload.new
+	// 							)
+	// 							return prev.map(patient =>
+	// 								patient.id === payload.new.sender_id
+	// 									? { ...patient, messages: newMessages }
+	// 									: patient
+	// 							)
+	// 						})
+	// 					}
+	// 				})
+	// 				.on('UPDATE', payload => {
+	// 					setIsThereMessages(payload.new.status === 'SENT')
+	// 					if (professional) {
+	// 						setPatients(prev => {
+	// 							const getPatient = prev.find(
+	// 								patient => patient.id === payload.new.sender_id
+	// 							)
+	// 							const updatedMessages = getPatient.messages.map(
+	// 								message =>
+	// 									message.id === payload.new.id
+	// 										? payload.new
+	// 										: message
+	// 							)
+	// 							return prev.map(patient =>
+	// 								patient.id === payload.new.sender_id
+	// 									? { ...patient, messages: updatedMessages }
+	// 									: patient
+	// 							)
+	// 						})
+	// 					}
+	// 				})
+	// 				.subscribe()
 
-				return () => supabase.removeSubscription(subscription)
-			} else {
-				subscription = supabase
-					.from(`messages:receiver_id=eq.${user.id}`)
-					.on('INSERT', payload =>
-						setIsThereMessages(payload.new.status === 'SENT')
-					)
-					.on('UPDATE', payload =>
-						setIsThereMessages(payload.new.status === 'SENT')
-					)
-					.subscribe()
+	// 			return () => supabase.removeSubscription(subscription)
+	// 		} else {
+	// 			subscription = supabase
+	// 				.from(`messages:receiver_id=eq.${user.id}`)
+	// 				.on('INSERT', payload =>
+	// 					setIsThereMessages(payload.new.status === 'SENT')
+	// 				)
+	// 				.on('UPDATE', payload =>
+	// 					setIsThereMessages(payload.new.status === 'SENT')
+	// 				)
+	// 				.subscribe()
 
-				return () => supabase.removeSubscription(subscription)
-			}
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [user, professional])
+	// 			return () => supabase.removeSubscription(subscription)
+	// 		}
+	// 	}
+	// 	// eslint-disable-next-line react-hooks/exhaustive-deps
+	// }, [user, professional])
 
 	return (
 		<ChatNotificationsContext.Provider
