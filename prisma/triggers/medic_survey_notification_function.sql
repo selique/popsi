@@ -1,3 +1,5 @@
+DROP FUNCTION IF EXISTS handle_medic_survey_notification cascade;
+
 create or replace function handle_medic_survey_notification() returns trigger as $$
   declare
     s_id uuid;
@@ -7,7 +9,7 @@ create or replace function handle_medic_survey_notification() returns trigger as
     from questions
     where id = new."questionId" into s_id;
 
-    if not exists (select from surveys_notifications where patient_id = new."profileId" and surveys_id = s_id and status = 'SENT') then
+    if not exists (select from surveys_notifications where patient_id = new."profileId" and surveys_id = s_id and status = 'RECEIVED' and "for" = 'MEDIC' and invite_id = new.invite_id) then
       select owner_id
       from surveys
       where id = s_id into m_id;
@@ -21,6 +23,7 @@ create or replace function handle_medic_survey_notification() returns trigger as
         medic_id,
         patient_id,
         surveys_id,
+        invite_id,
         created_at
       )
       values (
@@ -28,6 +31,7 @@ create or replace function handle_medic_survey_notification() returns trigger as
         m_id,
         new."profileId",
         s_id,
+        new.invite_id,
         current_timestamp
       );
     end if;

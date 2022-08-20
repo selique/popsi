@@ -3,6 +3,7 @@ import { Controller, useForm } from 'react-hook-form'
 
 import {
 	IonCheckbox,
+	IonContent,
 	IonDatetime,
 	IonItem,
 	IonLabel,
@@ -11,6 +12,7 @@ import {
 	IonSelect,
 	IonSelectOption,
 	IonText,
+	IonToggle,
 	useIonToast
 } from '@ionic/react'
 import { format, parseISO } from 'date-fns'
@@ -18,7 +20,14 @@ import { format, parseISO } from 'date-fns'
 import Button from './../../ui/Button'
 import Modal from './../../ui/Modal/SheetBottom'
 
-const FrequencyModal = ({ isOpen, setIsOpen, setSchedule, daysOfTheWeek }) => {
+const FrequencyModal = ({
+	isOpen,
+	setIsOpen,
+	setSchedule,
+	daysOfTheWeek,
+	immediateInvitation,
+	setImmediateInvitation
+}) => {
 	const { control, handleSubmit, watch, unregister, reset } = useForm({
 		mode: 'onChange'
 	})
@@ -232,6 +241,20 @@ const FrequencyModal = ({ isOpen, setIsOpen, setSchedule, daysOfTheWeek }) => {
 						</>
 					)}
 				/>
+
+				<IonItem lines="none">
+					<IonLabel>Ativar envio imediato</IonLabel>
+					<IonToggle
+						checked={immediateInvitation}
+						onIonChange={e => setImmediateInvitation(e.detail.checked)}
+					/>
+				</IonItem>
+				<IonItem lines="none">
+					<IonText className="text-xs">
+						*Quando ativado envia o formulario imediatamente para o
+						paciente*
+					</IonText>
+				</IonItem>
 
 				<div className="flex w-full justify-around gap-3">
 					<Button onClick={handleCancel} className="bg-red-400" type="">

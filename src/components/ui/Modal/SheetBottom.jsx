@@ -1,12 +1,16 @@
 import * as React from 'react'
 
-import { IonIcon, IonModal, IonText } from '@ionic/react'
+import { IonContent, IonIcon, IonModal, IonText } from '@ionic/react'
 import { closeOutline } from 'ionicons/icons'
 import styled from 'styled-components'
 
 const CustomModal = styled(IonModal)`
 	.modal-wrapper {
 		background: transparent !important;
+	}
+
+	ion-content {
+		--background: transparent !important;
 	}
 `
 
@@ -54,7 +58,10 @@ const Modal = ({
 						/>
 					</div>
 				)}
-				{children}
+				<IonContent>
+					{children}
+					<div className="w-full h-[1px] my-5" />
+				</IonContent>
 			</div>
 		</CustomModal>
 	)
