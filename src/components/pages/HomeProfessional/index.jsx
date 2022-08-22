@@ -27,7 +27,7 @@ const HomeProfessional = () => {
 			await Share.share({
 				title: 'Seu Psicologo te convidou para Popsi',
 				text: 'Complete seu cadastro na Popsicle e aproveite os benefícios',
-				url: `${process.env.SITE_URL}/sign-up?medic=${user.id}`
+				url: `/sign-up?medic=${user.id}`
 			})
 		} catch (error) {
 			console.log(error)
