@@ -51,7 +51,7 @@ const MultipleChoiceFieldArray = ({ nestIndex, control, register }) => {
 						className="grid grid-cols-[1fr_auto] items-center"
 					>
 						<IonInput
-							placeholder="Titulo da Pergunta"
+							placeholder={`Alternativa ${index + 1}`}
 							className="mb-2 h-max"
 							{...register(
 								`questions[${nestIndex}].multiple_choice[${index}]`
@@ -102,7 +102,7 @@ const SingleChoiceFieldArray = ({ nestIndex, control, register }) => {
 						className="grid grid-cols-[1fr_auto] items-center"
 					>
 						<IonInput
-							placeholder="Titulo da Pergunta"
+							placeholder={`Alternativa ${index + 1}`}
 							className="mb-2 h-max"
 							{...register(
 								`questions[${nestIndex}].single_choice[${index}]`
