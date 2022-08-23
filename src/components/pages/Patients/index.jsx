@@ -169,27 +169,13 @@ const Patients = () => {
 													'none'
 												}
 											>
-												{avatar_url ? (
-													<IonAvatar className="flex items-center w-[50px] h-[50px]">
-														<UploadAvatar
-															_avatarUrl={avatar_url}
-															disabledUpload
-															alt="Foto de perfil"
-														/>
-													</IonAvatar>
-												) : (
-													<IonAvatar
-														className="flex items-center w-[50px] h-[50px]"
-														onClick={() =>
-															router.push('/app/profile')
-														}
-													>
-														<IonImg
-															src={'/img/Profile.png'}
-															alt={full_name}
-														/>
-													</IonAvatar>
-												)}
+												<IonAvatar className="flex items-center w-[50px] h-[50px]">
+													<UploadAvatar
+														_avatarUrl={avatar_url}
+														disabledUpload
+														alt="Foto de perfil"
+													/>
+												</IonAvatar>
 												<IonText className="font-semibold ml-3">
 													{full_name}
 												</IonText>
