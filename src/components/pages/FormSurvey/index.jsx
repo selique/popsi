@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { useForm, useFieldArray, Controller } from 'react-hook-form'
+import useFormPersist from 'react-hook-form-persist'
 import { useParams } from 'react-router-dom'
 
 import {
@@ -133,19 +134,23 @@ const SingleChoiceFieldArray = ({ nestIndex, control, register }) => {
 
 const FormProfessional = ({ idForm }) => {
 	const { user } = useAuth()
-	const { register, control, handleSubmit, reset, setValue, watch } = useForm({
+	const { register, control, handleSubmit, setValue, watch } = useForm({
 		defaultValues: {
 			questions: [{ title: '', type: 'TEXT', description: '' }]
 		}
 	})
-	const { fields, append, prepend, remove, swap, move, insert, replace } =
-		useFieldArray({
-			control,
-			name: 'questions'
-		})
+	const { fields, append, remove, move } = useFieldArray({
+		control,
+		name: 'questions'
+	})
 
 	const [showToast, dimissToast] = useIonToast()
 	const [showLoading, hideLoading] = useIonLoading()
+
+	useFormPersist('Popsi@addForm', {
+		watch,
+		setValue
+	})
 
 	React.useEffect(() => {
 		if (idForm) {
@@ -154,8 +159,6 @@ const FormProfessional = ({ idForm }) => {
 					.from('questions')
 					.select('*')
 					.eq('surveysId', idForm)
-
-				console.log('questions', data)
 			}
 
 			const getDataForm = async () => {
