@@ -51,7 +51,7 @@ const Tabs = () => {
 			path: '/app/patients',
 			icon: list,
 			isProfessionalOnly: true,
-			label: 'Patients'
+			label: 'Pacientes'
 		},
 		{
 			path: '/app/quiz',

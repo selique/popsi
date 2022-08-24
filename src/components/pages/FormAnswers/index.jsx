@@ -32,8 +32,8 @@ const FormAnswers = () => {
 	const [showLoading, hideLoading] = useIonLoading()
 	const [showToast] = useIonToast()
 	const { id } = useParams()
-	const { user, professional } = useAuth()
-	const { register, control, handleSubmit, setValue, getValues } = useForm({
+	const { user } = useAuth()
+	const { register, control, handleSubmit, setValue } = useForm({
 		mode: 'onChange'
 	})
 
@@ -53,6 +53,7 @@ const FormAnswers = () => {
 				}
 
 				if (data) {
+					console.log({ data })
 					setQuestions(data)
 				}
 			} catch (error) {
@@ -75,7 +76,9 @@ const FormAnswers = () => {
 	}, [])
 
 	const onSubmit = async dataForm => {
+		await showLoading()
 		let data = []
+		console.log(dataForm)
 		if (dataForm) {
 			if (Array.isArray(dataForm[`answers${idQuiz}`])) {
 				let array = []
@@ -140,6 +143,7 @@ const FormAnswers = () => {
 		} else if (dataForm && idQuiz + 1 < questions.length) {
 			setIdQuiz(idQuiz + 1)
 		}
+		await hideLoading()
 	}
 
 	const MultipleChoice = ({ alternatives }) => {
@@ -219,12 +223,19 @@ const FormAnswers = () => {
 			</IonHeader>
 			<div className="h-[80vh] p-4">
 				<div className="bg-white shadow-lg p-4 rounded-2xl flex flex-col">
-					<IonText>
-						{idQuiz + 1}/{questions.length}
-					</IonText>
-					<IonText className="text-2xl my-5">
-						{questions[idQuiz].question}
-					</IonText>
+					<div className="flex flex-col my-5">
+						<IonText>
+							{idQuiz + 1}/{questions.length}
+						</IonText>
+						<IonText className="text-2xl">
+							{questions[idQuiz].question}
+						</IonText>
+						{questions[idQuiz].description && (
+							<IonText className="text-sm">
+								*{questions[idQuiz].description}*
+							</IonText>
+						)}
+					</div>
 					<form onSubmit={handleSubmit(onSubmit)}>
 						{questions[idQuiz].type === 'SINGLE_CHOICE' && (
 							<SingleChoice
@@ -237,18 +248,7 @@ const FormAnswers = () => {
 							/>
 						)}
 						{questions[idQuiz].type === 'TEXT' && <TextInput />}
-						<IonButton
-							color="purple"
-							type="submit"
-							// onClick={e => {
-							// 	e.preventDefault()
-							// 	if (idQuiz + 1 < questions.length) {
-							// 		setIdQuiz(idQuiz + 1)
-							// 	} else {
-							// 		Router.back()
-							// 	}
-							// }}
-						>
+						<IonButton color="purple" type="submit">
 							<IonText className="text-xl text-white">
 								{questions.length === idQuiz + 1
 									? 'Finalizar'
