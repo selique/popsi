@@ -3,8 +3,18 @@ import * as React from 'react'
 import 'swiper/css'
 import { Clipboard } from '@capacitor/clipboard'
 import { Share } from '@capacitor/share'
-import { IonAvatar, IonCol, IonGrid, IonRow, useIonRouter } from '@ionic/react'
-import { IonPage, IonContent, IonText, IonItem, IonLabel } from '@ionic/react'
+import {
+	IonAvatar,
+	IonCol,
+	IonGrid,
+	IonRow,
+	useIonRouter,
+	useIonToast,
+	IonPage,
+	IonContent,
+	IonText,
+	IonLabel
+} from '@ionic/react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
 import Letter from '../../../assets/icons/Letter'
@@ -21,6 +31,7 @@ const HomeProfessional = () => {
 	const { user } = useAuth()
 
 	const router = useIonRouter()
+	const [showToast] = useIonToast()
 
 	const handleShareUrl = async () => {
 		try {
@@ -31,6 +42,8 @@ const HomeProfessional = () => {
 			})
 		} catch (error) {
 			console.log(error)
+		} finally {
+			setModalInviteUserOpen(false)
 		}
 	}
 
@@ -98,47 +111,35 @@ const HomeProfessional = () => {
 					onDidDismiss={() => setModalInviteUserOpen(false)}
 					height={30}
 				>
-					<IonItem lines="none" className="mt-2">
-						<IonLabel position="stacked">Link</IonLabel>
-						<Button
-							className="justify-start w-full"
-							onClick={() => {
-								Clipboard.write({
-									string: `${process.env.SITE_URL}/sign-up?medic=${user.id}`
-								})
-								setModalInviteUserOpen(false)
-							}}
-						>
-							<IonText>
-								{`${process.env.SITE_URL}/sign-up?medic=${user.id}`.slice(
-									0,
-									34
-								) + '...'}
-							</IonText>
-						</Button>
-					</IonItem>
-					<IonGrid>
-						<IonRow>
-							<IonCol>
-								<Button
-									className="bg-red-400 text-white font-bold text-lg"
-									type="button"
-									onClick={() => setModalInviteUserOpen(false)}
-								>
-									Cancelar
-								</Button>
-							</IonCol>
-							<IonCol>
-								<Button
-									className="opacity-100 bg-purple-100 text-white font-bold text-lg"
-									onClick={() => handleShareUrl()}
-									type="submit"
-								>
-									Compartilhar
-								</Button>
-							</IonCol>
-						</IonRow>
-					</IonGrid>
+					<IonText>Link de Convite</IonText>
+					<Button
+						className="justify-start w-full"
+						onClick={() => {
+							Clipboard.write({
+								string: `${process.env.SITE_URL}/sign-up?medic=${user.id}`
+							})
+							showToast({
+								header: 'Link Copiado para a área de transferência',
+								position: 'top',
+								color: 'purple',
+								cssClass: 'text-white',
+								duration: 5000,
+								animated: true
+							})
+							setModalInviteUserOpen(false)
+						}}
+					>
+						<IonText>
+							{`${process.env.SITE_URL}/sign-up?medic=${user.id}`}
+						</IonText>
+					</Button>
+					<Button
+						className="opacity-100 bg-purple-100 text-white font-bold text-lg mt-2"
+						onClick={() => handleShareUrl()}
+						type="submit"
+					>
+						Compartilhar
+					</Button>
 				</Modal>
 			</IonContent>
 		</IonPage>
