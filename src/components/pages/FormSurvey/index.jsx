@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { useForm, useFieldArray, Controller } from 'react-hook-form'
 import useFormPersist from 'react-hook-form-persist'
-import { useParams } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 
 import {
 	IonPage,
@@ -17,23 +17,25 @@ import {
 	IonReorder,
 	IonTextarea,
 	useIonToast,
-	useIonLoading
+	useIonLoading,
+	useIonRouter
 } from '@ionic/react'
 import {
 	shareSocialOutline,
 	settingsOutline,
 	trashOutline
 } from 'ionicons/icons'
+import _ from 'lodash'
 import Router from 'next/router'
 
 import { useAuth } from '../../../contexts/Auth'
 import replaceLastComma from '../../../utils/replaceLastComma'
 import { supabase } from '../../../utils/supabaseClient'
 
-const MultipleChoiceFieldArray = ({ nestIndex, control, register }) => {
+const MultipleChoiceFieldArray = ({ nestIndex, control, register, mode }) => {
 	const { fields, remove, append } = useFieldArray({
 		control,
-		name: `questions[${nestIndex}].multiple_choice`
+		name: `questions[${nestIndex}].${mode.toLowerCase()}`
 	})
 
 	React.useEffect(() => {
@@ -55,7 +57,7 @@ const MultipleChoiceFieldArray = ({ nestIndex, control, register }) => {
 							placeholder={`Alternativa ${index + 1}`}
 							className="mb-2 h-max"
 							{...register(
-								`questions[${nestIndex}].multiple_choice[${index}]`
+								`questions[${nestIndex}].${mode.toLowerCase()}[${index}]`
 							)}
 						/>
 						{fields.length > 1 && (
@@ -81,60 +83,11 @@ const MultipleChoiceFieldArray = ({ nestIndex, control, register }) => {
 	)
 }
 
-const SingleChoiceFieldArray = ({ nestIndex, control, register }) => {
-	const { fields, remove, append } = useFieldArray({
-		control,
-		name: `questions[${nestIndex}].single_choice`
-	})
-
-	React.useEffect(() => {
-		if (fields.length === 0) {
-			append('')
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [fields])
-
-	return (
-		<div>
-			{fields.map((item, index) => {
-				return (
-					<div
-						key={item.id}
-						className="grid grid-cols-[1fr_auto] items-center"
-					>
-						<IonInput
-							placeholder={`Alternativa ${index + 1}`}
-							className="mb-2 h-max"
-							{...register(
-								`questions[${nestIndex}].single_choice[${index}]`
-							)}
-						/>
-						{fields.length > 1 && (
-							<IonButton
-								onClick={() => remove(index)}
-								size="small"
-								color="danger"
-								slot="end"
-								className="p-0"
-							>
-								<IonIcon icon={trashOutline} />
-							</IonButton>
-						)}
-					</div>
-				)
-			})}
-			<IonButton color="blue" onClick={() => append('')}>
-				<IonText className="text-white font-medium">
-					Adicionar Escolha
-				</IonText>
-			</IonButton>
-		</div>
-	)
-}
-
 const FormProfessional = ({ idForm }) => {
 	const { user } = useAuth()
+	const [formToUpdate, setFormToUpdate] = React.useState([])
 	const { register, control, handleSubmit, setValue, watch } = useForm({
+		mode: 'onChange',
 		defaultValues: {
 			questions: [{ title: '', type: 'TEXT', description: '' }]
 		}
@@ -147,35 +100,86 @@ const FormProfessional = ({ idForm }) => {
 	const [showToast, dimissToast] = useIonToast()
 	const [showLoading, hideLoading] = useIonLoading()
 
-	useFormPersist('Popsi@addForm', {
+	useFormPersist(idForm ? 'Popsi@editingSurvey' : 'Popsi@addForm', {
 		watch,
 		setValue
 	})
 
 	React.useEffect(() => {
-		if (idForm) {
-			const getQuestions = async () => {
-				const { data } = await supabase
-					.from('questions')
-					.select('*')
-					.eq('surveysId', idForm)
+		// Remove persist form when editing some survey
+		return () => {
+			if (idForm) {
+				sessionStorage.removeItem('Popsi@editingSurvey')
 			}
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
 
+	React.useEffect(() => {
+		if (idForm) {
 			const getDataForm = async () => {
-				const { data: dataSurvey } = await supabase
+				await showLoading()
+				const { data, error } = await supabase
 					.from('surveys')
-					.select('title')
+					.select(
+						`
+						title,
+						questions!inner (
+							*,
+							answers ( * )
+						)
+					`
+					)
 					.eq('id', idForm)
 					.single()
-				if (dataSurvey) {
-					setValue('title', dataSurvey.title)
-					getQuestions()
+
+				if (data) {
+					setValue('title', data.title)
+					// Filtering questions' fields to create the correct object to set for form
+					const questionsData = data.questions.map(
+						({ type, alternatives, description, question }) => ({
+							title: question,
+							description,
+							type,
+							...(['MULTIPLE_CHOICE', 'SINGLE_CHOICE'].includes(type)
+								? { [type.toLowerCase()]: alternatives }
+								: {})
+						})
+					)
+					setValue('questions', questionsData, { shouldDirty: false })
+					setFormToUpdate({ title: data.title, questions: questionsData })
+					if (data.questions[0].answers.length > 0) {
+						showToast({
+							header: 'Aviso',
+							message:
+								'Esse quetionário ja tem respostas cadastradas, ao edita-lo você irá alterar o fluxo do relatório atrelado a ele.',
+							position: 'top',
+							color: 'warning',
+							duration: 5000,
+							animated: true
+						})
+						Router.back()
+					}
 				}
+
+				if (error) {
+					showToast({
+						header: 'Erro',
+						message:
+							'Algo deu errado ao abrir a edição do formulário, tente novamente e caso o erro persistir contate o suporte',
+						position: 'top',
+						color: 'danger',
+						cssClass: 'text-white',
+						duration: 5000,
+						animated: true
+					})
+				}
+				await hideLoading()
 			}
 			getDataForm()
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [idForm])
+	}, [])
 
 	const onSubmit = async data => {
 		await dimissToast()
@@ -278,6 +282,60 @@ const FormProfessional = ({ idForm }) => {
 		}
 
 		await showLoading()
+
+		if (idForm) {
+			// compare if something changed
+			if (!_.isEqual(data, formToUpdate)) {
+				const { error: errorSurveys } = await supabase
+					.from('surveys')
+					.update([
+						{
+							title: data.title,
+							description: '',
+							owner_id: user.id
+						}
+					])
+					.eq('id', idForm)
+					.single()
+
+				const { error: errorQuestions } = await supabase
+					.from('questions')
+					.upsert(
+						dataQuestion.map(question => ({
+							...question,
+							surveysId: idForm
+						}))
+					)
+
+				if (errorSurveys || errorQuestions) {
+					showToast({
+						header: 'Erro',
+						message:
+							'Algo deu errado ao atualizar o questionário, tente novamente e caso o erro persistir contate o suporte',
+						position: 'top',
+						color: 'danger',
+						cssClass: 'text-white',
+						duration: 5000,
+						animated: true
+					})
+					Router.back()
+					return
+				}
+			}
+
+			showToast({
+				header: 'Sucesso',
+				message: 'Questionário atualizado.',
+				position: 'top',
+				color: 'success',
+				duration: 5000,
+				animated: true
+			})
+
+			Router.back()
+			await hideLoading()
+			return
+		}
 
 		const { data: dataSurveys } = await supabase
 			.from('surveys')
@@ -425,18 +483,12 @@ const FormProfessional = ({ idForm }) => {
 								)}
 							/>
 
-							{watch(`questions.${index}.type`) ===
-								'MULTIPLE_CHOICE' && (
-								// add options dinamicly with useFieldArray
+							{['MULTIPLE_CHOICE', 'SINGLE_CHOICE'].includes(
+								watch(`questions.${index}.type`)
+							) && (
 								<MultipleChoiceFieldArray
 									nestIndex={index}
-									{...{ control, register }}
-								/>
-							)}
-							{watch(`questions.${index}.type`) === 'SINGLE_CHOICE' && (
-								// add options dinamicly with useFieldArray
-								<SingleChoiceFieldArray
-									nestIndex={index}
+									mode={watch(`questions.${index}.type`)}
 									{...{ control, register }}
 								/>
 							)}
@@ -458,7 +510,7 @@ const FormProfessional = ({ idForm }) => {
 			</IonButton>
 			<IonButton color="purple" expand="full" shape="round" type="submit">
 				<IonText className="text-white font-medium">
-					Salvar Questionário
+					{idForm ? 'Atualizar formulário' : 'Salvar Questionário'}
 				</IonText>
 			</IonButton>
 		</form>
@@ -466,7 +518,15 @@ const FormProfessional = ({ idForm }) => {
 }
 
 const FormSurvey = () => {
-	const { id } = useParams()
+	const { search } = useLocation()
+	const [id, setId] = React.useState(null)
+
+	React.useState(() => {
+		if (search) {
+			const params = new URLSearchParams(search)
+			setId(params.get('id'))
+		}
+	}, [search])
 
 	return (
 		<IonPage>
