@@ -233,7 +233,7 @@ const QuizList = ({
 								<Link
 									to={{
 										pathname: professional
-											? ``
+											? `/form/view/${survey.id}`
 											: item.status === 'PENDING'
 											? `/form/answers/${survey.id}`
 											: '',
@@ -327,7 +327,7 @@ const QuizList = ({
 											/>
 											<IonLabel>Editar Formulário</IonLabel>
 										</IonItem>
-										{/* <IonItem
+										<IonItem
 											button
 											onClick={() => {
 												deleteSurvey(survey.id)
@@ -343,7 +343,7 @@ const QuizList = ({
 												className="px-2"
 											/>
 											<IonLabel>Deletar Questionario</IonLabel>
-										</IonItem> */}
+										</IonItem>
 									</IonList>
 								</IonPopover>
 							</IonItem>

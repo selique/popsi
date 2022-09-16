@@ -8,6 +8,7 @@ import Breathing from './pages/Breathing'
 import ForgotPassword from './pages/ForgotPassword'
 import FormAnswers from './pages/FormAnswers'
 import FormSurvey from './pages/FormSurvey'
+import FormSurveyView from './pages/FormSurveyView'
 import LastApresentation from './pages/LastApresentation'
 import Login from './pages/Login'
 import ResetPassword from './pages/ResetPassword'
@@ -61,6 +62,11 @@ const AppShell = () => {
 					<Route.Private
 						path="/form/answers/:id"
 						component={FormAnswers}
+						exact={true}
+					/>
+					<Route.Private
+						path="/form/view/:idForm"
+						component={FormSurveyView}
 						exact={true}
 					/>
 					<Route.Private path="/breathing" component={Breathing} />

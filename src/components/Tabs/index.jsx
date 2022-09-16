@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Redirect, useLocation, useHistory } from 'react-router-dom'
+import { Redirect, useLocation } from 'react-router-dom'
 
 import {
 	IonRouterOutlet,
