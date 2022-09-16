@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useParams } from 'react-router-dom/cjs/react-router-dom'
+import { useParams, useLocation } from 'react-router-dom'
 
 import {
 	IonBackButton,
@@ -19,7 +19,8 @@ import {
 	IonPage,
 	IonHeader,
 	IonButtons,
-	IonContent
+	IonContent,
+	IonRadioGroup
 } from '@ionic/react'
 import { createOutline, ellipsisVerticalOutline } from 'ionicons/icons'
 
@@ -27,8 +28,10 @@ import { supabase } from '../../../utils/supabaseClient'
 
 const FormSurveyView = () => {
 	const { idForm } = useParams()
+	const { search } = useLocation()
 	const Router = useIonRouter()
 	const [form, setForm] = React.useState(null)
+	const [inviteId, setInviteId] = React.useState(null)
 	const [popoverState, setShowPopover] = React.useState({
 		showPopover: false,
 		event: undefined,
@@ -40,8 +43,58 @@ const FormSurveyView = () => {
 
 	const [isLoading, setIsLoading] = React.useState(false)
 
+	React.useState(() => {
+		if (search) {
+			const params = new URLSearchParams(search)
+			setInviteId(params.get('inviteId'))
+		}
+	}, [search])
+
+	const getAnswers = async () => {
+		// fazer o sistema de mostrar as respostas
+		const { data } = await supabase
+			.from('_survey_invited')
+			.select(
+				`
+				answers!inner (
+					*,
+					questions:questionId (*)
+				),
+				survey_generate_invite:survey_generate_invite_id (
+					surveys:survey_id (title)
+				)
+			`
+			)
+			.eq('survey_generate_invite_id', inviteId)
+			.single()
+
+		if (data) {
+			const questions = data.answers.map(answer => ({
+				title: answer.questions.question,
+				description: answer.questions.description,
+				answer: answer.answer,
+				type: answer.questions.type,
+				...(['MULTIPLE_CHOICE', 'SINGLE_CHOICE'].includes(
+					answer.questions.type
+				)
+					? {
+							[answer.questions.type.toLowerCase()]:
+								answer.questions.alternatives
+					  }
+					: {})
+			}))
+
+			setForm({
+				title: data.survey_generate_invite.surveys.title,
+				questions
+			})
+		}
+	}
+
 	React.useEffect(() => {
-		if (idForm) {
+		if (inviteId) {
+			getAnswers()
+		} else if (idForm) {
 			const getDataForm = async () => {
 				await dimissToast()
 				setIsLoading(true)
@@ -136,17 +189,19 @@ const FormSurveyView = () => {
 					<IonTitle className="text-[30px] font-semibold text-white">
 						{form.title}
 					</IonTitle>
-					<IonIcon
-						icon={ellipsisVerticalOutline}
-						className="text-2xl mr-3 text-white"
-						onClick={e => {
-							e.persist()
-							setShowPopover({
-								showPopover: true,
-								event: e
-							})
-						}}
-					/>
+					{!inviteId && (
+						<IonIcon
+							icon={ellipsisVerticalOutline}
+							className="text-2xl mr-3 text-white"
+							onClick={e => {
+								e.persist()
+								setShowPopover({
+									showPopover: true,
+									event: e
+								})
+							}}
+						/>
+					)}
 				</div>
 			</IonHeader>
 			<IonContent>
@@ -199,35 +254,57 @@ const FormSurveyView = () => {
 										{question.title}
 									</IonText>
 									{question.description && (
-										<IonText className="text-[15px] mt-3">
-											{question.description}
+										<IonText className="text-[15px]">
+											*{question.description}*
 										</IonText>
 									)}
 								</div>
-								{['MULTIPLE_CHOICE', 'SINGLE_CHOICE'].includes(
-									question.type
-								) &&
+
+								{question.type === 'MULTIPLE_CHOICE' &&
 									alternatives.map((alternative, index) => (
 										<div
 											key={`${alternative}-${index}`}
 											className="flex items-center gap-2 mb-3 last:mb-0"
 										>
-											{question.type === 'MULTIPLE_CHOICE' && (
-												<IonCheckbox slot="start" disabled={true} />
-											)}
-											{question.type === 'SINGLE_CHOICE' && (
+											<IonCheckbox
+												slot="start"
+												disabled={true}
+												checked={
+													inviteId &&
+													question.answer.includes(alternative)
+												}
+											/>
+											<IonText>{alternative}</IonText>
+										</div>
+									))}
+
+								{question.type === 'SINGLE_CHOICE' && (
+									<IonRadioGroup
+										{...(inviteId
+											? { value: question.answer[0] }
+											: {})}
+									>
+										{alternatives.map((alternative, index) => (
+											<div
+												key={`${alternative}-${index}`}
+												className="flex items-center gap-2 mb-3 last:mb-0"
+											>
 												<IonRadio
 													disabled={true}
 													slot="start"
 													value={alternative}
 												/>
-											)}
-											<IonText>{alternative}</IonText>
-										</div>
-									))}
-								{question.type === 'TEXT' && (
-									<IonInput value="Resposta" disabled={true} />
+												<IonText>{alternative}</IonText>
+											</div>
+										))}
+									</IonRadioGroup>
 								)}
+								{question.type === 'TEXT' &&
+									(inviteId ? (
+										<IonText>{question.answer[0]}</IonText>
+									) : (
+										<IonInput value="Resposta" disabled={true} />
+									))}
 							</div>
 						)
 					})}

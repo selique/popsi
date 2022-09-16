@@ -14,7 +14,8 @@ import {
 	IonReorder,
 	IonTextarea,
 	useIonToast,
-	useIonLoading
+	useIonLoading,
+	IonButtons
 } from '@ionic/react'
 import { trashOutline } from 'ionicons/icons'
 import _ from 'lodash'
@@ -360,7 +361,12 @@ const FormProfessional = ({ idForm }) => {
 		<form onSubmit={handleSubmit(onSubmit)}>
 			<div className="bg-purple-100 p-4">
 				<div className="flex justify-between items-center">
-					<IonBackButton className="text-white" />
+					<IonButtons>
+						<IonBackButton
+							className="text-white"
+							defaultHref="/app/quiz"
+						/>
+					</IonButtons>
 					{/* <div className="flex text-2xl text-white">
 						<IonIcon
 							src={shareSocialOutline}
