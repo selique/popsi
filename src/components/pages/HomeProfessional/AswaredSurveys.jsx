@@ -82,8 +82,6 @@ const AnswaredSurveys = () => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
-	console.log(surveys)
-
 	return (
 		<Card>
 			<IonText className="font-semibold text-gray-900 text-xl leading-5">

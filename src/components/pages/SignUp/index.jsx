@@ -53,7 +53,6 @@ const SignUp = () => {
 	React.useEffect(() => {
 		const state = location.state
 
-		console.log('state', state)
 		if (state) setUserType(state.userType)
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [location])

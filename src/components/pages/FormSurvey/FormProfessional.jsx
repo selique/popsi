@@ -29,7 +29,7 @@ import MultipleChoiceFieldArray from './MultipleChoiceArray'
 const FormProfessional = ({ idForm }) => {
 	const { user } = useAuth()
 	const [formToUpdate, setFormToUpdate] = React.useState({})
-	const { register, control, handleSubmit, setValue, watch } = useForm({
+	const { register, control, handleSubmit, setValue, watch, reset } = useForm({
 		mode: 'onChange',
 		defaultValues: {
 			questions: [{ title: '', type: 'TEXT', description: '' }]
@@ -52,7 +52,7 @@ const FormProfessional = ({ idForm }) => {
 		// Remove persist form when editing some survey
 		return () => {
 			if (idForm) {
-				sessionStorage.removeItem('Popsi@editingSurvey')
+				reset()
 			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -282,6 +282,9 @@ const FormProfessional = ({ idForm }) => {
 				}
 			}
 
+			// Reset form
+			reset()
+
 			showToast({
 				header: 'Sucesso',
 				message: 'Questionário atualizado.',
@@ -318,7 +321,8 @@ const FormProfessional = ({ idForm }) => {
 					}))
 				)
 			if (dataQuestions) {
-				sessionStorage.removeItem('Popsi@addForm')
+				// Reset form
+				reset()
 				Router.back()
 				showToast({
 					header: 'Sucesso',
