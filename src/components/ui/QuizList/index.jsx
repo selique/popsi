@@ -10,7 +10,8 @@ import {
 	useIonLoading,
 	IonLabel,
 	IonList,
-	IonContent
+	IonContent,
+	useIonRouter
 } from '@ionic/react'
 import {
 	shareSocialOutline,
@@ -41,6 +42,8 @@ const QuizList = ({
 		event: undefined,
 		id: null
 	})
+
+	const router = useIonRouter()
 
 	const fetchProfessionalSurveys = async () => {
 		const { data } = await supabase
@@ -230,7 +233,7 @@ const QuizList = ({
 								<Link
 									to={{
 										pathname: professional
-											? ``
+											? `/form/view/${survey.id}`
 											: item.status === 'PENDING'
 											? `/form/answers/${survey.id}`
 											: '',
@@ -307,10 +310,10 @@ const QuizList = ({
 											/>
 											<IonLabel>Convidar Paciente</IonLabel>
 										</IonItem>
-										{/* <IonItem
+										<IonItem
 											button
 											onClick={() => {
-												console.log('editar')
+												router.push(`form?id=${survey.id}`)
 												setShowPopover({
 													showPopover: false,
 													event: undefined,
@@ -323,7 +326,7 @@ const QuizList = ({
 												className="px-2"
 											/>
 											<IonLabel>Editar Formulário</IonLabel>
-										</IonItem> */}
+										</IonItem>
 										<IonItem
 											button
 											onClick={() => {

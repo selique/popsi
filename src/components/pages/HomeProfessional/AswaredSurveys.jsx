@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { Link } from 'react-router-dom'
 
 import {
 	IonAvatar,
@@ -18,6 +19,7 @@ import UploadAvatar from '../../UploadAvatar'
 import { useAuth } from './../../../contexts/Auth'
 
 import 'dayjs/locale/pt-br'
+
 dayjs.extend(relativeTime)
 dayjs.locale('pt-br')
 
@@ -38,6 +40,7 @@ const AnswaredSurveys = () => {
 					status,
 					updated_at,
 					survey_generate_invite!inner(
+						id,
 						surveys!inner(*)
 					),
 					profiles:patient_id(*)
@@ -56,7 +59,8 @@ const AnswaredSurveys = () => {
 							avatar: profiles.avatar_url
 						},
 						survey: survey_generate_invite.surveys,
-						updated_at
+						updated_at,
+						survey_generate_invite_id: survey_generate_invite.id
 					})
 				)
 				setSurveys(_surveys)
@@ -87,30 +91,48 @@ const AnswaredSurveys = () => {
 				{surveys.length === 0 ? (
 					<IonText>Nenhum questionário encontrado</IonText>
 				) : (
-					surveys.map(({ survey, updated_at, user }, index) => (
-						<IonList key={index}>
-							<IonItem lines={index + 1 === surveys.length && 'none'}>
-								<IonAvatar className="flex items-center w-[50px] h-[50px] mr-5">
-									<UploadAvatar
-										_avatarUrl={user?.avatar}
-										disabledUpload
-										alt="Foto de perfil"
-									/>
-								</IonAvatar>
-								<div className="flex flex-col">
-									<IonText className="font-semibold">
-										{user?.name}
-									</IonText>
-									<IonText className="text-gray-900">
-										{survey?.title}
-									</IonText>
-								</div>
-								<IonNote slot="end">
-									{dayjs(updated_at).format('HH:mm')}
-								</IonNote>
-							</IonItem>
-						</IonList>
-					))
+					surveys.map(
+						(
+							{
+								id,
+								survey,
+								updated_at,
+								survey_generate_invite_id,
+								user
+							},
+							index
+						) => (
+							<IonList key={index}>
+								<Link
+									to={`/form/view/${survey.id}?inviteId=${survey_generate_invite_id}`}
+									className="flex items-center h-full w-full justify-between"
+								>
+									<IonItem
+										lines={index + 1 === surveys.length && 'none'}
+									>
+										<IonAvatar className="flex items-center w-[50px] h-[50px] mr-5">
+											<UploadAvatar
+												_avatarUrl={user?.avatar}
+												disabledUpload
+												alt="Foto de perfil"
+											/>
+										</IonAvatar>
+										<div className="flex flex-col">
+											<IonText className="font-semibold">
+												{user?.name}
+											</IonText>
+											<IonText className="text-gray-900">
+												{survey?.title}
+											</IonText>
+										</div>
+										<IonNote slot="end">
+											{dayjs(updated_at).format('HH:mm')}
+										</IonNote>
+									</IonItem>
+								</Link>
+							</IonList>
+						)
+					)
 				)}
 			</div>
 		</Card>
