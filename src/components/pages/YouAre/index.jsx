@@ -58,7 +58,6 @@ const YouAre = () => {
 			if (!dataForm.region || !dataForm.crpNumber) return
 		}
 
-		console.log('user is', dataForm)
 		history.push({
 			pathname: '/sign-up',
 			state: {

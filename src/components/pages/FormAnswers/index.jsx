@@ -53,7 +53,6 @@ const FormAnswers = () => {
 				}
 
 				if (data) {
-					console.log({ data })
 					setQuestions(data)
 				}
 			} catch (error) {
@@ -78,7 +77,6 @@ const FormAnswers = () => {
 	const onSubmit = async dataForm => {
 		await showLoading()
 		let data = []
-		console.log(dataForm)
 		if (dataForm) {
 			if (Array.isArray(dataForm[`answers${idQuiz}`])) {
 				let array = []
